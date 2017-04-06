@@ -15,7 +15,9 @@ CONFIG += C++11
 
 SOURCES += trafficCounterApp.cpp\
     backend/CommandLineParser.cpp \
+    backend/FrameProcessor.cpp \
     backend/VehicleBlob.cpp \
+    backend/VideoProcessor.cpp \
     database/DatabaseManager.cpp \
     videosources/AbstractVideoSource.cpp \
     videosources/FileVideoSource.cpp \
@@ -23,11 +25,14 @@ SOURCES += trafficCounterApp.cpp\
     widgets/DatabaseSettingsDialog.cpp \
     widgets/DatabaseSettingsWidget.cpp \
     widgets/TrafficCounterMainWindow.cpp \
-    widgets/VideoSourceDock.cpp \
+    widgets/VideoSourceDock.cpp
+
 
 HEADERS  += backend/CommandLineParser.h \
-    database/DatabaseManager.h \
+    backend/FrameProcessor.h \
+    backend/VideoProcessor.h \
     backend/VehicleBlob.h \
+    database/DatabaseManager.h \
     videosources/AbstractVideoSource.h \
     videosources/FileVideoSource.h \
     videosources/LiveIPCameraVideoSource.h \
@@ -35,6 +40,7 @@ HEADERS  += backend/CommandLineParser.h \
     widgets/DatabaseSettingsWidget.h \
     widgets/TrafficCounterMainWindow.h \
     widgets/VideoSourceDock.h
+
 
 FORMS    += ui/databasesettingsdialog.ui \
     ui/trafficcountermainwindow.ui \
