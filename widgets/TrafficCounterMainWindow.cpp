@@ -1,22 +1,23 @@
-#include "TrafficCounterMain.h"
-#include "ui_trafficcountermain.h"
+#include "widgets/TrafficCounterMainWindow.h"
+
+#include "ui_trafficcountermainwindow.h"
 
 #include <QKeyEvent>
 #include <QMessageBox>
 
-TrafficCounterMain::TrafficCounterMain(QWidget *parent) :
+TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::TrafficCounterMain)
+    ui(new Ui::TrafficCounterMainWindow)
 {
     ui->setupUi(this);
 }
 
-TrafficCounterMain::~TrafficCounterMain()
+TrafficCounterMainWindow::~TrafficCounterMainWindow()
 {
     delete ui;
 }
 
-void TrafficCounterMain::keyPressEvent(QKeyEvent * event)
+void TrafficCounterMainWindow::keyPressEvent(QKeyEvent * event)
 {
     if (event->matches(QKeySequence::Quit))
     {
@@ -28,7 +29,7 @@ void TrafficCounterMain::keyPressEvent(QKeyEvent * event)
     }
 }
 
-void TrafficCounterMain::closeEvent(QCloseEvent * event)
+void TrafficCounterMainWindow::closeEvent(QCloseEvent * event)
 {
     if (event->spontaneous())
     {

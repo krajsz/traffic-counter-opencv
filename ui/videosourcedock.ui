@@ -1,9 +1,7 @@
+<?xml version='1.0'?>
 <ui version="4.0">
- <author/>
- <comment/>
- <exportmacro/>
- <class>DatabaseSettingsDialog</class>
- <widget name="DatabaseSettingsDialog" class="QWidget">
+ <class>VideoSourceDock</class>
+ <widget class="QDockWidget" name="VideoSourceDock">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,9 +11,8 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>DockWidget</string>
   </property>
+  <widget class="QWidget" name="dockWidgetContents"/>
  </widget>
- <pixmapfunction/>
- <connections/>
 </ui>

@@ -4,19 +4,19 @@
 #include <QMainWindow>
 
 namespace Ui {
-class TrafficCounterMain;
+class TrafficCounterMainWindow;
 }
 
-class TrafficCounterMain : public QMainWindow
+class TrafficCounterMainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit TrafficCounterMain(QWidget *parent = 0);
-    ~TrafficCounterMain();
+    explicit TrafficCounterMainWindow(QWidget *parent = 0);
+    ~TrafficCounterMainWindow();
 
 private:
-    Ui::TrafficCounterMain *ui;
+    Ui::TrafficCounterMainWindow *ui;
 protected:
     void keyPressEvent(QKeyEvent*);
     void closeEvent(QCloseEvent*);

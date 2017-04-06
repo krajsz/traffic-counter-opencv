@@ -11,22 +11,35 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = TrafficCounter
 TEMPLATE = app
 
+CONFIG += C++11
 
-SOURCES += main.cpp\
-        TrafficCounterMain.cpp \
-    DatabaseSettingsDialog.cpp \
-    AbstractVideoSource.cpp \
-    FileVideoSource.cpp \
-    LiveIPCameraVideoSource.cpp \
-    VehicleBlob.cpp
+SOURCES += trafficCounterApp.cpp\
+    backend/CommandLineParser.cpp \
+    backend/VehicleBlob.cpp \
+    database/DatabaseManager.cpp \
+    videosources/AbstractVideoSource.cpp \
+    videosources/FileVideoSource.cpp \
+    videosources/LiveIPCameraVideoSource.cpp \
+    widgets/DatabaseSettingsDialog.cpp \
+    widgets/DatabaseSettingsWidget.cpp \
+    widgets/TrafficCounterMainWindow.cpp \
+    widgets/VideoSourceDock.cpp \
 
-HEADERS  += TrafficCounterMain.h \
-    DatabaseSettingsDialog.h \
-    AbstractVideoSource.h \
-    FileVideoSource.h \
-    LiveIPCameraVideoSource.h \
-    VehicleBlob.h
+HEADERS  += backend/CommandLineParser.h \
+    database/DatabaseManager.h \
+    backend/VehicleBlob.h \
+    videosources/AbstractVideoSource.h \
+    videosources/FileVideoSource.h \
+    videosources/LiveIPCameraVideoSource.h \
+    widgets/DatabaseSettingsDialog.h \
+    widgets/DatabaseSettingsWidget.h \
+    widgets/TrafficCounterMainWindow.h \
+    widgets/VideoSourceDock.h
 
-FORMS    += trafficcountermain.ui \
-    databasesettingsdialog.ui
+FORMS    += ui/databasesettingsdialog.ui \
+    ui/trafficcountermainwindow.ui \
+    ui/videosourcedock.ui
 LIBS += `pkg-config opencv --libs --cflags`
+
+DISTFILES += \
+    README.md
