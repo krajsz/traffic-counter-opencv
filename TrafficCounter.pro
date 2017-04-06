@@ -25,7 +25,8 @@ SOURCES += trafficCounterApp.cpp\
     widgets/DatabaseSettingsDialog.cpp \
     widgets/DatabaseSettingsWidget.cpp \
     widgets/TrafficCounterMainWindow.cpp \
-    widgets/VideoSourceDock.cpp
+    widgets/VideoSourceDock.cpp \
+    backend/Utils.cpp
 
 
 HEADERS  += backend/CommandLineParser.h \
@@ -39,7 +40,8 @@ HEADERS  += backend/CommandLineParser.h \
     widgets/DatabaseSettingsDialog.h \
     widgets/DatabaseSettingsWidget.h \
     widgets/TrafficCounterMainWindow.h \
-    widgets/VideoSourceDock.h
+    widgets/VideoSourceDock.h \
+    backend/Utils.h
 
 
 FORMS    += ui/databasesettingsdialog.ui \
@@ -48,4 +50,9 @@ FORMS    += ui/databasesettingsdialog.ui \
 LIBS += `pkg-config opencv --libs --cflags`
 
 DISTFILES += \
-    README.md
+    README.md \
+    package_bgs/LBSP/LBSP_16bits_dbcross_1ch.i \
+    package_bgs/LBSP/LBSP_16bits_dbcross_3ch1t.i \
+    package_bgs/LBSP/LBSP_16bits_dbcross_3ch3t.i \
+    package_bgs/LBSP/LBSP_16bits_dbcross_s3ch.i \
+    package_bgs/ViBe/LICENSE
