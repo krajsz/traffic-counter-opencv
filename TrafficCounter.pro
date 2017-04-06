@@ -16,6 +16,7 @@ CONFIG += C++11
 SOURCES += trafficCounterApp.cpp\
     backend/CommandLineParser.cpp \
     backend/FrameProcessor.cpp \
+    backend/Utils.cpp \
     backend/VehicleBlob.cpp \
     backend/VideoProcessor.cpp \
     database/DatabaseManager.cpp \
@@ -26,11 +27,12 @@ SOURCES += trafficCounterApp.cpp\
     widgets/DatabaseSettingsWidget.cpp \
     widgets/TrafficCounterMainWindow.cpp \
     widgets/VideoSourceDock.cpp \
-    backend/Utils.cpp
+    widgets/PlaybackActionsDock.cpp
 
 
 HEADERS  += backend/CommandLineParser.h \
     backend/FrameProcessor.h \
+    backend/Utils.h \
     backend/VideoProcessor.h \
     backend/VehicleBlob.h \
     database/DatabaseManager.h \
@@ -41,18 +43,15 @@ HEADERS  += backend/CommandLineParser.h \
     widgets/DatabaseSettingsWidget.h \
     widgets/TrafficCounterMainWindow.h \
     widgets/VideoSourceDock.h \
-    backend/Utils.h
+    widgets/PlaybackActionsDock.h
 
 
 FORMS    += ui/databasesettingsdialog.ui \
     ui/trafficcountermainwindow.ui \
-    ui/videosourcedock.ui
+    ui/videosourcedock.ui \
+    playbackactionsdock.ui
 LIBS += `pkg-config opencv --libs --cflags`
 
 DISTFILES += \
-    README.md \
-    package_bgs/LBSP/LBSP_16bits_dbcross_1ch.i \
-    package_bgs/LBSP/LBSP_16bits_dbcross_3ch1t.i \
-    package_bgs/LBSP/LBSP_16bits_dbcross_3ch3t.i \
-    package_bgs/LBSP/LBSP_16bits_dbcross_s3ch.i \
-    package_bgs/ViBe/LICENSE
+    README.md
+

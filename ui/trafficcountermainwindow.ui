@@ -30,8 +30,8 @@
    <widget class="QProgressBar" name="progressBar">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>230</y>
+      <x>170</x>
+      <y>250</y>
       <width>118</width>
       <height>23</height>
      </rect>
@@ -60,39 +60,6 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="mainStatusBar"/>
-  <widget class="QDockWidget" name="dockWidget">
-   <attribute name="dockWidgetArea">
-    <number>4</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
-    <widget class="QPushButton" name="pushButton">
-     <property name="geometry">
-      <rect>
-       <x>320</x>
-       <y>0</y>
-       <width>83</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>PushButton</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_2">
-     <property name="geometry">
-      <rect>
-       <x>420</x>
-       <y>0</y>
-       <width>83</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>PushButton</string>
-     </property>
-    </widget>
-   </widget>
-  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
