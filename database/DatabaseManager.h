@@ -35,6 +35,15 @@ class DatabaseManager : public QObject
 public:
     explicit DatabaseManager(QObject *parent = 0);
 
+    struct SQLConnection {
+        int vendorIndex;
+        int port;
+        QString name;
+        QString hostName;
+        QString dbName;
+        QString userName;
+        QString password;
+};
 signals:
 
 public slots:
