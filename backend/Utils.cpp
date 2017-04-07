@@ -26,7 +26,16 @@
  ***************************************************************************/
 #include "Utils.h"
 
-Utils::Utils()
-{
-
+QImage Utils::Mat2QImage(const cv::Mat & src) {
+  cv::Mat temp;
+  cv::cvtColor(src, temp, CV_BGR2RGB);
+  QImage dest((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+  dest.bits();
+  return dest;
+}
+cv::Mat Utils::QImage2Mat(const QImage & src) {
+  cv::Mat tmp(src.height(), src.width(), CV_8UC3, (uchar*)src.bits(), src.bytesPerLine());
+  cv::Mat result;
+  cv::cvtColor(tmp, result, CV_RGB2BGR);
+  return result;
 }

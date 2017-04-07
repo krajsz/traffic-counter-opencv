@@ -27,11 +27,16 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <QImage>
+#include <opencv2/opencv.hpp>
 
 class Utils
 {
 public:
-    Utils();
+    Utils() = default;
+
+    static QImage Mat2QImage(const cv::Mat& src);
+    static cv::Mat QImage2Mat(const QImage& src);
 };
 
 #endif // UTILS_H

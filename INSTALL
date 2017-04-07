@@ -1,0 +1,4 @@
+The following packages are required to compile TrafficCounter:
+    * Qt version 5.5 or higher (including the devel-package, libqt5-devel or similar)
+    * OpenCV version 3.2 
+    * BGSLib version 2.0

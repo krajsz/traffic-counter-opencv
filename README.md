@@ -2,4 +2,5 @@
 
 ## Additional dependencies
 
-BGSLib
+BGSLib (https://github.com/andrewssobral/bgslibrary)
+
