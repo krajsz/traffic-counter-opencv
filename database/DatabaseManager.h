@@ -28,13 +28,15 @@
 #define DATABASEMANAGER_H
 
 #include <QObject>
+#include <QSettings>
+#include <QVector>
 #include <QtSql/QSqlDatabase>
 class DatabaseManager : public QObject
 {
     Q_OBJECT
 public:
     explicit DatabaseManager(QObject *parent = 0);
-
+    ~DatabaseManager();
     struct SQLConnection {
         int vendorIndex;
         int port;
@@ -43,9 +45,20 @@ public:
         QString dbName;
         QString userName;
         QString password;
-};
+    };
 
     static QStringList drivers();
+
+    QSqlError connect(const int connectionIndex);
+
+    QSqlError initDb();
+
+    QVector<SQLConnection> connections() const;
+private:
+    QVector<SQLConnection> m_connections;
+    QString m_databaseConnectionsFile;
+    void saveConnections() const;
+    void loadConnections();
 
 signals:
 

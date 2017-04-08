@@ -28,6 +28,7 @@
 #define DATABASESETTINGSDIALOG_H
 
 #include <QWidget>
+#include "database/DatabaseManager.h"
 
 namespace Ui {
 class DatabaseSettingsDialog;
@@ -46,6 +47,7 @@ private:
 
     void initSlots();
 
+    DatabaseManager* m_dbManager;
 private Q_SLOTS:
     void addConnection();
     void removeConnection();

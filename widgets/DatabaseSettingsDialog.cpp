@@ -29,7 +29,7 @@
 
 DatabaseSettingsDialog::DatabaseSettingsDialog(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::DatabaseSettingsDialog)
+    ui(new Ui::DatabaseSettingsDialog), m_dbManager(new DatabaseManager)
 {
     ui->setupUi(this);
     ui->passwordLineEdit->setEchoMode(QLineEdit::Password);

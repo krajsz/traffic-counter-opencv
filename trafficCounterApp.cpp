@@ -28,12 +28,15 @@
 #include <QApplication>
 #include "widgets/TrafficCounterMainWindow.h"
 
-#include <opencv2/opencv.hpp>
-#include <QDebug>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    QCoreApplication::setApplicationName("TrafficCounter");
+    QCoreApplication::setOrganizationName("University of Debrecen");
+    QCoreApplication::setApplicationVersion("1.0");
+    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
     /*TrafficCounterMain w;
     w.show();*/
 
