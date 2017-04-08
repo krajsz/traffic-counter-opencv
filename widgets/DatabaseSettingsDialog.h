@@ -47,10 +47,12 @@ private:
 
     void initSlots();
 
+    bool canAddNewConnection() const;
+
     DatabaseManager* m_dbManager;
 private Q_SLOTS:
     void addConnection();
-    void removeConnection();
+    void removeConnection(const int index);
     void testConnection();
 
     void connectionSelectionChanged(const int index);

@@ -36,7 +36,7 @@ DatabaseManager::DatabaseManager(QObject *parent) : QObject(parent),
 
 DatabaseManager::~DatabaseManager()
 {
-
+    saveConnections();
 }
 
 QStringList DatabaseManager::drivers()
@@ -44,7 +44,7 @@ QStringList DatabaseManager::drivers()
     return QSqlDatabase::drivers();
 }
 
-QVector<DatabaseManager::SQLConnection> DatabaseManager::connections() const
+QVector<DatabaseManager::SQLConnection *> DatabaseManager::connections() const
 {
     return m_connections;
 }
@@ -52,6 +52,26 @@ QVector<DatabaseManager::SQLConnection> DatabaseManager::connections() const
 QSqlError DatabaseManager::connect(const int connectionIndex)
 {
     return QSqlError();
+}
+
+QSqlError DatabaseManager::testConnection(const int connectionIndex)
+{
+    return QSqlError();
+}
+
+QSqlError DatabaseManager::testConnection(SQLConnection* conn)
+{
+    return QSqlError();
+}
+
+QSqlError DatabaseManager::deleteConnection(const int connectionIndex)
+{
+    return QSqlError();
+}
+
+bool DatabaseManager::addConnection(const SQLConnection* conn)
+{
+    return false;
 }
 
 QSqlError DatabaseManager::initDb()
@@ -68,14 +88,14 @@ void DatabaseManager::saveConnections() const
     for(int i = 0; i < m_connections.size(); ++i)
     {
         connectionSetting.setArrayIndex(i);
-        SQLConnection conn = m_connections.at(i);
-        connectionSetting.setValue(QLatin1String("connectionName"), conn.name);
-        connectionSetting.setValue(QLatin1String("databaseName"), conn.dbName);
-        connectionSetting.setValue(QLatin1String("driver"), conn.vendorIndex);
-        connectionSetting.setValue(QLatin1String("port"), conn.port);
-        connectionSetting.setValue(QLatin1String("hostName"), conn.hostName);
-        connectionSetting.setValue(QLatin1String("userName"), conn.userName);
-        connectionSetting.setValue(QLatin1String("password"), conn.password);
+        SQLConnection* conn = m_connections.at(i);
+        connectionSetting.setValue(QLatin1String("connectionName"), conn->name);
+        connectionSetting.setValue(QLatin1String("databaseName"), conn->dbName);
+        connectionSetting.setValue(QLatin1String("driver"), conn->vendorIndex);
+        connectionSetting.setValue(QLatin1String("port"), conn->port);
+        connectionSetting.setValue(QLatin1String("hostName"), conn->hostName);
+        connectionSetting.setValue(QLatin1String("userName"), conn->userName);
+        connectionSetting.setValue(QLatin1String("password"), conn->password);
     }
 
     connectionSetting.endArray();
@@ -92,16 +112,51 @@ void DatabaseManager::loadConnections()
     for(int i = 0; i < savedConnectionsSize; ++i)
     {
         connectionSetting.setArrayIndex(i);
-        SQLConnection conn;
-        conn.name = connectionSetting.value(QLatin1String("connectionName"), QLatin1String("NoConnectionName")).toString();
-        conn.dbName = connectionSetting.value(QLatin1String("databaseName"), QLatin1String("NoDatabaseName")).toString();
-        conn.hostName = connectionSetting.value(QLatin1String("hostName"), QLatin1String("")).toString();
-        conn.port = connectionSetting.value(QLatin1String("port")).toInt();
-        conn.vendorIndex = connectionSetting.value(QLatin1String("driver")).toInt();
-        conn.userName = connectionSetting.value(QLatin1String("userName")).toString();
-        conn.password = connectionSetting.value(QLatin1String("password")).toString();
+        SQLConnection* conn = new SQLConnection;
+        conn->name = connectionSetting.value(QLatin1String("connectionName"), QLatin1String("NoConnectionName")).toString();
+        conn->dbName = connectionSetting.value(QLatin1String("databaseName"), QLatin1String("NoDatabaseName")).toString();
+        conn->hostName = connectionSetting.value(QLatin1String("hostName"), QLatin1String("")).toString();
+        conn->port = connectionSetting.value(QLatin1String("port")).toInt();
+        conn->vendorIndex = connectionSetting.value(QLatin1String("driver")).toInt();
+        conn->userName = connectionSetting.value(QLatin1String("userName")).toString();
+        conn->password = connectionSetting.value(QLatin1String("password")).toString();
 
         m_connections[i] = conn;
     }
     connectionSetting.endArray();;
+}
+
+void DatabaseManager::currentConnectionChanged(const int index)
+{
+    m_currentConnectionIndex = index;
+}
+
+void DatabaseManager::driverChanged(const int index)
+{
+
+}
+
+void DatabaseManager::hostChanged(const QString& newHost)
+{
+
+}
+
+void DatabaseManager::portChanged(const QString& newPort)
+{
+
+}
+
+void DatabaseManager::connectionNameChanged(const QString &newName)
+{
+
+}
+
+void DatabaseManager::userNameChanged(const QString &newUserName)
+{
+
+}
+
+void DatabaseManager::passwordChanged(const QString &newPassword)
+{
+
 }

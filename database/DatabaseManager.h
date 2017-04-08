@@ -50,19 +50,37 @@ public:
     static QStringList drivers();
 
     QSqlError connect(const int connectionIndex);
+    QSqlError testConnection(const int connectionIndex);
+    QSqlError testConnection(SQLConnection* conn);
+
+    QSqlError deleteConnection(const int connectionIndex);
+    bool addConnection(const SQLConnection* conn);
 
     QSqlError initDb();
 
-    QVector<SQLConnection> connections() const;
+    QVector<SQLConnection*> connections() const;
+
+    void currentConnectionChanged(const int index);
+    void driverChanged(const int index);
+    void hostChanged(const QString& newHost);
+    void portChanged(const QString& newPort);
+    void connectionNameChanged(const QString &newName);
+    void userNameChanged(const QString &newUserName);
+    void passwordChanged(const QString &newPassword);
+
 private:
-    QVector<SQLConnection> m_connections;
+    QVector<SQLConnection*> m_connections;
     QString m_databaseConnectionsFile;
-    void saveConnections() const;
     void loadConnections();
+    QSqlDatabase m_database;
 
-signals:
+    int m_currentConnectionIndex;
 
-public slots:
+Q_SIGNALS:
+
+public Q_SLOTS:
+    void saveConnections() const;
+
 };
 
 #endif // DATABASEMANAGER_H
