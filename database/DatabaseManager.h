@@ -28,7 +28,7 @@
 #define DATABASEMANAGER_H
 
 #include <QObject>
-
+#include <QtSql/QSqlDatabase>
 class DatabaseManager : public QObject
 {
     Q_OBJECT
@@ -44,6 +44,9 @@ public:
         QString userName;
         QString password;
 };
+
+    static QStringList drivers();
+
 signals:
 
 public slots:

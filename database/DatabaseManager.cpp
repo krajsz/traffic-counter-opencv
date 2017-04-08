@@ -30,3 +30,8 @@ DatabaseManager::DatabaseManager(QObject *parent) : QObject(parent)
 {
 
 }
+
+QStringList DatabaseManager::drivers()
+{
+    return QSqlDatabase::drivers();
+}

@@ -43,6 +43,23 @@ public:
 
 private:
     Ui::DatabaseSettingsDialog *ui;
+
+    void initSlots();
+
+private Q_SLOTS:
+    void addConnection();
+    void removeConnection();
+    void testConnection();
+
+    void connectionSelectionChanged(const int index);
+    void driverChanged(const int index);
+    void hostChanged(const QString& newHost);
+    void portChanged(const QString& newPort);
+    void connectionNameChanged(const QString &newName);
+    void userNameChanged(const QString &newUserName);
+    void passwordChanged(const QString &newPassword);
+
+
 };
 
 #endif // DATABASESETTINGSDIALOG_H

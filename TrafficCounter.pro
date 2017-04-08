@@ -24,7 +24,6 @@ SOURCES += trafficCounterApp.cpp\
     videosources/FileVideoSource.cpp \
     videosources/LiveIPCameraVideoSource.cpp \
     widgets/DatabaseSettingsDialog.cpp \
-    widgets/DatabaseSettingsWidget.cpp \
     widgets/TrafficCounterMainWindow.cpp \
     widgets/VideoSourceDock.cpp \
     widgets/PlaybackActionsDock.cpp
@@ -39,7 +38,6 @@ HEADERS  += backend/CommandLineParser.h \
     videosources/FileVideoSource.h \
     videosources/LiveIPCameraVideoSource.h \
     widgets/DatabaseSettingsDialog.h \
-    widgets/DatabaseSettingsWidget.h \
     widgets/TrafficCounterMainWindow.h \
     widgets/VideoSourceDock.h \
     widgets/PlaybackActionsDock.h
@@ -51,5 +49,6 @@ FORMS    += ui/databasesettingsdialog.ui \
 LIBS += `pkg-config opencv --libs --cflags`
 
 DISTFILES += \
-    README.md
+    README.md \
+    INSTALL
 
