@@ -26,7 +26,6 @@
  ***************************************************************************/
 #include "FileVideoSource.h"
 
-FileVideoSource::FileVideoSource(QObject *parent) : AbstractVideoSource(parent)
+FileVideoSource::FileVideoSource(const QString &path, QObject *parent) : AbstractVideoSource(path, parent)
 {
-
 }

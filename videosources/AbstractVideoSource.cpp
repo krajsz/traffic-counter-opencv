@@ -26,7 +26,17 @@
  ***************************************************************************/
 #include "AbstractVideoSource.h"
 
-AbstractVideoSource::AbstractVideoSource(QObject *parent):QObject(parent)
+AbstractVideoSource::AbstractVideoSource(const QString &path, QObject *parent):QObject(parent), m_path(path)
 {
 
+}
+
+QString AbstractVideoSource::path() const
+{
+    return m_path;
+}
+
+cv::VideoCapture AbstractVideoSource::reader() const
+{
+    return m_videoReader;
 }

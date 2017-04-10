@@ -27,13 +27,19 @@
  ***************************************************************************/
 #ifndef LIVEIPCAMERAVIDEOSOURCE_H
 #define LIVEIPCAMERAVIDEOSOURCE_H
+#include <QObject>
 
 #include "AbstractVideoSource.h"
 
 class LiveIPCameraVideoSource : public AbstractVideoSource
 {
+    Q_OBJECT
 public:
     LiveIPCameraVideoSource();
+private:
+    int m_port;
+    QString m_userName;
+    QString m_password;
 };
 
 #endif // LIVEIPCAMERAVIDEOSOURCE_H

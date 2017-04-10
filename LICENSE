@@ -1,5 +1,5 @@
 /***************************************************************************
-    File                 : FileVideoSource.h
+    File                 : LICENSE
     Project              : TrafficCounter
     Description          :
     --------------------------------------------------------------------
@@ -24,20 +24,3 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
-#ifndef FILEVIDEOSOURCE_H
-#define FILEVIDEOSOURCE_H
-
-#include "AbstractVideoSource.h"
-
-class FileVideoSource : public AbstractVideoSource
-{
-    Q_OBJECT
-public:
-    FileVideoSource(const QString& path, QObject* parent = nullptr);
-private:
-    int m_lengthInMS;
-    int m_fps;
-    int m_frameCount;
-};
-
-#endif // FILEVIDEOSOURCE_H

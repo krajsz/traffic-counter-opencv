@@ -1,5 +1,5 @@
 /***************************************************************************
-    File                 : FileVideoSource.h
+    File                 : VideoRecorder.cpp
     Project              : TrafficCounter
     Description          :
     --------------------------------------------------------------------
@@ -24,20 +24,30 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
-#ifndef FILEVIDEOSOURCE_H
-#define FILEVIDEOSOURCE_H
+#include "VideoRecorder.h"
+#include <QStandardPaths>
+#include <QDir>
 
-#include "AbstractVideoSource.h"
-
-class FileVideoSource : public AbstractVideoSource
+VideoRecorder::VideoRecorder(QObject *parent) : QObject(parent),
+    m_filePath(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation))
 {
-    Q_OBJECT
-public:
-    FileVideoSource(const QString& path, QObject* parent = nullptr);
-private:
-    int m_lengthInMS;
-    int m_fps;
-    int m_frameCount;
-};
+}
 
-#endif // FILEVIDEOSOURCE_H
+void VideoRecorder::setFilePath(const QString &path)
+{
+    m_filePath = path;
+}
+
+void VideoRecorder::stopRecording()
+{
+
+}
+
+void VideoRecorder::startRecording()
+{
+    const QString dir = m_filePath.left(m_filePath.lastIndexOf('\\'));
+    if(QDir(dir).exists())
+    {
+
+    }
+}

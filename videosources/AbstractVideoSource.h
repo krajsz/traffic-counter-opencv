@@ -27,16 +27,24 @@
 #ifndef ABSTRACTVIDEOSOURCE_H
 #define ABSTRACTVIDEOSOURCE_H
 #include <QObject>
+#include <QString>
+#include <QSize>
+#include <opencv2/videoio.hpp>
 
 class AbstractVideoSource : public QObject
 {
     Q_OBJECT
 public:
-    explicit AbstractVideoSource(QObject* parent = nullptr);
+    explicit AbstractVideoSource(const QString& path, QObject* parent = nullptr);
 
+    QString path() const;
+    cv::VideoCapture reader() const;
 
 private:
+    cv::VideoCapture m_videoReader;
 
+    QString m_path;
+    QSize m_imageSize;
 };
 
 #endif // ABSTRACTVIDEOSOURCE_H

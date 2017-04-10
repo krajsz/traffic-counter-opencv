@@ -1,5 +1,5 @@
 /***************************************************************************
-    File                 : FileVideoSource.h
+    File                 : VideoRecorder.h
     Project              : TrafficCounter
     Description          :
     --------------------------------------------------------------------
@@ -24,20 +24,31 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
-#ifndef FILEVIDEOSOURCE_H
-#define FILEVIDEOSOURCE_H
+#ifndef VIDEORECORDER_H
+#define VIDEORECORDER_H
 
-#include "AbstractVideoSource.h"
-
-class FileVideoSource : public AbstractVideoSource
+#include <QObject>
+#include <opencv2/videoio.hpp>
+class VideoRecorder : public QObject
 {
     Q_OBJECT
 public:
-    FileVideoSource(const QString& path, QObject* parent = nullptr);
+    explicit VideoRecorder(QObject *parent = 0);
+
+    void setFilePath(const QString& path);
 private:
-    int m_lengthInMS;
-    int m_fps;
-    int m_frameCount;
+    cv::VideoWriter m_recorder;
+
+    QString m_filePath;
+
+    bool m_recording;
+
+signals:
+
+public slots:
+
+    void startRecording();
+    void stopRecording();
 };
 
-#endif // FILEVIDEOSOURCE_H
+#endif // VIDEORECORDER_H
