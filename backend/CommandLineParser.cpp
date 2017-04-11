@@ -25,10 +25,15 @@
  *                                                                         *
  ***************************************************************************/
 #include "CommandLineParser.h"
+#include <unistd.h>
+
 #include <QDir>
+#include <QDebug>
+#include <QTextStream>
 
 CommandLineParser::CommandLineParser(QObject *parent) : QObject(parent),
-    m_fileNameSet(false), m_showGui(true), m_record(false)
+    m_fileNameSet(false), m_showGui(true), m_record(false),
+    m_stdinNotifier(STDIN_FILENO, QSocketNotifier::Read)
 {
     m_optionsParser.addHelpOption();
     m_optionsParser.addVersionOption();
@@ -56,6 +61,8 @@ void CommandLineParser::parse(const QCoreApplication& app)
     if(m_optionsParser.isSet(QLatin1String("nogui")))
     {
         m_showGui = false;
+        connect(&m_stdinNotifier, &QSocketNotifier::activated, this, &CommandLineParser::stdinInputReceived);
+        m_stdinNotifier.setEnabled(true);
     }
 
     //record
@@ -75,6 +82,13 @@ void CommandLineParser::parse(const QCoreApplication& app)
             m_fileNameSet = true;
         }
     }
+
+}
+
+void CommandLineParser::stdinInputReceived()
+{
+    QTextStream strin(stdin);
+    qDebug() << "command: " << strin.readLine();
 
 }
 

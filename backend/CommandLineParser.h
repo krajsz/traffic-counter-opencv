@@ -31,6 +31,7 @@
 #include <QCommandLineOption>
 #include <QCommandLineParser>
 #include <QVector>
+#include <QSocketNotifier>
 
 class CommandLineParser : public QObject
 {
@@ -45,12 +46,19 @@ public:
 private:
     QCommandLineParser m_optionsParser;
 
-    bool m_showGui;
     bool m_fileNameSet;
+    bool m_showGui;
+
     bool m_record;
+
+    QSocketNotifier m_stdinNotifier;
+
 signals:
 
-public slots:
+public Q_SLOTS:
+
+private Q_SLOTS:
+    void stdinInputReceived();
 };
 
 #endif // COMMANDLINEPARSER_H

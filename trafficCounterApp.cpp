@@ -29,6 +29,7 @@
 #include "widgets/TrafficCounterMainWindow.h"
 #include "backend/CommandLineParser.h"
 
+#include <QDebug>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -41,9 +42,12 @@ int main(int argc, char *argv[])
     CommandLineParser commandLineParser;
     commandLineParser.parse(a);
 
+    TrafficCounterMainWindow* win;
     if (commandLineParser.showGui())
     {
         //show gui
+        win =  new TrafficCounterMainWindow;
+        win->show();
     }
     else
     {
