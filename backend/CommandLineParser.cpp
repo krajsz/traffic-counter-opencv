@@ -28,6 +28,7 @@
 #include <unistd.h>
 
 #include <QDir>
+#include <QFileInfo>
 #include <QDebug>
 #include <QTextStream>
 
@@ -46,7 +47,8 @@ CommandLineParser::CommandLineParser(QObject *parent) : QObject(parent),
 
 
     QCommandLineOption fileNameOption(QStringList() << QLatin1String("f") <<
-                                        QLatin1String("filename"),"Input file name");
+                                        QLatin1String("filename"),"Input file name",
+                                      QLatin1String("filename"));
 
     m_optionsParser.addOption(noGuiOption);
     m_optionsParser.addOption(recordOption);
@@ -75,11 +77,17 @@ void CommandLineParser::parse(const QCoreApplication& app)
 
     if (m_optionsParser.isSet(QLatin1String("filename")))
     {
-        const QString path = m_optionsParser.value(QLatin1String("filename"));
-        const QString dir = path.left(path.lastIndexOf('\\'));
-        if(QDir(dir).exists())
+        const QString filepath = m_optionsParser.value(QLatin1String("filename"));
+
+        if(QFileInfo(filepath).exists())
         {
             m_fileNameSet = true;
+        }
+        else
+        {
+            qDebug() << "Incorrect file path!";
+
+            m_optionsParser.showHelp(1);
         }
     }
 
@@ -90,6 +98,7 @@ void CommandLineParser::stdinInputReceived()
     QTextStream strin(stdin);
     qDebug() << "command: " << strin.readLine();
 
+    //pause, resume, new file, show gui
 }
 
 QString CommandLineParser::fileName() const

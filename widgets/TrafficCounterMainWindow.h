@@ -28,6 +28,9 @@
 #define TRAFFICCOUNTERMAIN_H
 
 #include <QMainWindow>
+#include "widgets/PlaybackActionsDock.h"
+#include "widgets/DatabaseSettingsDialog.h"
+#include "widgets/VideoSourceDock.h"
 
 namespace Ui {
 class TrafficCounterMainWindow;
@@ -43,9 +46,21 @@ public:
 
 private:
     Ui::TrafficCounterMainWindow *ui;
+    PlaybackActionsDock* m_playbackActionsDock;
+    DatabaseSettingsDialog* m_databaseSettingsDialog;
+    VideoSourceDock* m_videoSourceDock;
 protected:
     void keyPressEvent(QKeyEvent*);
     void closeEvent(QCloseEvent*);
+
+private Q_SLOTS:
+    void showAbout();
+    void databaseSettingsActionClicked();
+    void sourceSettingsActionChecked(bool checked);
+    void playActionsChecked(bool checked);
+    void openFileActionClicked();
+    void playbackDockClosed();
+    void videoSourceDockClosed();
 };
 
 #endif // TRAFFICCOUNTERMAIN_H

@@ -28,6 +28,10 @@
 #define VIDEOSOURCEDOCK_H
 
 #include <QDockWidget>
+#include "widgets/FileVideoSourceOptionsWidget.h"
+#include "widgets/IPCameraVideoSourceOptionsWidget.h"
+#include "ui_videosourcedock.h"
+#include <QStackedWidget>
 
 namespace Ui {
 class VideoSourceDock;
@@ -43,6 +47,11 @@ public:
 
 private:
     Ui::VideoSourceDock *ui;
+    Ui::FileVideoSourceOptionsWidget m_fileVideoSourceOptions;
+    Ui::IPCameraVideoSourceOptions m_ipCameraVideoSourceOptions;
+
+private Q_SLOTS:
+    void sourceTypeChanged(bool checked);
 };
 
 #endif // VIDEOSOURCEDOCK_H

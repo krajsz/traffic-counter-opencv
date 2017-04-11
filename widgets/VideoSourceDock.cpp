@@ -25,16 +25,40 @@
  *                                                                         *
  ***************************************************************************/
 #include "VideoSourceDock.h"
-#include "ui_videosourcedock.h"
 
 VideoSourceDock::VideoSourceDock(QWidget *parent) :
     QDockWidget(parent),
     ui(new Ui::VideoSourceDock)
 {
     ui->setupUi(this);
+
+    QWidget* fileSourceWidget = new QWidget;
+    m_fileVideoSourceOptions.setupUi(fileSourceWidget);
+
+    ui->sourceOptionsStackedWidget->insertWidget(0, fileSourceWidget);
+
+    QWidget* ipCameraSourceWidget = new QWidget;
+    m_ipCameraVideoSourceOptions.setupUi(ipCameraSourceWidget);
+
+    ui->sourceOptionsStackedWidget->insertWidget(1, ipCameraSourceWidget);
+
+    ui->sourceOptionsStackedWidget->setCurrentIndex(0);
+    connect(ui->fileSourceRadioButton, &QRadioButton::toggled, this, &VideoSourceDock::sourceTypeChanged);
 }
 
 VideoSourceDock::~VideoSourceDock()
 {
     delete ui;
+}
+
+void VideoSourceDock::sourceTypeChanged(bool checked)
+{
+    if (checked)
+    {
+        ui->sourceOptionsStackedWidget->setCurrentIndex(0);
+    }
+    else
+    {
+        ui->sourceOptionsStackedWidget->setCurrentIndex(1);
+    }
 }

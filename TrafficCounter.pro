@@ -19,6 +19,8 @@ SOURCES += trafficCounterApp.cpp\
     backend/Utils.cpp \
     backend/VehicleBlob.cpp \
     backend/VideoProcessor.cpp \
+    backend/VideoRecorder.cpp \
+    backend/TrafficCounterController.cpp \
     database/DatabaseManager.cpp \
     videosources/AbstractVideoSource.cpp \
     videosources/FileVideoSource.cpp \
@@ -27,14 +29,16 @@ SOURCES += trafficCounterApp.cpp\
     widgets/TrafficCounterMainWindow.cpp \
     widgets/VideoSourceDock.cpp \
     widgets/PlaybackActionsDock.cpp \
-    backend/VideoRecorder.cpp \
-    backend/TrafficCounterController.cpp
+    widgets/FileVideoSourceOptionsWidget.cpp \
+    widgets/IPCameraVideoSourceOptionsWidget.cpp
 
 HEADERS  += backend/CommandLineParser.h \
     backend/FrameProcessor.h \
     backend/Utils.h \
     backend/VideoProcessor.h \
     backend/VehicleBlob.h \
+    backend/VideoRecorder.h \
+    backend/TrafficCounterController.h \
     database/DatabaseManager.h \
     videosources/AbstractVideoSource.h \
     videosources/FileVideoSource.h \
@@ -43,13 +47,15 @@ HEADERS  += backend/CommandLineParser.h \
     widgets/TrafficCounterMainWindow.h \
     widgets/VideoSourceDock.h \
     widgets/PlaybackActionsDock.h \
-    backend/VideoRecorder.h \
-    backend/TrafficCounterController.h
+    widgets/FileVideoSourceOptionsWidget.h \
+    widgets/IPCameraVideoSourceOptionsWidget.h
 
 FORMS    += ui/databasesettingsdialog.ui \
     ui/trafficcountermainwindow.ui \
     ui/videosourcedock.ui \
-    ui/playbackactionsdock.ui
+    ui/playbackactionsdock.ui \
+    ui/filevideosourceoptionswidget.ui \
+    ui/ipcameravideosourceoptions.ui
 LIBS += `pkg-config opencv --libs --cflags`
 
 DISTFILES += \

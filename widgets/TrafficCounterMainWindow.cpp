@@ -25,17 +25,29 @@
  *                                                                         *
  ***************************************************************************/
 #include "widgets/TrafficCounterMainWindow.h"
-
 #include "ui_trafficcountermainwindow.h"
 
 #include <QKeyEvent>
 #include <QMessageBox>
+#include <QDebug>
 
 TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::TrafficCounterMainWindow)
+    ui(new Ui::TrafficCounterMainWindow),
+    m_playbackActionsDock(new PlaybackActionsDock),
+    m_databaseSettingsDialog(new DatabaseSettingsDialog),
+    m_videoSourceDock(new VideoSourceDock)
 {
     ui->setupUi(this);
+    addDockWidget(Qt::BottomDockWidgetArea, m_playbackActionsDock);
+    addDockWidget(Qt::RightDockWidgetArea, m_videoSourceDock);
+    connect(ui->aboutAction, &QAction::triggered, this, &TrafficCounterMainWindow::showAbout);
+    connect(ui->databaseSettingsAction, &QAction::triggered, this, &TrafficCounterMainWindow::databaseSettingsActionClicked);
+    connect(ui->playbackActionsAction, &QAction::triggered, this, &TrafficCounterMainWindow::playActionsChecked);
+    connect(ui->sourceSettingsAction, &QAction::triggered, this, &TrafficCounterMainWindow::sourceSettingsActionChecked);
+
+    connect(m_playbackActionsDock, &PlaybackActionsDock::visibilityChanged, this, &TrafficCounterMainWindow::playbackDockClosed);
+    connect(m_videoSourceDock, &VideoSourceDock::visibilityChanged, this, &TrafficCounterMainWindow::videoSourceDockClosed);
 }
 
 TrafficCounterMainWindow::~TrafficCounterMainWindow()
@@ -50,15 +62,74 @@ void TrafficCounterMainWindow::keyPressEvent(QKeyEvent * event)
         if (QMessageBox::warning(0, tr("Warning"),
                                  tr("Are you sure you want to quit?"),
                                  QMessageBox::Ok,
-                                 QMessageBox::Cancel) == QMessageBox::Ok) {}
-        //close();
+                                 QMessageBox::Cancel) == QMessageBox::Ok)
+        {
+            close();
+        }
     }
 }
 
 void TrafficCounterMainWindow::closeEvent(QCloseEvent * event)
 {
-    if (event->spontaneous())
+
+}
+
+void TrafficCounterMainWindow::showAbout()
+{
+    QMessageBox::about(0, tr("About"), "TrafficCounter v1.0");
+}
+
+void TrafficCounterMainWindow::openFileActionClicked()
+{
+
+}
+
+void TrafficCounterMainWindow::databaseSettingsActionClicked()
+{
+    if (m_databaseSettingsDialog->isHidden())
     {
-        event->ignore();
+        m_databaseSettingsDialog->show();
+    }
+
+    qDebug() << "ddd";
+}
+
+void TrafficCounterMainWindow::sourceSettingsActionChecked(bool checked)
+{
+    if (checked)
+    {
+        m_videoSourceDock->show();
+    }
+    else
+    {
+        m_videoSourceDock->hide();
+    }
+}
+
+void TrafficCounterMainWindow::playActionsChecked(bool checked)
+{
+    if (checked)
+    {
+        m_playbackActionsDock->show();
+    }
+    else
+    {
+        m_playbackActionsDock->hide();
+    }
+}
+
+void TrafficCounterMainWindow::playbackDockClosed()
+{
+    if (!m_playbackActionsDock->isVisible())
+    {
+        ui->playbackActionsAction->setChecked(false);
+    }
+}
+
+void TrafficCounterMainWindow::videoSourceDockClosed()
+{
+    if (!m_videoSourceDock->isVisible())
+    {
+        ui->sourceSettingsAction->setChecked(false);
     }
 }

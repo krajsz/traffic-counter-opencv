@@ -1,4 +1,4 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>VideoSourceDock</class>
  <widget class="QDockWidget" name="VideoSourceDock">
@@ -6,13 +6,58 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>489</width>
+    <height>293</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>DockWidget</string>
+  <property name="features">
+   <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
   </property>
-  <widget class="QWidget" name="dockWidgetContents"/>
+  <property name="windowTitle">
+   <string>Source settings</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QGroupBox" name="sourceTypeGroupBox">
+      <property name="title">
+       <string>Source type</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QRadioButton" name="fileSourceRadioButton">
+         <property name="text">
+          <string>File</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_2">
+         <property name="text">
+          <string>IP camera</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="sourceOptionsStackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="page">
+       <zorder>sourceTypeGroupBox</zorder>
+      </widget>
+      <widget class="QWidget" name="page_2"/>
+     </widget>
+    </item>
+   </layout>
+  </widget>
  </widget>
+ <resources/>
+ <connections/>
 </ui>
