@@ -27,7 +27,7 @@
 
 #include <QApplication>
 #include "widgets/TrafficCounterMainWindow.h"
-
+#include "backend/CommandLineParser.h"
 
 int main(int argc, char *argv[])
 {
@@ -37,8 +37,28 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("University of Debrecen");
     QCoreApplication::setApplicationVersion("1.0");
     QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
-    /*TrafficCounterMain w;
-    w.show();*/
+
+    CommandLineParser commandLineParser;
+    commandLineParser.parse(a);
+
+    if (commandLineParser.showGui())
+    {
+        //show gui
+    }
+    else
+    {
+        //nogui, controller
+    }
+
+    if (commandLineParser.fileNameSet())
+    {
+
+    }
+
+    if (commandLineParser.record())
+    {
+
+    }
 
     return a.exec();
 }

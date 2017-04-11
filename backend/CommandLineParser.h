@@ -28,13 +28,26 @@
 #define COMMANDLINEPARSER_H
 
 #include <QObject>
+#include <QCommandLineOption>
+#include <QCommandLineParser>
+#include <QVector>
 
 class CommandLineParser : public QObject
 {
     Q_OBJECT
 public:
     explicit CommandLineParser(QObject *parent = 0);
+    bool showGui() const;
+    bool fileNameSet() const;
+    bool record() const;
+    QString fileName() const;
+    void parse(const QCoreApplication &app);
+private:
+    QCommandLineParser m_optionsParser;
 
+    bool m_showGui;
+    bool m_fileNameSet;
+    bool m_record;
 signals:
 
 public slots:

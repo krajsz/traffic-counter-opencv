@@ -1,5 +1,5 @@
 /***************************************************************************
-    File                 : LiveIPCameraVideoSource.cpp
+    File                 : TrafficCounterController.h
     Project              : TrafficCounter
     Description          :
     --------------------------------------------------------------------
@@ -24,39 +24,20 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
-#include "LiveIPCameraVideoSource.h"
+#ifndef TRAFFICCOUNTERCONTROLLER_H
+#define TRAFFICCOUNTERCONTROLLER_H
 
-LiveIPCameraVideoSource::LiveIPCameraVideoSource(const QString& path, QObject* parent): AbstractVideoSource(path, parent)
+#include <QObject>
+
+class TrafficCounterController : public QObject
 {
-}
+    Q_OBJECT
+public:
+    explicit TrafficCounterController(QObject *parent = 0);
 
-void LiveIPCameraVideoSource::setPort(const int port)
-{
-    m_port = port;
-}
+signals:
 
-void LiveIPCameraVideoSource::setPassword(const QString &password)
-{
-    m_password = password;
-}
+public slots:
+};
 
-void LiveIPCameraVideoSource::setUserName(const QString &userName)
-{
-    m_userName = userName;
-}
-
-int LiveIPCameraVideoSource::port() const
-{
-    return m_port;
-}
-
-QString LiveIPCameraVideoSource::password() const
-{
-    return m_password;
-}
-
-QString LiveIPCameraVideoSource::userName() const
-{
-    return m_userName;
-}
-
+#endif // TRAFFICCOUNTERCONTROLLER_H

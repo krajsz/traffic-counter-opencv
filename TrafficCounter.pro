@@ -27,7 +27,8 @@ SOURCES += trafficCounterApp.cpp\
     widgets/TrafficCounterMainWindow.cpp \
     widgets/VideoSourceDock.cpp \
     widgets/PlaybackActionsDock.cpp \
-    backend/VideoRecorder.cpp
+    backend/VideoRecorder.cpp \
+    backend/TrafficCounterController.cpp
 
 HEADERS  += backend/CommandLineParser.h \
     backend/FrameProcessor.h \
@@ -42,7 +43,8 @@ HEADERS  += backend/CommandLineParser.h \
     widgets/TrafficCounterMainWindow.h \
     widgets/VideoSourceDock.h \
     widgets/PlaybackActionsDock.h \
-    backend/VideoRecorder.h
+    backend/VideoRecorder.h \
+    backend/TrafficCounterController.h
 
 FORMS    += ui/databasesettingsdialog.ui \
     ui/trafficcountermainwindow.ui \

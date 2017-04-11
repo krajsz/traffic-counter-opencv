@@ -35,7 +35,14 @@ class LiveIPCameraVideoSource : public AbstractVideoSource
 {
     Q_OBJECT
 public:
-    LiveIPCameraVideoSource();
+    explicit LiveIPCameraVideoSource(const QString& path, QObject* parent = nullptr);
+    void setPort(const int port);
+    void setUserName(const QString& userName);
+    void setPassword(const QString& password);
+
+    int port() const;
+    QString userName() const;
+    QString password() const;
 private:
     int m_port;
     QString m_userName;
