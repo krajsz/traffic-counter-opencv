@@ -39,6 +39,8 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
     m_videoSourceDock(new VideoSourceDock)
 {
     ui->setupUi(this);
+
+    ui->videoFrameDisplayLabel->setPixmap(QPixmap(":/images/noSource.png"));
     addDockWidget(Qt::BottomDockWidgetArea, m_playbackActionsDock);
     addDockWidget(Qt::RightDockWidgetArea, m_videoSourceDock);
     connect(ui->aboutAction, &QAction::triggered, this, &TrafficCounterMainWindow::showAbout);
@@ -86,12 +88,10 @@ void TrafficCounterMainWindow::openFileActionClicked()
 
 void TrafficCounterMainWindow::databaseSettingsActionClicked()
 {
-    if (m_databaseSettingsDialog->isHidden())
+    if (!m_databaseSettingsDialog->isVisible())
     {
         m_databaseSettingsDialog->show();
     }
-
-    qDebug() << "ddd";
 }
 
 void TrafficCounterMainWindow::sourceSettingsActionChecked(bool checked)

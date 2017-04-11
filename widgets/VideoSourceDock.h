@@ -47,8 +47,9 @@ public:
 
 private:
     Ui::VideoSourceDock *ui;
-    Ui::FileVideoSourceOptionsWidget m_fileVideoSourceOptions;
-    Ui::IPCameraVideoSourceOptions m_ipCameraVideoSourceOptions;
+
+    FileVideoSourceOptionsWidget* m_fileVideoSourceOptionsWidget;
+    IPCameraVideoSourceOptionsWidget* m_ipCameraVideoSourceOptionsWidget;
 
 private Q_SLOTS:
     void sourceTypeChanged(bool checked);

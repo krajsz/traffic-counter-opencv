@@ -28,19 +28,14 @@
 
 VideoSourceDock::VideoSourceDock(QWidget *parent) :
     QDockWidget(parent),
+    m_fileVideoSourceOptionsWidget(new FileVideoSourceOptionsWidget),
+    m_ipCameraVideoSourceOptionsWidget(new IPCameraVideoSourceOptionsWidget),
     ui(new Ui::VideoSourceDock)
 {
     ui->setupUi(this);
 
-    QWidget* fileSourceWidget = new QWidget;
-    m_fileVideoSourceOptions.setupUi(fileSourceWidget);
-
-    ui->sourceOptionsStackedWidget->insertWidget(0, fileSourceWidget);
-
-    QWidget* ipCameraSourceWidget = new QWidget;
-    m_ipCameraVideoSourceOptions.setupUi(ipCameraSourceWidget);
-
-    ui->sourceOptionsStackedWidget->insertWidget(1, ipCameraSourceWidget);
+    ui->sourceOptionsStackedWidget->insertWidget(0, m_fileVideoSourceOptionsWidget);
+    ui->sourceOptionsStackedWidget->insertWidget(1, m_ipCameraVideoSourceOptionsWidget);
 
     ui->sourceOptionsStackedWidget->setCurrentIndex(0);
     connect(ui->fileSourceRadioButton, &QRadioButton::toggled, this, &VideoSourceDock::sourceTypeChanged);

@@ -41,6 +41,7 @@ public:
     void pause();
     void resume();
     void setSource(AbstractVideoSource* source);
+    void process();
 
     cv::VideoCapture reader() const;
 
@@ -48,6 +49,7 @@ private:
     AbstractVideoSource* m_source;
     FrameProcessor* m_frameProcessor;
     cv::VideoCapture m_videoReader;
+    bool m_processing;
 
 signals:
     void progress(int value);

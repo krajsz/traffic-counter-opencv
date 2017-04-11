@@ -28,5 +28,9 @@
 
 FrameProcessor::FrameProcessor(QObject *parent) : QObject(parent)
 {
+}
+
+void FrameProcessor::process(const cv::Mat &frame)
+{
 
 }

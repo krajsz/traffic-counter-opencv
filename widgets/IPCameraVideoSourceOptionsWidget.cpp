@@ -1,13 +1,32 @@
 #include "IPCameraVideoSourceOptionsWidget.h"
+#include <QDebug>
 
-IPCameraVideoSourceOptions::IPCameraVideoSourceOptions(QWidget *parent) :
+IPCameraVideoSourceOptionsWidget::IPCameraVideoSourceOptionsWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::IPCameraVideoSourceOptions)
 {
     ui->setupUi(this);
+    connect(ui->urlContainsEverythingCheckBox, &QCheckBox::toggled,
+            this, &IPCameraVideoSourceOptionsWidget::urlContainsEverythingChecked);
 }
 
-IPCameraVideoSourceOptions::~IPCameraVideoSourceOptions()
+IPCameraVideoSourceOptionsWidget::~IPCameraVideoSourceOptionsWidget()
 {
     delete ui;
+}
+
+void IPCameraVideoSourceOptionsWidget::urlContainsEverythingChecked(bool checked)
+{
+    if (checked)
+    {
+        ui->portLineEdit->setEnabled(false);
+        ui->userNameLineEdit->setEnabled(false);
+        ui->passwordLineEdit->setEnabled(false);
+    }
+    else
+    {
+        ui->portLineEdit->setEnabled(true);
+        ui->userNameLineEdit->setEnabled(true);
+        ui->passwordLineEdit->setEnabled(true);
+    }
 }

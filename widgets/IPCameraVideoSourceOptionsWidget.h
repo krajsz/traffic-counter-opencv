@@ -4,16 +4,18 @@
 #include <QWidget>
 #include "ui_ipcameravideosourceoptions.h"
 
-class IPCameraVideoSourceOptions : public QWidget
+class IPCameraVideoSourceOptionsWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit IPCameraVideoSourceOptions(QWidget *parent = 0);
-    ~IPCameraVideoSourceOptions();
+    explicit IPCameraVideoSourceOptionsWidget(QWidget *parent = 0);
+    ~IPCameraVideoSourceOptionsWidget();
 
 private:
     Ui::IPCameraVideoSourceOptions *ui;
+private Q_SLOTS:
+    void urlContainsEverythingChecked(bool checked);
 };
 
 #endif // IPCAMERAVIDEOSOURCEOPTIONS_H

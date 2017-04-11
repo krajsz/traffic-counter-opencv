@@ -62,3 +62,6 @@ DISTFILES += \
     README.md \
     INSTALL
 
+RESOURCES += \
+    resources.qrc
+

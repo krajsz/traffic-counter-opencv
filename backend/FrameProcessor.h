@@ -28,6 +28,7 @@
 #define FRAMEPROCESSOR_H
 
 #include <QObject>
+#include <opencv2/opencv.hpp>
 
 class FrameProcessor : public QObject
 {
@@ -35,9 +36,12 @@ class FrameProcessor : public QObject
 public:
     explicit FrameProcessor(QObject *parent = 0);
 
+
 signals:
 
-public slots:
+public Q_SLOTS:
+    void process(const cv::Mat& frame);
+
 };
 
 #endif // FRAMEPROCESSOR_H
