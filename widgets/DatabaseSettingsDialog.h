@@ -28,7 +28,7 @@
 #define DATABASESETTINGSDIALOG_H
 
 #include <QWidget>
-#include "database/DatabaseManager.h"
+#include "backend/database/DatabaseManager.h"
 
 namespace Ui {
 class DatabaseSettingsDialog;

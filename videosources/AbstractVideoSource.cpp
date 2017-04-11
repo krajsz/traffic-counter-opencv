@@ -36,7 +36,3 @@ QString AbstractVideoSource::path() const
     return m_path;
 }
 
-cv::VideoCapture AbstractVideoSource::reader() const
-{
-    return m_videoReader;
-}

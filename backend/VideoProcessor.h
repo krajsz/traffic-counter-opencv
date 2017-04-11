@@ -28,16 +28,31 @@
 #define VIDEOPROCESSOR_H
 
 #include <QObject>
+#include "backend/FrameProcessor.h"
+#include "videosources/AbstractVideoSource.h"
 
 class VideoProcessor : public QObject
 {
     Q_OBJECT
 public:
     explicit VideoProcessor(QObject *parent = 0);
+    void start();
+    void stop();
+    void pause();
+    void resume();
+    void setSource(AbstractVideoSource* source);
+
+    cv::VideoCapture reader() const;
+
+private:
+    AbstractVideoSource* m_source;
+    FrameProcessor* m_frameProcessor;
+    cv::VideoCapture m_videoReader;
 
 signals:
-
+    void progress(int value);
 public slots:
+
 };
 
 #endif // VIDEOPROCESSOR_H

@@ -21,7 +21,7 @@ SOURCES += trafficCounterApp.cpp\
     backend/VideoProcessor.cpp \
     backend/VideoRecorder.cpp \
     backend/TrafficCounterController.cpp \
-    database/DatabaseManager.cpp \
+    backend/database/DatabaseManager.cpp \
     videosources/AbstractVideoSource.cpp \
     videosources/FileVideoSource.cpp \
     videosources/LiveIPCameraVideoSource.cpp \
@@ -39,7 +39,7 @@ HEADERS  += backend/CommandLineParser.h \
     backend/VehicleBlob.h \
     backend/VideoRecorder.h \
     backend/TrafficCounterController.h \
-    database/DatabaseManager.h \
+    backend/database/DatabaseManager.h \
     videosources/AbstractVideoSource.h \
     videosources/FileVideoSource.h \
     videosources/LiveIPCameraVideoSource.h \

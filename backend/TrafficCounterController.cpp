@@ -30,3 +30,33 @@ TrafficCounterController::TrafficCounterController(QObject *parent) : QObject(pa
 {
 
 }
+
+void TrafficCounterController::startProcessing()
+{
+
+}
+
+void TrafficCounterController::pauseProcessing()
+{
+
+}
+
+void TrafficCounterController::resumeProcessing()
+{
+
+}
+
+void TrafficCounterController::stopProcessing()
+{
+
+}
+
+void TrafficCounterController::startRecording()
+{
+
+}
+
+void TrafficCounterController::stopRecording()
+{
+
+}

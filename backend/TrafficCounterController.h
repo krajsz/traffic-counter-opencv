@@ -27,6 +27,9 @@
 #ifndef TRAFFICCOUNTERCONTROLLER_H
 #define TRAFFICCOUNTERCONTROLLER_H
 
+#include "backend/VideoProcessor.h"
+#include "backend/VideoRecorder.h"
+#include "backend/database/DatabaseManager.h"
 #include <QObject>
 
 class TrafficCounterController : public QObject
@@ -35,9 +38,22 @@ class TrafficCounterController : public QObject
 public:
     explicit TrafficCounterController(QObject *parent = 0);
 
+private:
+
+    DatabaseManager* m_databaseManager;
+    VideoProcessor* m_videoProcessor;
+    VideoRecorder* m_videoRecorder;
+
 signals:
 
 public slots:
+    void startProcessing();
+    void pauseProcessing();
+    void resumeProcessing();
+    void stopProcessing();
+
+    void startRecording();
+    void stopRecording();
 };
 
 #endif // TRAFFICCOUNTERCONTROLLER_H

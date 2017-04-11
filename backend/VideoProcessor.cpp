@@ -30,3 +30,33 @@ VideoProcessor::VideoProcessor(QObject *parent) : QObject(parent)
 {
 
 }
+
+void VideoProcessor::start()
+{
+
+}
+
+cv::VideoCapture VideoProcessor::reader() const
+{
+    return m_videoReader;
+}
+
+void VideoProcessor::stop()
+{
+
+}
+
+void VideoProcessor::resume()
+{
+
+}
+
+void VideoProcessor::pause()
+{
+
+}
+
+void VideoProcessor::setSource(AbstractVideoSource *source)
+{
+    m_source = source;
+}

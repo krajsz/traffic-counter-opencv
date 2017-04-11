@@ -38,10 +38,8 @@ public:
     explicit AbstractVideoSource(const QString& path, QObject* parent = nullptr);
 
     QString path() const;
-    cv::VideoCapture reader() const;
 
 private:
-    cv::VideoCapture m_videoReader;
 
     QString m_path;
     QSize m_imageSize;
