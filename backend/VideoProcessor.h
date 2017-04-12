@@ -51,6 +51,16 @@ public:
     QImage currentFrameQImage() const;
     cv::Mat currentFrameMat() const;
 
+    struct FileVideoInfo
+    {
+        int fps;
+        int frameCount;
+        int lenghtMs;
+        QSize frameSize;
+    };
+
+    static FileVideoInfo videoInfos(const QString& filename);
+
 private:
     AbstractVideoSource* m_source;
     FrameProcessor* m_frameProcessor;

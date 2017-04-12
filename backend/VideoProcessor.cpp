@@ -63,6 +63,14 @@ cv::Mat VideoProcessor::currentFrameMat() const
     return m_currentFrame;
 }
 
+VideoProcessor::FileVideoInfo VideoProcessor::videoInfos(const QString& filename)
+{
+    FileVideoInfo infos;
+
+
+    return infos;
+}
+
 bool VideoProcessor::isPaused() const
 {
     return m_paused;

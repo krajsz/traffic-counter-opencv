@@ -42,7 +42,7 @@ FileInfoDialog::FileInfoDialog(const QString &fileName, QWidget *parent) :
     if (file->open(QIODevice::ReadOnly))
     {
         QFileInfo infos;
-        infos.setFile(file);
+        infos.setFile(fileName);
 
         ui->createdLabel->setText(QLatin1String("Created: ") + infos.created().toString());
         ui->fileNameLabel->setText(QLatin1String("File name: ") + infos.fileName());
