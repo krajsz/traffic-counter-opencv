@@ -1,5 +1,5 @@
 /***************************************************************************
-    File                 : VideoProcessor.cpp
+    File                 : FileInfoDialog.cpp
     Project              : TrafficCounter
     Description          :
     --------------------------------------------------------------------
@@ -24,85 +24,36 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
-#include "VideoProcessor.h"
-#include "Utils.h"
-#include "videosources/FileVideoSource.h"
-#include "videosources/LiveIPCameraVideoSource.h"
-#include <QDebug>
+#include "FileInfoDialog.h"
+#include "ui_fileinfodialog.h"
 
-VideoProcessor::VideoProcessor(QObject *parent) : QObject(parent),
-    m_processing(false),
-    m_paused(false),
-    m_readyForProcessing(false)
+#include <QProcess>
+#include <QFileInfo>
+#include <QDateTime>
+
+FileInfoDialog::FileInfoDialog(const QString &fileName, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::FileInfoDialog)
 {
+    ui->setupUi(this);
 
-}
+    QIODevice* file = new QFile(fileName);
 
-void VideoProcessor::start()
-{
-    m_processing = true;
-
-    while (m_processing)
+    if (file->open(QIODevice::ReadOnly))
     {
-        process();
+        QFileInfo infos;
+        infos.setFile(file);
+
+        ui->createdLabel->setText(QLatin1String("Created: ") + infos.created().toString());
+        ui->fileNameLabel->setText(QLatin1String("File name: ") + infos.fileName());
+        ui->lastModifiedLabel->setText(QLatin1String("Last modified: ") + infos.lastModified().toString());
+        ui->ownerLabel->setText(QLatin1String("Owner: ") + infos.owner());
+
+        ui->readableLabel->setText(QLatin1String("Readable") + (infos.isReadable() ? QLatin1String("yes") : QLatin1String("no")));
     }
 }
 
-cv::VideoCapture VideoProcessor::reader() const
+FileInfoDialog::~FileInfoDialog()
 {
-    return m_videoReader;
-}
-
-QImage VideoProcessor::currentFrameQImage() const
-{
-    return Utils::Mat2QImage(m_currentFrame);
-}
-
-cv::Mat VideoProcessor::currentFrameMat() const
-{
-    return m_currentFrame;
-}
-
-bool VideoProcessor::isPaused() const
-{
-    return m_paused;
-}
-
-bool VideoProcessor::isProcessing() const
-{
-    return m_processing;
-}
-
-bool VideoProcessor::isReadyForProcessing() const
-{
-    return m_readyForProcessing;
-}
-
-void VideoProcessor::process()
-{
-    if (dynamic_cast<FileVideoSource*>(m_source))
-    {
-        qDebug() << "file";
-    }
-
-    if (dynamic_cast<LiveIPCameraVideoSource*>(m_source))
-    {
-        qDebug() << "ipcam";
-    }
-
-}
-
-void VideoProcessor::pauseResume(bool pause)
-{
-    m_paused = pause;
-}
-
-void VideoProcessor::stop()
-{
-    m_processing = false;
-}
-
-void VideoProcessor::setSource(AbstractVideoSource *source)
-{
-    m_source = source;
+    delete ui;
 }

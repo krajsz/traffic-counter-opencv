@@ -38,18 +38,31 @@ public:
     explicit VideoProcessor(QObject *parent = 0);
     void start();
     void stop();
-    void pause();
-    void resume();
+
     void setSource(AbstractVideoSource* source);
     void process();
 
+    bool isPaused() const;
+    bool isProcessing() const;
+    bool isReadyForProcessing() const;
+
     cv::VideoCapture reader() const;
+
+    QImage currentFrameQImage() const;
+    cv::Mat currentFrameMat() const;
 
 private:
     AbstractVideoSource* m_source;
     FrameProcessor* m_frameProcessor;
     cv::VideoCapture m_videoReader;
+    cv::Mat m_currentFrame;
+
     bool m_processing;
+    bool m_paused;
+    bool m_readyForProcessing;
+
+public Q_SLOTS:
+    void pauseResume(bool pause);
 
 signals:
     void progress(int value);

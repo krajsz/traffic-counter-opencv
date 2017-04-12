@@ -1,5 +1,5 @@
 /***************************************************************************
-    File                 : VideoProcessor.cpp
+    File                 : FileInfoDialog.h
     Project              : TrafficCounter
     Description          :
     --------------------------------------------------------------------
@@ -24,85 +24,25 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
-#include "VideoProcessor.h"
-#include "Utils.h"
-#include "videosources/FileVideoSource.h"
-#include "videosources/LiveIPCameraVideoSource.h"
-#include <QDebug>
+#ifndef FILEINFODIALOG_H
+#define FILEINFODIALOG_H
 
-VideoProcessor::VideoProcessor(QObject *parent) : QObject(parent),
-    m_processing(false),
-    m_paused(false),
-    m_readyForProcessing(false)
-{
+#include <QDialog>
 
+namespace Ui {
+class FileInfoDialog;
 }
 
-void VideoProcessor::start()
+class FileInfoDialog : public QDialog
 {
-    m_processing = true;
+    Q_OBJECT
 
-    while (m_processing)
-    {
-        process();
-    }
-}
+public:
+    explicit FileInfoDialog(const QString& fileName, QWidget *parent = 0);
+    ~FileInfoDialog();
 
-cv::VideoCapture VideoProcessor::reader() const
-{
-    return m_videoReader;
-}
+private:
+    Ui::FileInfoDialog *ui;
+};
 
-QImage VideoProcessor::currentFrameQImage() const
-{
-    return Utils::Mat2QImage(m_currentFrame);
-}
-
-cv::Mat VideoProcessor::currentFrameMat() const
-{
-    return m_currentFrame;
-}
-
-bool VideoProcessor::isPaused() const
-{
-    return m_paused;
-}
-
-bool VideoProcessor::isProcessing() const
-{
-    return m_processing;
-}
-
-bool VideoProcessor::isReadyForProcessing() const
-{
-    return m_readyForProcessing;
-}
-
-void VideoProcessor::process()
-{
-    if (dynamic_cast<FileVideoSource*>(m_source))
-    {
-        qDebug() << "file";
-    }
-
-    if (dynamic_cast<LiveIPCameraVideoSource*>(m_source))
-    {
-        qDebug() << "ipcam";
-    }
-
-}
-
-void VideoProcessor::pauseResume(bool pause)
-{
-    m_paused = pause;
-}
-
-void VideoProcessor::stop()
-{
-    m_processing = false;
-}
-
-void VideoProcessor::setSource(AbstractVideoSource *source)
-{
-    m_source = source;
-}
+#endif // FILEINFODIALOG_H

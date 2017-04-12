@@ -30,7 +30,8 @@ SOURCES += trafficCounterApp.cpp\
     widgets/VideoSourceDock.cpp \
     widgets/PlaybackActionsDock.cpp \
     widgets/FileVideoSourceOptionsWidget.cpp \
-    widgets/IPCameraVideoSourceOptionsWidget.cpp
+    widgets/IPCameraVideoSourceOptionsWidget.cpp \
+    widgets/FileInfoDialog.cpp
 
 HEADERS  += backend/CommandLineParser.h \
     backend/FrameProcessor.h \
@@ -48,14 +49,16 @@ HEADERS  += backend/CommandLineParser.h \
     widgets/VideoSourceDock.h \
     widgets/PlaybackActionsDock.h \
     widgets/FileVideoSourceOptionsWidget.h \
-    widgets/IPCameraVideoSourceOptionsWidget.h
+    widgets/IPCameraVideoSourceOptionsWidget.h \
+    widgets/FileInfoDialog.h
 
 FORMS    += ui/databasesettingsdialog.ui \
     ui/trafficcountermainwindow.ui \
     ui/videosourcedock.ui \
     ui/playbackactionsdock.ui \
     ui/filevideosourceoptionswidget.ui \
-    ui/ipcameravideosourceoptions.ui
+    ui/ipcameravideosourceoptions.ui \
+    ui/fileinfodialog.ui
 LIBS += `pkg-config opencv --libs --cflags`
 
 DISTFILES += \
