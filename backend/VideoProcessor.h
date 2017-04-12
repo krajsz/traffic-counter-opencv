@@ -53,9 +53,9 @@ public:
 
     struct FileVideoInfo
     {
-        int fps;
+        double fps;
         int frameCount;
-        int lenghtMs;
+        QString lenghtFormatted;
         QSize frameSize;
     };
 
