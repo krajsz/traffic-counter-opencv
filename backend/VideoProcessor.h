@@ -28,6 +28,8 @@
 #define VIDEOPROCESSOR_H
 
 #include <QObject>
+#include <QTimer>
+
 #include "backend/FrameProcessor.h"
 #include "videosources/FileVideoSource.h"
 
@@ -66,6 +68,8 @@ private:
     bool m_paused;
     bool m_readyForProcessing;
 
+
+    QTimer* m_updateImageTimer;
 public Q_SLOTS:
     void pauseResume(bool pause);
 

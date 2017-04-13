@@ -27,9 +27,12 @@
 #include "DatabaseManager.h"
 #include <QApplication>
 #include <QtSql>
+#include <QDebug>
+#include <QVector>
 
 DatabaseManager::DatabaseManager(QObject *parent) : QObject(parent),
-    m_databaseConnectionsFile(QApplication::applicationDirPath().left(1) + ":/dbConnections.ini")
+    m_databaseConnectionsFile(QApplication::applicationDirPath().left(1) + ":/dbConnections.ini"),
+    m_currentConnectionIndex(-1)
 {
     loadConnections();
 }
@@ -44,7 +47,7 @@ QStringList DatabaseManager::drivers()
     return QSqlDatabase::drivers();
 }
 
-QVector<DatabaseManager::SQLConnection *> DatabaseManager::connections() const
+QList<DatabaseManager::SQLConnection *> DatabaseManager::connections() const
 {
     return m_connections;
 }
@@ -64,14 +67,39 @@ QSqlError DatabaseManager::testConnection(SQLConnection* conn)
     return QSqlError();
 }
 
-QSqlError DatabaseManager::deleteConnection(const int connectionIndex)
+void DatabaseManager::deleteConnection(const int connectionIndex)
 {
-    return QSqlError();
+    if (connectionIndex != -1)
+    {
+        const int connectionc = m_connections.size();
+        qDebug() << "connectionsCountBeforeDelete: " << QString::number(connectionc);
+        if (connectionc != 0)
+        {
+            qDebug() << "connectionIndexToRemove: " << QString::number(connectionIndex);
+            m_connections.removeAt(connectionIndex);
+            if (connectionIndex == 0)
+            {
+                if (connectionc == 1)
+                {
+                    currentConnectionChanged(0);
+                }
+                else
+                {
+                    currentConnectionChanged(connectionIndex+1);
+                }
+            }
+            else
+            {
+                currentConnectionChanged(connectionIndex-1);
+            }
+            qDebug() << "currentConnectionChangedAfter: " << QString::number(m_currentConnectionIndex);
+        }
+    }
 }
 
-bool DatabaseManager::addConnection(const SQLConnection* conn)
+void DatabaseManager::addConnection(SQLConnection *&conn)
 {
-    return false;
+    m_connections.append(conn);
 }
 
 QSqlError DatabaseManager::initDb()
@@ -84,7 +112,7 @@ void DatabaseManager::saveConnections() const
     QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
 
     connectionSetting.beginWriteArray(QLatin1String("Connections"));
-
+    qDebug() << "saving connections";
     for(int i = 0; i < m_connections.size(); ++i)
     {
         connectionSetting.setArrayIndex(i);
@@ -106,9 +134,10 @@ void DatabaseManager::loadConnections()
 {
     QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
 
+    qDebug() << connectionSetting.status();
+
     const int savedConnectionsSize = connectionSetting.beginReadArray(QLatin1String("Connections"));
     m_connections.reserve(savedConnectionsSize);
-    m_connections.resize(savedConnectionsSize);
     for(int i = 0; i < savedConnectionsSize; ++i)
     {
         connectionSetting.setArrayIndex(i);
@@ -133,30 +162,48 @@ void DatabaseManager::currentConnectionChanged(const int index)
 
 void DatabaseManager::driverChanged(const int index)
 {
-
+    if (m_currentConnectionIndex != -1)
+    {
+        m_connections[m_currentConnectionIndex]->vendorIndex = index;
+    }
 }
 
 void DatabaseManager::hostChanged(const QString& newHost)
 {
-
+    if (m_currentConnectionIndex != -1)
+    {
+        m_connections[m_currentConnectionIndex]->hostName = newHost;
+    }
 }
 
-void DatabaseManager::portChanged(const QString& newPort)
+void DatabaseManager::portChanged(const int& newPort)
 {
-
+    if (m_currentConnectionIndex != -1)
+    {
+        m_connections[m_currentConnectionIndex]->port = newPort;
+    }
 }
 
 void DatabaseManager::connectionNameChanged(const QString &newName)
 {
-
+    if (m_currentConnectionIndex != -1)
+    {
+        m_connections[m_currentConnectionIndex]->name = newName;
+    }
 }
 
 void DatabaseManager::userNameChanged(const QString &newUserName)
 {
-
+    if (m_currentConnectionIndex != -1)
+    {
+        m_connections[m_currentConnectionIndex]->userName = newUserName;
+    }
 }
 
 void DatabaseManager::passwordChanged(const QString &newPassword)
 {
-
+    if (m_currentConnectionIndex != -1)
+    {
+        m_connections[m_currentConnectionIndex]->password = newPassword;
+    }
 }

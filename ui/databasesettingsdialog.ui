@@ -15,7 +15,14 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QListWidget" name="sqlConnectionsListWidget"/>
+    <widget class="QListWidget" name="sqlConnectionsListWidget">
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="0" column="1">
     <layout class="QVBoxLayout" name="verticalLayout_2" stretch="7,0">
@@ -112,21 +119,21 @@
        <item>
         <widget class="QPushButton" name="addNewConnectionButton">
          <property name="text">
-          <string>Add</string>
+          <string>&amp;Add</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="removeConnectionButton">
          <property name="text">
-          <string>Remove</string>
+          <string>&amp;Remove</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="testConnectionButton">
          <property name="text">
-          <string>Test</string>
+          <string>&amp;Test</string>
          </property>
         </widget>
        </item>

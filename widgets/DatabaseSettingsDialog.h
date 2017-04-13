@@ -52,10 +52,10 @@ private:
     DatabaseManager* m_dbManager;
 private Q_SLOTS:
     void addConnection();
-    void removeConnection(const int index);
+    void removeConnection();
     void testConnection();
 
-    void connectionSelectionChanged(const int index);
+    void connectionSelectionChanged(int index);
     void driverChanged(const int index);
     void hostChanged(const QString& newHost);
     void portChanged(const QString& newPort);

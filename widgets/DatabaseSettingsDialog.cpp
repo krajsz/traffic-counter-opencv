@@ -29,6 +29,8 @@
 #include <QMessageBox>
 #include <QSqlError>
 
+#include <QDebug>
+
 DatabaseSettingsDialog::DatabaseSettingsDialog(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DatabaseSettingsDialog), m_dbManager(new DatabaseManager)
@@ -36,7 +38,14 @@ DatabaseSettingsDialog::DatabaseSettingsDialog(QWidget *parent) :
     ui->setupUi(this);
     ui->passwordLineEdit->setEchoMode(QLineEdit::Password);
 
+    ui->sqlDriversComboBox->addItems(DatabaseManager::drivers());
     initSlots();
+
+    ui->removeConnectionButton->setEnabled(false);
+
+
+
+
 }
 
 DatabaseSettingsDialog::~DatabaseSettingsDialog()
@@ -65,6 +74,8 @@ void DatabaseSettingsDialog::initSlots()
     connect(ui->sqlDriversComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DatabaseSettingsDialog::driverChanged);
     connect(ui->userNameLineEdit, &QLineEdit::textEdited, this, &DatabaseSettingsDialog::userNameChanged);
     connect(ui->passwordLineEdit, &QLineEdit::textEdited, this, &DatabaseSettingsDialog::passwordChanged);
+
+    connect(ui->sqlConnectionsListWidget, &QListWidget::currentRowChanged, this, &DatabaseSettingsDialog::connectionSelectionChanged);
 }
 
 void DatabaseSettingsDialog::addConnection()
@@ -76,7 +87,26 @@ void DatabaseSettingsDialog::addConnection()
     }
 
     DatabaseManager::SQLConnection* conn = new DatabaseManager::SQLConnection;
+    conn->name = ui->connectionNameLineEdit->text();
+    conn->port = ui->portLineEdit->text().toInt();
+    conn->password = ui->passwordLineEdit->text();
+    conn->userName = ui->userNameLineEdit->text();
+    conn->vendorIndex = ui->sqlDriversComboBox->currentIndex();
+    conn->hostName = ui->hostLineEdit->text();
+
+    //conn->dbName
+
     m_dbManager->addConnection(conn);
+    QListWidgetItem* newConnectionItem = new QListWidgetItem(conn->name);
+    newConnectionItem->setSelected(true);
+    ui->sqlConnectionsListWidget->addItem(newConnectionItem);
+
+    if (!ui->removeConnectionButton->isEnabled())
+    {
+        ui->removeConnectionButton->setEnabled(true);
+    }
+
+    m_dbManager->currentConnectionChanged(ui->sqlConnectionsListWidget->currentRow());
 }
 
 void DatabaseSettingsDialog::driverChanged(const int index)
@@ -87,11 +117,21 @@ void DatabaseSettingsDialog::driverChanged(const int index)
     }
 }
 
-void DatabaseSettingsDialog::removeConnection(const int index)
+void DatabaseSettingsDialog::removeConnection()
 {
+    const int index = ui->sqlConnectionsListWidget->currentRow();
     if (index != -1)
     {
+        qDebug() << "indexToRemove: " << QString::number(index);
         m_dbManager->deleteConnection(index);
+        qDebug() << "count: " << QString::number(ui->sqlConnectionsListWidget->count());
+        qDebug() << "connectionsCountAfterDelete: " << QString::number(m_dbManager->connections().size());
+        delete ui->sqlConnectionsListWidget->item(index);
+
+        if (m_dbManager->connections().size() == 0)
+        {
+            ui->removeConnectionButton->setEnabled(false);
+        }
     }
 }
 
@@ -116,7 +156,7 @@ void DatabaseSettingsDialog::testConnection()
     }
 }
 
-void DatabaseSettingsDialog::connectionSelectionChanged(const int index)
+void DatabaseSettingsDialog::connectionSelectionChanged(int index)
 {
     if (index != -1)
     {
@@ -140,7 +180,7 @@ void DatabaseSettingsDialog::hostChanged(const QString& newHost)
 
 void DatabaseSettingsDialog::portChanged(const QString &newPort)
 {
-    m_dbManager->portChanged(newPort);
+    m_dbManager->portChanged(newPort.toInt());
 }
 
 void DatabaseSettingsDialog::connectionNameChanged(const QString &newName)

@@ -25,19 +25,25 @@
  *                                                                         *
  ***************************************************************************/
 #include "VideoSourceDock.h"
+#include <QGroupBox>
 
 VideoSourceDock::VideoSourceDock(QWidget *parent) :
     QDockWidget(parent),
     m_fileVideoSourceOptionsWidget(new FileVideoSourceOptionsWidget),
     m_ipCameraVideoSourceOptionsWidget(new IPCameraVideoSourceOptionsWidget),
+    m_cameraVideoSourceOptionsWidget(new CameraVideoSourceOptionsWidget),
     ui(new Ui::VideoSourceDock)
 {
     ui->setupUi(this);
 
     ui->sourceOptionsStackedWidget->insertWidget(0, m_fileVideoSourceOptionsWidget);
     ui->sourceOptionsStackedWidget->insertWidget(1, m_ipCameraVideoSourceOptionsWidget);
+    ui->sourceOptionsStackedWidget->insertWidget(2, m_cameraVideoSourceOptionsWidget);
 
     ui->sourceOptionsStackedWidget->setCurrentIndex(0);
+
+    connect(ui->ipCameraSourceRadioButton, &QRadioButton::toggled, this, &VideoSourceDock::sourceTypeChanged);
+    connect(ui->webcamSourceRadioButton, &QRadioButton::toggled, this, &VideoSourceDock::sourceTypeChanged);
     connect(ui->fileSourceRadioButton, &QRadioButton::toggled, this, &VideoSourceDock::sourceTypeChanged);
 }
 
@@ -48,12 +54,17 @@ VideoSourceDock::~VideoSourceDock()
 
 void VideoSourceDock::sourceTypeChanged(bool checked)
 {
-    if (checked)
+    Q_UNUSED(checked)
+    if (ui->fileSourceRadioButton->isChecked())
     {
         ui->sourceOptionsStackedWidget->setCurrentIndex(0);
     }
-    else
+    else if (ui->ipCameraSourceRadioButton->isChecked())
     {
         ui->sourceOptionsStackedWidget->setCurrentIndex(1);
+    }
+    else
+    {
+        ui->sourceOptionsStackedWidget->setCurrentIndex(2);
     }
 }

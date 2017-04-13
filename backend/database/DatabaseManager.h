@@ -53,23 +53,23 @@ public:
     QSqlError testConnection(const int connectionIndex);
     QSqlError testConnection(SQLConnection* conn);
 
-    QSqlError deleteConnection(const int connectionIndex);
-    bool addConnection(const SQLConnection* conn);
+    void deleteConnection(const int connectionIndex);
+    void addConnection(SQLConnection *&conn);
 
     QSqlError initDb();
 
-    QVector<SQLConnection*> connections() const;
+    QList<SQLConnection*> connections() const;
 
     void currentConnectionChanged(const int index);
     void driverChanged(const int index);
     void hostChanged(const QString& newHost);
-    void portChanged(const QString& newPort);
+    void portChanged(const int &newPort);
     void connectionNameChanged(const QString &newName);
     void userNameChanged(const QString &newUserName);
     void passwordChanged(const QString &newPassword);
 
 private:
-    QVector<SQLConnection*> m_connections;
+    QList<SQLConnection*> m_connections;
     QString m_databaseConnectionsFile;
     void loadConnections();
     QSqlDatabase m_database;

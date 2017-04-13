@@ -1,5 +1,5 @@
 /***************************************************************************
-    File                 : VideoSourceDock.h
+    File                 : CameraVideoSource.cpp
     Project              : TrafficCounter
     Description          :
     --------------------------------------------------------------------
@@ -24,38 +24,19 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
-#ifndef VIDEOSOURCEDOCK_H
-#define VIDEOSOURCEDOCK_H
+#include "CameraVideoSource.h"
 
-#include <QDockWidget>
-#include "widgets/FileVideoSourceOptionsWidget.h"
-#include "widgets/IPCameraVideoSourceOptionsWidget.h"
-#include "widgets/CameraVideoSourceOptionsWidget.h"
-
-#include "ui_videosourcedock.h"
-#include <QStackedWidget>
-
-namespace Ui {
-class VideoSourceDock;
+CameraVideoSource::CameraVideoSource(const QString &path, QObject *parent) : AbstractVideoSource(path, parent)
+{
 }
 
-class VideoSourceDock : public QDockWidget
+
+QCameraInfo CameraVideoSource::infos() const
 {
-    Q_OBJECT
+    return m_infos;
+}
 
-public:
-    explicit VideoSourceDock(QWidget *parent = 0);
-    ~VideoSourceDock();
-
-private:
-    Ui::VideoSourceDock *ui;
-
-    FileVideoSourceOptionsWidget* m_fileVideoSourceOptionsWidget;
-    IPCameraVideoSourceOptionsWidget* m_ipCameraVideoSourceOptionsWidget;
-    CameraVideoSourceOptionsWidget* m_cameraVideoSourceOptionsWidget;
-
-private Q_SLOTS:
-    void sourceTypeChanged(bool checked);
-};
-
-#endif // VIDEOSOURCEDOCK_H
+void CameraVideoSource::setInfos(const QCameraInfo &info)
+{
+    m_infos = info;
+}

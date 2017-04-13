@@ -21,26 +21,26 @@
        <item>
         <widget class="QLabel" name="filePathLabel">
          <property name="text">
-          <string>File path</string>
+          <string>File path:</string>
          </property>
         </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="filePathLineEdit"/>
        </item>
       </layout>
      </item>
      <item>
+      <widget class="QLineEdit" name="filePathLineEdit"/>
+     </item>
+     <item>
       <widget class="QPushButton" name="openFileButton">
        <property name="text">
-        <string>Open file</string>
+        <string>&amp;Open file</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="fileInfoButton">
        <property name="text">
-        <string>Info</string>
+        <string>&amp;Info</string>
        </property>
       </widget>
      </item>

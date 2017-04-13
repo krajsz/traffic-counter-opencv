@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
+QT       += core gui sql multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -31,7 +31,9 @@ SOURCES += trafficCounterApp.cpp\
     widgets/PlaybackActionsDock.cpp \
     widgets/FileVideoSourceOptionsWidget.cpp \
     widgets/IPCameraVideoSourceOptionsWidget.cpp \
-    widgets/FileInfoDialog.cpp
+    widgets/FileInfoDialog.cpp \
+    widgets/CameraVideoSourceOptionsWidget.cpp \
+    videosources/CameraVideoSource.cpp
 
 HEADERS  += backend/CommandLineParser.h \
     backend/FrameProcessor.h \
@@ -50,7 +52,9 @@ HEADERS  += backend/CommandLineParser.h \
     widgets/PlaybackActionsDock.h \
     widgets/FileVideoSourceOptionsWidget.h \
     widgets/IPCameraVideoSourceOptionsWidget.h \
-    widgets/FileInfoDialog.h
+    widgets/FileInfoDialog.h \
+    widgets/CameraVideoSourceOptionsWidget.h \
+    videosources/CameraVideoSource.h
 
 FORMS    += ui/databasesettingsdialog.ui \
     ui/trafficcountermainwindow.ui \
@@ -58,7 +62,8 @@ FORMS    += ui/databasesettingsdialog.ui \
     ui/playbackactionsdock.ui \
     ui/filevideosourceoptionswidget.ui \
     ui/ipcameravideosourceoptions.ui \
-    ui/fileinfodialog.ui
+    ui/fileinfodialog.ui \
+    ui/cameravideosourceoptionswidget.ui
 LIBS += `pkg-config opencv --libs --cflags`
 
 DISTFILES += \

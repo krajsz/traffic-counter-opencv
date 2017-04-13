@@ -1,5 +1,5 @@
 /***************************************************************************
-    File                 : VideoSourceDock.h
+    File                 : CameraVideoSourceOptionsWidget.cpp
     Project              : TrafficCounter
     Description          :
     --------------------------------------------------------------------
@@ -24,38 +24,36 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
-#ifndef VIDEOSOURCEDOCK_H
-#define VIDEOSOURCEDOCK_H
+#include "CameraVideoSourceOptionsWidget.h"
+#include "ui_cameravideosourceoptionswidget.h"
+#include <QCamera>
+#include <QCameraInfo>
 
-#include <QDockWidget>
-#include "widgets/FileVideoSourceOptionsWidget.h"
-#include "widgets/IPCameraVideoSourceOptionsWidget.h"
-#include "widgets/CameraVideoSourceOptionsWidget.h"
+#include <QDebug>
+CameraVideoSourceOptionsWidget::CameraVideoSourceOptionsWidget(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::CameraVideoSourceOptionsWidget)
+{
+    ui->setupUi(this);
+    qDebug() <<"something";
 
-#include "ui_videosourcedock.h"
-#include <QStackedWidget>
+    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+    foreach (const QCameraInfo &cameraInfo, cameras) {
+        QListWidgetItem* cameraDescription = new QListWidgetItem(cameraInfo.deviceName() +
+                                                                 QLatin1String(" ") + cameraInfo.description());
 
-namespace Ui {
-class VideoSourceDock;
+
+        ui->availableCamerasListWidget->addItem(cameraDescription);
+    }
+    if (!ui->availableCamerasListWidget->count())
+    {
+        QListWidgetItem* noCamerasItem = new QListWidgetItem(QLatin1String("No cameras found."));
+        noCamerasItem->setFlags(noCamerasItem->flags()& ~Qt::ItemIsSelectable);
+        ui->availableCamerasListWidget->addItem(noCamerasItem);
+    }
 }
 
-class VideoSourceDock : public QDockWidget
+CameraVideoSourceOptionsWidget::~CameraVideoSourceOptionsWidget()
 {
-    Q_OBJECT
-
-public:
-    explicit VideoSourceDock(QWidget *parent = 0);
-    ~VideoSourceDock();
-
-private:
-    Ui::VideoSourceDock *ui;
-
-    FileVideoSourceOptionsWidget* m_fileVideoSourceOptionsWidget;
-    IPCameraVideoSourceOptionsWidget* m_ipCameraVideoSourceOptionsWidget;
-    CameraVideoSourceOptionsWidget* m_cameraVideoSourceOptionsWidget;
-
-private Q_SLOTS:
-    void sourceTypeChanged(bool checked);
-};
-
-#endif // VIDEOSOURCEDOCK_H
+    delete ui;
+}
