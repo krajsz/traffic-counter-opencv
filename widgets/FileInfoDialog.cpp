@@ -30,8 +30,9 @@
 
 #include <QProcess>
 #include <QFileInfo>
+#include <QDateTime>
 
-FileInfoDialog::FileInfoDialog(const QString &fileName, QWidget *parent) :
+FileInfoDialog::FileInfoDialog(const QString& fileName, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::FileInfoDialog)
 {
@@ -49,13 +50,14 @@ FileInfoDialog::FileInfoDialog(const QString &fileName, QWidget *parent) :
         ui->fileNameLabel->setText(QLatin1String("File name: ") + infos.fileName());
         ui->lastModifiedLabel->setText(QLatin1String("Last modified: ") + infos.lastModified().toString());
         ui->ownerLabel->setText(QLatin1String("Owner: ") + infos.owner());
-        ui->readableLabel->setText(QLatin1String("Readable") + (infos.isReadable() ? QLatin1String("yes") : QLatin1String("no")));
+        ui->readableLabel->setText(QLatin1String("Readable: ") + (infos.isReadable() ? QLatin1String("yes") : QLatin1String("no")));
         ui->sizeLabel->setText(QLatin1String("Size: ") + QString::number(infos.size()) + QLatin1String(" bytes"));
 
-        VideoProcessor::FileVideoInfo videoInfos = VideoProcessor::videoInfos(fileName);
+        FileVideoSource::VideoInfo videoInfos = VideoProcessor::videoInfos(fileName);
 
         ui->frameSizeLabel->setText(QLatin1String("Frame size: ") + QString::number(videoInfos.frameSize.width()) +
-                QString::number(videoInfos.frameSize.height())) ;
+                                    QLatin1String("x ") +
+                                    QString::number(videoInfos.frameSize.height())) ;
         ui->fpsLabel->setText(QLatin1String("FPS: ") + QString::number(videoInfos.fps));
         ui->framesLabel->setText(QLatin1String("Frames: ") + QString::number(videoInfos.frameCount));
         ui->lengthLabel->setText(QLatin1String("Length: ") + videoInfos.lenghtFormatted);

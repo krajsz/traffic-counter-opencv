@@ -40,13 +40,19 @@ public:
     void setUserName(const QString& userName);
     void setPassword(const QString& password);
 
-    int port() const;
-    QString userName() const;
-    QString password() const;
+    struct VideoInfo
+    {
+        int port;
+        QString userName;
+        QString password;
+        QSize frameSize;
+    };
+
+    VideoInfo infos() const;
+
 private:
-    int m_port;
-    QString m_userName;
-    QString m_password;
+    VideoInfo m_infos;
+
 };
 
 #endif // LIVEIPCAMERAVIDEOSOURCE_H

@@ -34,10 +34,21 @@ class FileVideoSource : public AbstractVideoSource
     Q_OBJECT
 public:
     FileVideoSource(const QString& path, QObject* parent = nullptr);
+
+    struct VideoInfo
+    {
+        double fps;
+        int frameCount;
+        QString lenghtFormatted;
+        QSize frameSize;
+    };
+
+    VideoInfo infos() const;
+    void setInfos(const VideoInfo& info);
 private:
-    int m_lengthInMS;
-    int m_fps;
-    int m_frameCount;
+
+    VideoInfo m_infos;
+
 };
 
 #endif // FILEVIDEOSOURCE_H

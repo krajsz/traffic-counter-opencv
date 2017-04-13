@@ -36,13 +36,11 @@ class AbstractVideoSource : public QObject
     Q_OBJECT
 public:
     explicit AbstractVideoSource(const QString& path, QObject* parent = nullptr);
-
     QString path() const;
 
 private:
 
     QString m_path;
-    QSize m_imageSize;
 };
 
 #endif // ABSTRACTVIDEOSOURCE_H

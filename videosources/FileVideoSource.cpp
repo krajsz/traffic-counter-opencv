@@ -29,3 +29,14 @@
 FileVideoSource::FileVideoSource(const QString &path, QObject *parent) : AbstractVideoSource(path, parent)
 {
 }
+
+
+FileVideoSource::VideoInfo FileVideoSource::infos() const
+{
+    return m_infos;
+}
+
+void FileVideoSource::setInfos(const FileVideoSource::VideoInfo &info)
+{
+    m_infos = info;
+}

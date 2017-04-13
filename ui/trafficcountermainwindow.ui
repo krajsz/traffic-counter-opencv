@@ -14,8 +14,8 @@
    <string>TrafficCounter</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <widget class="QLabel" name="videoFrameDisplayLabel">
@@ -49,6 +49,8 @@
      <string>&amp;File</string>
     </property>
     <addaction name="openVideoAction"/>
+    <addaction name="separator"/>
+    <addaction name="exitAction"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -110,6 +112,11 @@
   <action name="databaseSettingsAction">
    <property name="text">
     <string>&amp;Database</string>
+   </property>
+  </action>
+  <action name="exitAction">
+   <property name="text">
+    <string>&amp;Exit</string>
    </property>
   </action>
  </widget>

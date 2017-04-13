@@ -43,6 +43,7 @@ private:
     Ui::FileVideoSourceOptionsWidget *ui;
 private Q_SLOTS:
     void showFileInfoDialog();
+    void openFile();
 };
 
 #endif // FILEVIDEOSOURCEOPTIONSWIDGET_H

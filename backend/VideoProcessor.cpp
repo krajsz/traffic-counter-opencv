@@ -38,8 +38,37 @@ VideoProcessor::VideoProcessor(QObject *parent) : QObject(parent),
 
 }
 
+void VideoProcessor::initialize()
+{
+    if (dynamic_cast<FileVideoSource*>(m_source))
+    {
+        m_videoReader.open(m_source->path().toStdString());
+        if (m_videoReader.isOpened())
+        {
+            m_readyForProcessing = true;
+        }
+    }
+
+    if (dynamic_cast<LiveIPCameraVideoSource*>(m_source))
+    {
+        qDebug() << "ipcam";
+    }
+
+}
+
 void VideoProcessor::start()
 {
+
+    if (dynamic_cast<FileVideoSource*>(m_source))
+    {
+        qDebug() << "file";
+    }
+
+    if (dynamic_cast<LiveIPCameraVideoSource*>(m_source))
+    {
+        qDebug() << "ipcam";
+    }
+
     m_processing = true;
 
     while (m_processing)
@@ -63,10 +92,9 @@ cv::Mat VideoProcessor::currentFrameMat() const
     return m_currentFrame;
 }
 
-VideoProcessor::FileVideoInfo VideoProcessor::videoInfos(const QString& filename)
+FileVideoSource::VideoInfo VideoProcessor::videoInfos(const QString& filename)
 {
-    FileVideoInfo infos;
-
+    FileVideoSource::VideoInfo infos;
 
     return infos;
 }
@@ -88,14 +116,9 @@ bool VideoProcessor::isReadyForProcessing() const
 
 void VideoProcessor::process()
 {
-    if (dynamic_cast<FileVideoSource*>(m_source))
+    if (!m_paused)
     {
-        qDebug() << "file";
-    }
 
-    if (dynamic_cast<LiveIPCameraVideoSource*>(m_source))
-    {
-        qDebug() << "ipcam";
     }
 
 }

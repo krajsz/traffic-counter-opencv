@@ -25,13 +25,19 @@
  *                                                                         *
  ***************************************************************************/
 #include "FileVideoSourceOptionsWidget.h"
+#include <QFile>
+#include <QFileDialog>
+
+#include <QDebug>
 
 FileVideoSourceOptionsWidget::FileVideoSourceOptionsWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FileVideoSourceOptionsWidget)
 {
     ui->setupUi(this);
-    connect(ui->fileInfoButton, &QPushButton::toggled, this, &FileVideoSourceOptionsWidget::showFileInfoDialog);
+
+    connect(ui->openFileButton, &QPushButton::clicked, this, &FileVideoSourceOptionsWidget::openFile);
+    connect(ui->fileInfoButton, &QPushButton::clicked, this, &FileVideoSourceOptionsWidget::showFileInfoDialog);
 }
 
 FileVideoSourceOptionsWidget::~FileVideoSourceOptionsWidget()
@@ -41,8 +47,20 @@ FileVideoSourceOptionsWidget::~FileVideoSourceOptionsWidget()
 
 void FileVideoSourceOptionsWidget::showFileInfoDialog()
 {
-    FileInfoDialog* fileInfoDialog = new FileInfoDialog(ui->filePathLineEdit->text());
+    if (!ui->filePathLineEdit->text().isEmpty())
+    {
+        QFile* file = new QFile(ui->filePathLineEdit->text());
+        if (file->open(QFile::ReadOnly))
+        {
+            delete file;
+            FileInfoDialog* fileInfoDialog = new FileInfoDialog(ui->filePathLineEdit->text());
 
-    fileInfoDialog->show();
+            fileInfoDialog->show();
+        }
+    }
+}
 
+void FileVideoSourceOptionsWidget::openFile()
+{
+    ui->filePathLineEdit->setText(QFileDialog::getOpenFileName(0, "Select your video", QDir::homePath()));
 }

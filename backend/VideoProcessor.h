@@ -29,7 +29,7 @@
 
 #include <QObject>
 #include "backend/FrameProcessor.h"
-#include "videosources/AbstractVideoSource.h"
+#include "videosources/FileVideoSource.h"
 
 class VideoProcessor : public QObject
 {
@@ -42,6 +42,8 @@ public:
     void setSource(AbstractVideoSource* source);
     void process();
 
+    void initialize();
+
     bool isPaused() const;
     bool isProcessing() const;
     bool isReadyForProcessing() const;
@@ -51,19 +53,12 @@ public:
     QImage currentFrameQImage() const;
     cv::Mat currentFrameMat() const;
 
-    struct FileVideoInfo
-    {
-        double fps;
-        int frameCount;
-        QString lenghtFormatted;
-        QSize frameSize;
-    };
-
-    static FileVideoInfo videoInfos(const QString& filename);
+    static FileVideoSource::VideoInfo videoInfos(const QString& filename);
 
 private:
     AbstractVideoSource* m_source;
     FrameProcessor* m_frameProcessor;
+
     cv::VideoCapture m_videoReader;
     cv::Mat m_currentFrame;
 

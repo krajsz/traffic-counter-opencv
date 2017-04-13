@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>78</height>
+    <width>394</width>
+    <height>103</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,6 +29,13 @@
         <widget class="QLineEdit" name="filePathLineEdit"/>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="openFileButton">
+       <property name="text">
+        <string>Open file</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="fileInfoButton">

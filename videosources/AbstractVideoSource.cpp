@@ -28,7 +28,6 @@
 
 AbstractVideoSource::AbstractVideoSource(const QString &path, QObject *parent):QObject(parent), m_path(path)
 {
-
 }
 
 QString AbstractVideoSource::path() const

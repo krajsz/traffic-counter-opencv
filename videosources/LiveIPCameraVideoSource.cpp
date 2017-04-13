@@ -32,31 +32,21 @@ LiveIPCameraVideoSource::LiveIPCameraVideoSource(const QString& path, QObject* p
 
 void LiveIPCameraVideoSource::setPort(const int port)
 {
-    m_port = port;
+    m_infos.port = port;
 }
 
 void LiveIPCameraVideoSource::setPassword(const QString &password)
 {
-    m_password = password;
+    m_infos.password = password;
 }
 
 void LiveIPCameraVideoSource::setUserName(const QString &userName)
 {
-    m_userName = userName;
+    m_infos.userName = userName;
 }
 
-int LiveIPCameraVideoSource::port() const
+LiveIPCameraVideoSource::VideoInfo LiveIPCameraVideoSource::infos() const
 {
-    return m_port;
-}
-
-QString LiveIPCameraVideoSource::password() const
-{
-    return m_password;
-}
-
-QString LiveIPCameraVideoSource::userName() const
-{
-    return m_userName;
+    return m_infos;
 }
 
