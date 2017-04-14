@@ -31,7 +31,7 @@
 #include <QVector>
 
 DatabaseManager::DatabaseManager(QObject *parent) : QObject(parent),
-    m_databaseConnectionsFile(QApplication::applicationDirPath().left(1) + ":/dbConnections.ini"),
+    m_databaseConnectionsFile(QApplication::applicationDirPath() + "/dbConnections.ini"),
     m_currentConnectionIndex(-1)
 {
     loadConnections();
@@ -111,8 +111,11 @@ void DatabaseManager::saveConnections() const
 {
     QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
 
+
+    qDebug() << m_databaseConnectionsFile;
+
     connectionSetting.beginWriteArray(QLatin1String("Connections"));
-    qDebug() << "saving connections";
+    qDebug() << "saving connections: " << m_connections.size();
     for(int i = 0; i < m_connections.size(); ++i)
     {
         connectionSetting.setArrayIndex(i);
@@ -127,16 +130,16 @@ void DatabaseManager::saveConnections() const
     }
 
     connectionSetting.endArray();
-
 }
 
 void DatabaseManager::loadConnections()
 {
     QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
 
-    qDebug() << connectionSetting.status();
-
     const int savedConnectionsSize = connectionSetting.beginReadArray(QLatin1String("Connections"));
+
+    qDebug() << "loading connections: " << connectionSetting.status() << ", " << QString::number(savedConnectionsSize);
+
     m_connections.reserve(savedConnectionsSize);
     for(int i = 0; i < savedConnectionsSize; ++i)
     {
@@ -150,7 +153,7 @@ void DatabaseManager::loadConnections()
         conn->userName = connectionSetting.value(QLatin1String("userName")).toString();
         conn->password = connectionSetting.value(QLatin1String("password")).toString();
 
-        m_connections[i] = conn;
+        m_connections.append(conn);
     }
     connectionSetting.endArray();;
 }
@@ -206,4 +209,16 @@ void DatabaseManager::passwordChanged(const QString &newPassword)
     {
         m_connections[m_currentConnectionIndex]->password = newPassword;
     }
+}
+
+DatabaseManager* DatabaseManager::ptr = 0;
+
+DatabaseManager* DatabaseManager::instance()
+{
+    if (ptr == nullptr)
+    {
+        ptr = new DatabaseManager;
+    }
+
+    return ptr;
 }

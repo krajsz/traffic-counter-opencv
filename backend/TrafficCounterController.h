@@ -37,7 +37,7 @@ class TrafficCounterController : public QObject
     Q_OBJECT
 public:
     explicit TrafficCounterController(QObject *parent = 0);
-
+    ~TrafficCounterController();
 private:
 
     DatabaseManager* m_databaseManager;

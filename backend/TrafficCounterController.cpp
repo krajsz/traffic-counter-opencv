@@ -31,6 +31,10 @@ TrafficCounterController::TrafficCounterController(QObject *parent) : QObject(pa
 
 }
 
+TrafficCounterController::~TrafficCounterController()
+{
+}
+
 void TrafficCounterController::startProcessing()
 {
 

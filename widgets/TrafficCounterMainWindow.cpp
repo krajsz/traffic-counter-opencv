@@ -40,6 +40,8 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setAttribute(Qt::WA_DeleteOnClose);
+
     ui->videoFrameDisplayLabel->setPixmap(QPixmap(":/images/noSource.png"));
     addDockWidget(Qt::BottomDockWidgetArea, m_playbackActionsDock);
     addDockWidget(Qt::RightDockWidgetArea, m_videoSourceDock);
@@ -55,6 +57,9 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
 TrafficCounterMainWindow::~TrafficCounterMainWindow()
 {
     delete ui;
+    delete m_playbackActionsDock;
+    delete m_databaseSettingsDialog;
+    delete m_videoSourceDock;
 }
 
 void TrafficCounterMainWindow::keyPressEvent(QKeyEvent * event)

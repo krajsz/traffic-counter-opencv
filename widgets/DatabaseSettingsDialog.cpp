@@ -33,7 +33,7 @@
 
 DatabaseSettingsDialog::DatabaseSettingsDialog(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::DatabaseSettingsDialog), m_dbManager(new DatabaseManager)
+    ui(new Ui::DatabaseSettingsDialog), m_dbManager(DatabaseManager::instance())
 {
     ui->setupUi(this);
     ui->passwordLineEdit->setEchoMode(QLineEdit::Password);
@@ -43,14 +43,16 @@ DatabaseSettingsDialog::DatabaseSettingsDialog(QWidget *parent) :
 
     ui->removeConnectionButton->setEnabled(false);
 
-
-
-
+    foreach (DatabaseManager::SQLConnection* conn, m_dbManager->connections()) {
+        QListWidgetItem* connectionNameItem = new QListWidgetItem(conn->name);
+        ui->sqlConnectionsListWidget->addItem(connectionNameItem);
+    }
 }
 
 DatabaseSettingsDialog::~DatabaseSettingsDialog()
 {
     delete ui;
+    delete m_dbManager;
 }
 
 bool DatabaseSettingsDialog::canAddNewConnection() const

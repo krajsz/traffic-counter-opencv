@@ -35,7 +35,6 @@ class DatabaseManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit DatabaseManager(QObject *parent = 0);
     ~DatabaseManager();
     struct SQLConnection {
         int vendorIndex;
@@ -68,12 +67,17 @@ public:
     void userNameChanged(const QString &newUserName);
     void passwordChanged(const QString &newPassword);
 
+    static DatabaseManager* instance();
+
 private:
+    explicit DatabaseManager(QObject *parent = 0);
+
+    static DatabaseManager* ptr;
+
     QList<SQLConnection*> m_connections;
     QString m_databaseConnectionsFile;
     void loadConnections();
     QSqlDatabase m_database;
-
     int m_currentConnectionIndex;
 
 Q_SIGNALS:
@@ -82,5 +86,6 @@ public Q_SLOTS:
     void saveConnections() const;
 
 };
+
 
 #endif // DATABASEMANAGER_H
