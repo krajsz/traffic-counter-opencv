@@ -55,11 +55,35 @@ void VideoProcessor::initialize()
     if (dynamic_cast<LiveIPCameraVideoSource*>(m_source))
     {
         qDebug() << "ipcam";
+        LiveIPCameraVideoSource* ipCamSource = dynamic_cast<LiveIPCameraVideoSource*>(m_source);
+        QString path;
+
+        if (ipCamSource->pathContainsInfos())
+        {
+            path = ipCamSource->path();
+        }
+        else
+        {
+            //path = ipCamSource->infos().
+        }
+        m_videoReader.open(path.toStdString());
+
+        if(m_videoReader.isOpened())
+        {
+            m_readyForProcessing = true;
+        }
     }
 
     if (dynamic_cast<CameraVideoSource*>(m_source))
     {
         qDebug() << "webcam";
+        CameraVideoSource* source = dynamic_cast<CameraVideoSource*>(m_source);
+        int camIdx = source->infos().deviceName().toInt();
+        m_videoReader.open(camIdx);
+        if (m_videoReader.isOpened())
+        {
+            m_readyForProcessing = true;
+        }
     }
 }
 
@@ -102,6 +126,41 @@ cv::Mat VideoProcessor::currentFrameMat() const
 FileVideoSource::VideoInfo VideoProcessor::videoInfos(const QString& filename)
 {
     FileVideoSource::VideoInfo infos;
+
+    cv::VideoCapture cap;
+
+    cap.open(filename.toStdString());
+
+    if (cap.isOpened())
+    {
+        cap.set(CV_CAP_PROP_POS_AVI_RATIO,1);
+
+        int milliseconds = cap.get(CV_CAP_PROP_POS_MSEC);
+
+        QString lengthFormatted;
+
+        int seconds  = milliseconds/ 1000;
+        milliseconds %= 1000;
+        int minutes  = seconds / 60;
+        seconds  %= 60;
+        int hours  = minutes/ 60;
+        minutes  %= 60;
+
+        lengthFormatted.append(QString("%1").arg(hours, 2, 10, QLatin1Char('0')) + ":" +
+                               QString( "%1" ).arg(minutes, 2, 10, QLatin1Char('0')) + ":" +
+                               QString( "%1" ).arg(seconds, 2, 10, QLatin1Char('0')) + ":" +
+                               QString( "%1" ).arg(milliseconds, 3, 10, QLatin1Char('0')));
+
+        infos.lenghtFormatted = lengthFormatted;
+
+        infos.fps = cap.get(CV_CAP_PROP_FPS);
+        infos.frameCount = cap.get(CV_CAP_PROP_FRAME_COUNT);
+        infos.frameSize.setHeight(cap.get(CV_CAP_PROP_FRAME_HEIGHT));
+        infos.frameSize.setWidth(cap.get(CV_CAP_PROP_FRAME_WIDTH));
+
+        cap.set(CV_CAP_PROP_POS_FRAMES,1);
+        cap.release();
+    }
 
     return infos;
 }

@@ -45,6 +45,16 @@ void LiveIPCameraVideoSource::setUserName(const QString &userName)
     m_infos.userName = userName;
 }
 
+void LiveIPCameraVideoSource::setPathContainsInfos(bool contains)
+{
+    m_pathContainsInfos = contains;
+}
+
+bool LiveIPCameraVideoSource::pathContainsInfos() const
+{
+    return m_pathContainsInfos;
+}
+
 LiveIPCameraVideoSource::VideoInfo LiveIPCameraVideoSource::infos() const
 {
     return m_infos;

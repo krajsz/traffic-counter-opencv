@@ -39,7 +39,9 @@ public:
     void setPort(const int port);
     void setUserName(const QString& userName);
     void setPassword(const QString& password);
+    void setPathContainsInfos(bool contains);
 
+    bool pathContainsInfos() const;
     struct VideoInfo
     {
         int port;
@@ -52,6 +54,7 @@ public:
 
 private:
     VideoInfo m_infos;
+    bool m_pathContainsInfos;
 
 };
 
