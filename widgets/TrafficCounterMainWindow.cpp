@@ -29,6 +29,9 @@
 
 #include <QKeyEvent>
 #include <QMessageBox>
+#include <QFileDialog>
+#include <QFile>
+
 #include <QDebug>
 
 TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
@@ -52,6 +55,16 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
 
     connect(m_playbackActionsDock, &PlaybackActionsDock::visibilityChanged, this, &TrafficCounterMainWindow::playbackDockClosed);
     connect(m_videoSourceDock, &VideoSourceDock::visibilityChanged, this, &TrafficCounterMainWindow::videoSourceDockClosed);
+
+    connect(m_playbackActionsDock->startButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::startProcessing);
+    connect(m_playbackActionsDock->pauseButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::pauseProcessing);
+    connect(m_playbackActionsDock->recordButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::record);
+    connect(m_playbackActionsDock->saveScreenshotButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::saveScreenshot);
+}
+
+void TrafficCounterMainWindow::setController(TrafficCounterController *controller)
+{
+    m_controller = controller;
 }
 
 TrafficCounterMainWindow::~TrafficCounterMainWindow()
@@ -60,6 +73,7 @@ TrafficCounterMainWindow::~TrafficCounterMainWindow()
     delete m_playbackActionsDock;
     delete m_databaseSettingsDialog;
     delete m_videoSourceDock;
+    delete m_controller;
 }
 
 void TrafficCounterMainWindow::keyPressEvent(QKeyEvent * event)
@@ -78,7 +92,7 @@ void TrafficCounterMainWindow::keyPressEvent(QKeyEvent * event)
 
 void TrafficCounterMainWindow::closeEvent(QCloseEvent * event)
 {
-
+    Q_UNUSED(event)
 }
 
 void TrafficCounterMainWindow::showAbout()
@@ -88,7 +102,16 @@ void TrafficCounterMainWindow::showAbout()
 
 void TrafficCounterMainWindow::openFileActionClicked()
 {
+    const QString fileName = QFileDialog::getOpenFileName(0, QLatin1String("Select a video"), QDir::homePath());
 
+    QFile* pathOfFileSelectedFile = new QFile(fileName);
+    if (pathOfFileSelectedFile->exists())
+    {
+        delete pathOfFileSelectedFile;
+        FileVideoSource* newSource = new FileVideoSource(fileName);
+
+        m_controller->setSource(newSource);
+    }
 }
 
 void TrafficCounterMainWindow::databaseSettingsActionClicked()
@@ -137,4 +160,29 @@ void TrafficCounterMainWindow::videoSourceDockClosed()
     {
         ui->sourceSettingsAction->setChecked(false);
     }
+}
+
+void TrafficCounterMainWindow::startProcessing()
+{
+    m_controller->startProcessing();
+}
+
+void TrafficCounterMainWindow::pauseProcessing()
+{
+    m_controller->pauseProcessing();
+}
+
+void TrafficCounterMainWindow::saveScreenshot()
+{
+    m_controller->saveScreenshot();
+}
+
+void TrafficCounterMainWindow::stopProcessing()
+{
+    m_controller->stopProcessing();
+}
+
+void TrafficCounterMainWindow::record()
+{
+    m_controller->startRecording();
 }

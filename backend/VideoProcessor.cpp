@@ -28,6 +28,8 @@
 #include "Utils.h"
 #include "videosources/FileVideoSource.h"
 #include "videosources/LiveIPCameraVideoSource.h"
+#include "videosources/CameraVideoSource.h"
+
 #include <QDebug>
 
 VideoProcessor::VideoProcessor(QObject *parent) : QObject(parent),
@@ -42,6 +44,7 @@ void VideoProcessor::initialize()
 {
     if (dynamic_cast<FileVideoSource*>(m_source))
     {
+        qDebug() << "file";
         m_videoReader.open(m_source->path().toStdString());
         if (m_videoReader.isOpened())
         {
@@ -54,6 +57,10 @@ void VideoProcessor::initialize()
         qDebug() << "ipcam";
     }
 
+    if (dynamic_cast<CameraVideoSource*>(m_source))
+    {
+        qDebug() << "webcam";
+    }
 }
 
 void VideoProcessor::start()

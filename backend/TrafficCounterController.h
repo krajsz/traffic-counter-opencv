@@ -38,6 +38,8 @@ class TrafficCounterController : public QObject
 public:
     explicit TrafficCounterController(QObject *parent = 0);
     ~TrafficCounterController();
+
+    void setSource(AbstractVideoSource* source);
 private:
 
     DatabaseManager* m_databaseManager;
@@ -54,6 +56,8 @@ public slots:
 
     void startRecording();
     void stopRecording();
+
+    void saveScreenshot();
 };
 
 #endif // TRAFFICCOUNTERCONTROLLER_H

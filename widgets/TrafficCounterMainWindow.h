@@ -32,6 +32,8 @@
 #include "widgets/DatabaseSettingsDialog.h"
 #include "widgets/VideoSourceDock.h"
 
+#include "backend/TrafficCounterController.h"
+
 namespace Ui {
 class TrafficCounterMainWindow;
 }
@@ -44,11 +46,15 @@ public:
     explicit TrafficCounterMainWindow(QWidget *parent = 0);
     ~TrafficCounterMainWindow();
 
+    void setController(TrafficCounterController* controller);
 private:
     Ui::TrafficCounterMainWindow *ui;
+
     PlaybackActionsDock* m_playbackActionsDock;
     DatabaseSettingsDialog* m_databaseSettingsDialog;
     VideoSourceDock* m_videoSourceDock;
+    TrafficCounterController* m_controller;
+
 protected:
     void keyPressEvent(QKeyEvent*);
     void closeEvent(QCloseEvent*);
@@ -61,6 +67,12 @@ private Q_SLOTS:
     void openFileActionClicked();
     void playbackDockClosed();
     void videoSourceDockClosed();
+
+    void startProcessing();
+    void stopProcessing();
+    void record();
+    void saveScreenshot();
+    void pauseProcessing();
 };
 
 #endif // TRAFFICCOUNTERMAIN_H

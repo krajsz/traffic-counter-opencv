@@ -43,10 +43,12 @@ int main(int argc, char *argv[])
     commandLineParser.parse(a);
 
     TrafficCounterMainWindow* win;
+    TrafficCounterController* trafficCounterController = new TrafficCounterController;
     if (commandLineParser.showGui())
     {
         //show gui
         win =  new TrafficCounterMainWindow;
+        win->setController(trafficCounterController);
         win->show();
     }
     else
@@ -62,6 +64,11 @@ int main(int argc, char *argv[])
     if (commandLineParser.record())
     {
 
+    }
+
+    if (win == nullptr)
+    {
+        delete trafficCounterController;
     }
 
     return a.exec();

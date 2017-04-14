@@ -111,11 +111,7 @@ void DatabaseManager::saveConnections() const
 {
     QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
 
-
-    qDebug() << m_databaseConnectionsFile;
-
     connectionSetting.beginWriteArray(QLatin1String("Connections"));
-    qDebug() << "saving connections: " << m_connections.size();
     for(int i = 0; i < m_connections.size(); ++i)
     {
         connectionSetting.setArrayIndex(i);
@@ -137,8 +133,6 @@ void DatabaseManager::loadConnections()
     QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
 
     const int savedConnectionsSize = connectionSetting.beginReadArray(QLatin1String("Connections"));
-
-    qDebug() << "loading connections: " << connectionSetting.status() << ", " << QString::number(savedConnectionsSize);
 
     m_connections.reserve(savedConnectionsSize);
     for(int i = 0; i < savedConnectionsSize; ++i)

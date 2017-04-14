@@ -35,6 +35,11 @@ TrafficCounterController::~TrafficCounterController()
 {
 }
 
+void TrafficCounterController::setSource(AbstractVideoSource *source)
+{
+    m_videoProcessor->setSource(source);
+}
+
 void TrafficCounterController::startProcessing()
 {
 
@@ -61,6 +66,11 @@ void TrafficCounterController::startRecording()
 }
 
 void TrafficCounterController::stopRecording()
+{
+
+}
+
+void TrafficCounterController::saveScreenshot()
 {
 
 }

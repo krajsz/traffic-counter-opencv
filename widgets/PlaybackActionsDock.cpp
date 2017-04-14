@@ -38,3 +38,23 @@ PlaybackActionsDock::~PlaybackActionsDock()
 {
     delete ui;
 }
+
+QPushButton* PlaybackActionsDock::pauseButton()
+{
+    return ui->pauseButton;
+}
+
+QPushButton* PlaybackActionsDock::startButton()
+{
+    return ui->startButton;
+}
+
+QPushButton* PlaybackActionsDock::recordButton()
+{
+    return ui->recordButton;
+}
+
+QPushButton* PlaybackActionsDock::saveScreenshotButton()
+{
+    return ui->saveScreenshotButton;
+}

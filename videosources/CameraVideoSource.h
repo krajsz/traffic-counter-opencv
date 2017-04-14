@@ -24,8 +24,8 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
-#ifndef FILEVIDEOSOURCE_H
-#define FILEVIDEOSOURCE_H
+#ifndef CAMERAVIDEOSOURCE_H
+#define CAMERAVIDEOSOURCE_H
 
 #include "AbstractVideoSource.h"
 #include <QCameraInfo>

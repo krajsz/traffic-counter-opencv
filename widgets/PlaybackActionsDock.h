@@ -32,6 +32,7 @@
 namespace Ui {
 class PlaybackActionsDock;
 }
+class QPushButton;
 
 class PlaybackActionsDock : public QDockWidget
 {
@@ -40,6 +41,10 @@ class PlaybackActionsDock : public QDockWidget
 public:
     explicit PlaybackActionsDock(QWidget *parent = 0);
     ~PlaybackActionsDock();
+    QPushButton* startButton();
+    QPushButton* recordButton();
+    QPushButton* saveScreenshotButton();
+    QPushButton* pauseButton();
 
 private:
     Ui::PlaybackActionsDock *ui;

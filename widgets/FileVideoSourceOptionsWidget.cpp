@@ -36,8 +36,17 @@ FileVideoSourceOptionsWidget::FileVideoSourceOptionsWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->fileInfoButton->setEnabled(false);
     connect(ui->openFileButton, &QPushButton::clicked, this, &FileVideoSourceOptionsWidget::openFile);
     connect(ui->fileInfoButton, &QPushButton::clicked, this, &FileVideoSourceOptionsWidget::showFileInfoDialog);
+    connect(ui->filePathLineEdit, &QLineEdit::textChanged, this,
+            [=]{
+        if (!ui->filePathLineEdit->text().isEmpty())
+        {
+            if (!ui->fileInfoButton->isEnabled())
+                ui->fileInfoButton->setEnabled(true);
+        }
+    });
 }
 
 FileVideoSourceOptionsWidget::~FileVideoSourceOptionsWidget()
