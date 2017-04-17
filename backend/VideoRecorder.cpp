@@ -28,7 +28,7 @@
 #include <QStandardPaths>
 #include <QDir>
 
-VideoRecorder::VideoRecorder(QObject *parent) : QObject(parent),
+VideoRecorder::VideoRecorder(QObject *parent) : QThread(parent),
     m_filePath(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation))
 {
 }

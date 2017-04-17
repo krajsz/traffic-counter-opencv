@@ -25,6 +25,9 @@
  *                                                                         *
  ***************************************************************************/
 #include "widgets/TrafficCounterMainWindow.h"
+#include "videosources/LiveIPCameraVideoSource.h"
+#include "videosources/CameraVideoSource.h"
+
 #include "ui_trafficcountermainwindow.h"
 
 #include <QKeyEvent>
@@ -60,6 +63,8 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
     connect(m_playbackActionsDock->pauseButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::pauseProcessing);
     connect(m_playbackActionsDock->recordButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::record);
     connect(m_playbackActionsDock->saveScreenshotButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::saveScreenshot);
+
+    connect(m_videoSourceDock, &VideoSourceDock::currentFileSourceTypeChanged, this, &TrafficCounterMainWindow::enableButtonStart);
 }
 
 void TrafficCounterMainWindow::setController(TrafficCounterController *controller)
@@ -164,6 +169,39 @@ void TrafficCounterMainWindow::videoSourceDockClosed()
 
 void TrafficCounterMainWindow::startProcessing()
 {
+    AbstractVideoSource* source;
+    if (m_videoSourceDock->type() == 0)
+    {
+        //file
+        FileVideoSource* fsource = new FileVideoSource(m_videoSourceDock->fileVideoSourceOptions()->filePath());
+        qDebug() << "fileSourceStartProcessing";
+        source = fsource;
+    }
+    else if (m_videoSourceDock->type() == 1)
+    {
+        //ip
+
+        LiveIPCameraVideoSource* ipsource = new LiveIPCameraVideoSource(m_videoSourceDock->ipCameraSourceOptions()->url());
+
+        if (!m_videoSourceDock->ipCameraSourceOptions()->urlContainsEverything())
+        {
+            ipsource->setPort(m_videoSourceDock->ipCameraSourceOptions()->port());
+            ipsource->setUserName(m_videoSourceDock->ipCameraSourceOptions()->userName());
+            ipsource->setPassword(m_videoSourceDock->ipCameraSourceOptions()->password());
+        }
+        qDebug() << "ipSourceStartProcessing";
+
+        source = ipsource;
+    }
+    else
+    {
+        //camera
+        CameraVideoSource* csource = new CameraVideoSource(m_videoSourceDock->cameraSourceOptions()->cameraName());
+        qDebug() << "camSourceStartProcessing";
+
+        source = csource;
+    }
+    m_controller->setSource(source);
     m_controller->startProcessing();
 }
 
@@ -185,4 +223,24 @@ void TrafficCounterMainWindow::stopProcessing()
 void TrafficCounterMainWindow::record()
 {
     m_controller->startRecording();
+}
+
+void TrafficCounterMainWindow::enableButtonStart(int newSourceType)
+{
+    if (newSourceType == 0)
+    {
+        FileVideoSourceOptionsWidget* fsow = m_videoSourceDock->fileVideoSourceOptions();
+        m_playbackActionsDock->startButton()->setEnabled(fsow->ok());
+    }
+    else if (newSourceType == 1)
+    {
+        IPCameraVideoSourceOptionsWidget* ipcvsow = m_videoSourceDock->ipCameraSourceOptions();
+        m_playbackActionsDock->startButton()->setEnabled(ipcvsow->ok());
+    }
+    else
+    {
+        CameraVideoSourceOptionsWidget* cvsow = m_videoSourceDock->cameraSourceOptions();
+        m_playbackActionsDock->startButton()->setEnabled(cvsow->ok());
+
+    }
 }

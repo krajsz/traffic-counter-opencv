@@ -53,6 +53,10 @@ CameraVideoSourceOptionsWidget::CameraVideoSourceOptionsWidget(QWidget *parent) 
     }
 }
 
+bool CameraVideoSourceOptionsWidget::ok() const
+{
+    return ui->selectCameraButton->isEnabled();
+}
 QString CameraVideoSourceOptionsWidget::cameraName() const
 {
     return ui->availableCamerasListWidget->currentItem()->text();

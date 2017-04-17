@@ -43,6 +43,8 @@ public:
     QString password() const;
     int port() const;
 
+    bool ok() const;
+
     bool urlContainsEverything() const;
 
 private:

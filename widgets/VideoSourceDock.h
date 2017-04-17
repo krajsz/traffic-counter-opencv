@@ -47,13 +47,20 @@ public:
     explicit VideoSourceDock(QWidget *parent = 0);
     ~VideoSourceDock();
 
+    FileVideoSourceOptionsWidget* fileVideoSourceOptions() const;
+    IPCameraVideoSourceOptionsWidget* ipCameraSourceOptions() const;
+    CameraVideoSourceOptionsWidget* cameraSourceOptions() const;
+
+    int type() const;
+
 private:
     Ui::VideoSourceDock *ui;
 
     FileVideoSourceOptionsWidget* m_fileVideoSourceOptionsWidget;
     IPCameraVideoSourceOptionsWidget* m_ipCameraVideoSourceOptionsWidget;
     CameraVideoSourceOptionsWidget* m_cameraVideoSourceOptionsWidget;
-
+Q_SIGNALS:
+    void currentFileSourceTypeChanged(int type);
 private Q_SLOTS:
     void sourceTypeChanged(bool checked);
 };

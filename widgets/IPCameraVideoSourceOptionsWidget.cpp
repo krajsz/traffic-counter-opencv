@@ -65,9 +65,20 @@ void IPCameraVideoSourceOptionsWidget::testButtonClicked()
 
 }
 
+bool IPCameraVideoSourceOptionsWidget::ok() const
+{
+    //todo
+    return true;
+}
+
 void IPCameraVideoSourceOptionsWidget::enableButtonTest(const QString &newUrl)
 {
     ui->testConnectionButton->setEnabled(!newUrl.isEmpty());
+}
+
+QString IPCameraVideoSourceOptionsWidget::url() const
+{
+    return ui->urlLineEdit->text();
 }
 
 QString IPCameraVideoSourceOptionsWidget::userName() const

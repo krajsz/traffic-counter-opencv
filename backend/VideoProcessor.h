@@ -27,19 +27,20 @@
 #ifndef VIDEOPROCESSOR_H
 #define VIDEOPROCESSOR_H
 
-#include <QObject>
-#include <QTimer>
+#include <QThread>
 
 #include "backend/FrameProcessor.h"
 #include "videosources/FileVideoSource.h"
 
-class VideoProcessor : public QObject
+class QTimer;
+
+class VideoProcessor : public QThread
 {
     Q_OBJECT
 public:
     explicit VideoProcessor(QObject *parent = 0);
-    void start();
-    void stop();
+    void startProcessing();
+    void stopProcessing();
 
     void setSource(AbstractVideoSource* source);
     void process();
@@ -68,8 +69,10 @@ private:
     bool m_paused;
     bool m_readyForProcessing;
 
-
     QTimer* m_updateImageTimer;
+protected:
+    void run() override;
+
 public Q_SLOTS:
     void pauseResume(bool pause);
 

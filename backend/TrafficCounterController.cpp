@@ -26,48 +26,52 @@
  ***************************************************************************/
 #include "TrafficCounterController.h"
 
-TrafficCounterController::TrafficCounterController(QObject *parent) : QObject(parent)
+TrafficCounterController::TrafficCounterController(QObject *parent) : QObject(parent),
+    m_videoProcessor(new VideoProcessor),
+    m_videoRecorder(new VideoRecorder)
 {
-
 }
 
 TrafficCounterController::~TrafficCounterController()
 {
+    delete m_videoProcessor;
+    delete m_videoRecorder;
 }
 
 void TrafficCounterController::setSource(AbstractVideoSource *source)
 {
     m_videoProcessor->setSource(source);
+    m_videoProcessor->initialize();
 }
 
 void TrafficCounterController::startProcessing()
 {
-
+    m_videoProcessor->startProcessing();
 }
 
 void TrafficCounterController::pauseProcessing()
 {
-
+    m_videoProcessor->pauseResume(true);
 }
 
 void TrafficCounterController::resumeProcessing()
 {
-
+    m_videoProcessor->pauseResume(false);
 }
 
 void TrafficCounterController::stopProcessing()
 {
-
+    m_videoProcessor->stopProcessing();
 }
 
 void TrafficCounterController::startRecording()
 {
-
+    m_videoRecorder->startRecording();
 }
 
 void TrafficCounterController::stopRecording()
 {
-
+    m_videoRecorder->stopRecording();
 }
 
 void TrafficCounterController::saveScreenshot()

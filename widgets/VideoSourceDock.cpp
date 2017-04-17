@@ -45,6 +45,28 @@ VideoSourceDock::VideoSourceDock(QWidget *parent) :
     connect(ui->ipCameraSourceRadioButton, &QRadioButton::toggled, this, &VideoSourceDock::sourceTypeChanged);
     connect(ui->webcamSourceRadioButton, &QRadioButton::toggled, this, &VideoSourceDock::sourceTypeChanged);
     connect(ui->fileSourceRadioButton, &QRadioButton::toggled, this, &VideoSourceDock::sourceTypeChanged);
+
+    connect(ui->sourceOptionsStackedWidget, &QStackedWidget::currentChanged, this, &VideoSourceDock::currentFileSourceTypeChanged);
+}
+
+int VideoSourceDock::type() const
+{
+    return ui->sourceOptionsStackedWidget->currentIndex();
+}
+
+FileVideoSourceOptionsWidget* VideoSourceDock::fileVideoSourceOptions() const
+{
+    return m_fileVideoSourceOptionsWidget;
+}
+
+IPCameraVideoSourceOptionsWidget* VideoSourceDock::ipCameraSourceOptions() const
+{
+    return m_ipCameraVideoSourceOptionsWidget;
+}
+
+CameraVideoSourceOptionsWidget* VideoSourceDock::cameraSourceOptions() const
+{
+    return m_cameraVideoSourceOptionsWidget;
 }
 
 VideoSourceDock::~VideoSourceDock()

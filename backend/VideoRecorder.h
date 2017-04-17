@@ -27,9 +27,10 @@
 #ifndef VIDEORECORDER_H
 #define VIDEORECORDER_H
 
-#include <QObject>
+#include <QThread>
 #include <opencv2/videoio.hpp>
-class VideoRecorder : public QObject
+
+class VideoRecorder : public QThread
 {
     Q_OBJECT
 public:

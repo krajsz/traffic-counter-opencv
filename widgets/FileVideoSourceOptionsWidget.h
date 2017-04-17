@@ -39,6 +39,8 @@ public:
     explicit FileVideoSourceOptionsWidget(QWidget *parent = 0);
     ~FileVideoSourceOptionsWidget();
 
+    bool ok() const;
+
     QString filePath() const;
 
 private:

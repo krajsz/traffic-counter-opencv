@@ -30,13 +30,21 @@
 #include "videosources/LiveIPCameraVideoSource.h"
 #include "videosources/CameraVideoSource.h"
 
+#include <QTimer>
+
 #include <QDebug>
 
-VideoProcessor::VideoProcessor(QObject *parent) : QObject(parent),
+VideoProcessor::VideoProcessor(QObject *parent) : QThread(parent),
     m_processing(false),
     m_paused(false),
     m_readyForProcessing(false)
 {
+
+}
+
+void VideoProcessor::run()
+{
+    process();
 
 }
 
@@ -87,7 +95,7 @@ void VideoProcessor::initialize()
     }
 }
 
-void VideoProcessor::start()
+void VideoProcessor::startProcessing()
 {
 
     if (dynamic_cast<FileVideoSource*>(m_source))
@@ -102,10 +110,15 @@ void VideoProcessor::start()
 
     m_processing = true;
 
-    while (m_processing)
+
+    //start the thread
+    start();
+
+    //new thread needed for this
+    /*while (m_processing)
     {
-        process();
-    }
+       // process();
+    }*/
 }
 
 cv::VideoCapture VideoProcessor::reader() const
@@ -185,8 +198,10 @@ void VideoProcessor::process()
     if (!m_paused)
     {
         // read
-    }
 
+
+        cv::waitKey(30);
+    }
 }
 
 void VideoProcessor::pauseResume(bool pause)
@@ -194,9 +209,15 @@ void VideoProcessor::pauseResume(bool pause)
     m_paused = pause;
 }
 
-void VideoProcessor::stop()
+void VideoProcessor::stopProcessing()
 {
     m_processing = false;
+
+    if (wait(2000))
+    {
+        terminate();
+        wait();
+    }
 }
 
 void VideoProcessor::setSource(AbstractVideoSource *source)

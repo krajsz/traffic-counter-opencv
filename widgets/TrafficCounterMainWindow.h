@@ -68,6 +68,8 @@ private Q_SLOTS:
     void playbackDockClosed();
     void videoSourceDockClosed();
 
+    void enableButtonStart(int newSourceType);
+
     void startProcessing();
     void stopProcessing();
     void record();

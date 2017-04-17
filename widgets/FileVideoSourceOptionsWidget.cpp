@@ -57,6 +57,12 @@ FileVideoSourceOptionsWidget::~FileVideoSourceOptionsWidget()
     delete ui;
 }
 
+bool FileVideoSourceOptionsWidget::ok() const
+{
+    //this means that the file exists and it's a video (at least the extension says so)
+    return ui->fileInfoButton->isEnabled();
+}
+
 void FileVideoSourceOptionsWidget::showFileInfoDialog()
 {
 
