@@ -38,10 +38,19 @@ public:
     explicit IPCameraVideoSourceOptionsWidget(QWidget *parent = 0);
     ~IPCameraVideoSourceOptionsWidget();
 
+    QString url() const;
+    QString userName() const;
+    QString password() const;
+    int port() const;
+
+    bool urlContainsEverything() const;
+
 private:
     Ui::IPCameraVideoSourceOptions *ui;
 private Q_SLOTS:
     void urlContainsEverythingChecked(bool checked);
+    void testButtonClicked();
+    void enableButtonTest(const QString& newUrl);
 };
 
 #endif // IPCAMERAVIDEOSOURCEOPTIONS_H

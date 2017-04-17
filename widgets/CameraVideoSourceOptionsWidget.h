@@ -41,6 +41,8 @@ public:
     explicit CameraVideoSourceOptionsWidget(QWidget *parent = 0);
     ~CameraVideoSourceOptionsWidget();
 
+    QString cameraName() const;
+
 private:
     Ui::CameraVideoSourceOptionsWidget *ui;
 };

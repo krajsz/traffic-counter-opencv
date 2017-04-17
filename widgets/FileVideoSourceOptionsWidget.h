@@ -39,6 +39,8 @@ public:
     explicit FileVideoSourceOptionsWidget(QWidget *parent = 0);
     ~FileVideoSourceOptionsWidget();
 
+    QString filePath() const;
+
 private:
     Ui::FileVideoSourceOptionsWidget *ui;
 private Q_SLOTS:

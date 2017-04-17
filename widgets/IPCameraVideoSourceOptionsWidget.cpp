@@ -34,6 +34,9 @@ IPCameraVideoSourceOptionsWidget::IPCameraVideoSourceOptionsWidget(QWidget *pare
     ui->setupUi(this);
     connect(ui->urlContainsEverythingCheckBox, &QCheckBox::toggled,
             this, &IPCameraVideoSourceOptionsWidget::urlContainsEverythingChecked);
+
+    connect(ui->testConnectionButton, &QPushButton::clicked, this, &IPCameraVideoSourceOptionsWidget::testButtonClicked);
+    connect(ui->urlLineEdit, &QLineEdit::textEdited, this, &IPCameraVideoSourceOptionsWidget::enableButtonTest);
 }
 
 IPCameraVideoSourceOptionsWidget::~IPCameraVideoSourceOptionsWidget()
@@ -55,4 +58,34 @@ void IPCameraVideoSourceOptionsWidget::urlContainsEverythingChecked(bool checked
         ui->userNameLineEdit->setEnabled(true);
         ui->passwordLineEdit->setEnabled(true);
     }
+}
+
+void IPCameraVideoSourceOptionsWidget::testButtonClicked()
+{
+
+}
+
+void IPCameraVideoSourceOptionsWidget::enableButtonTest(const QString &newUrl)
+{
+    ui->testConnectionButton->setEnabled(!newUrl.isEmpty());
+}
+
+QString IPCameraVideoSourceOptionsWidget::userName() const
+{
+    return ui->userNameLineEdit->text();
+}
+
+bool IPCameraVideoSourceOptionsWidget::urlContainsEverything() const
+{
+    return ui->urlContainsEverythingCheckBox->isChecked();
+}
+
+QString IPCameraVideoSourceOptionsWidget::password() const
+{
+    return ui->passwordLineEdit->text();;
+}
+
+int IPCameraVideoSourceOptionsWidget::port() const
+{
+    return ui->portLineEdit->text().toInt();
 }

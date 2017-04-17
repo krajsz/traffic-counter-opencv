@@ -27,6 +27,7 @@
 #include "FileVideoSourceOptionsWidget.h"
 #include <QFile>
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include <QDebug>
 
@@ -41,12 +42,14 @@ FileVideoSourceOptionsWidget::FileVideoSourceOptionsWidget(QWidget *parent) :
     connect(ui->fileInfoButton, &QPushButton::clicked, this, &FileVideoSourceOptionsWidget::showFileInfoDialog);
     connect(ui->filePathLineEdit, &QLineEdit::textChanged, this,
             [=]{
-        if (!ui->filePathLineEdit->text().isEmpty())
-        {
-            if (!ui->fileInfoButton->isEnabled())
-                ui->fileInfoButton->setEnabled(true);
-        }
+        bool exists = QFile::exists(ui->filePathLineEdit->text());
+        ui->fileInfoButton->setEnabled(exists);
     });
+}
+
+QString FileVideoSourceOptionsWidget::filePath() const
+{
+    return ui->filePathLineEdit->text();
 }
 
 FileVideoSourceOptionsWidget::~FileVideoSourceOptionsWidget()
@@ -56,20 +59,24 @@ FileVideoSourceOptionsWidget::~FileVideoSourceOptionsWidget()
 
 void FileVideoSourceOptionsWidget::showFileInfoDialog()
 {
-    if (!ui->filePathLineEdit->text().isEmpty())
-    {
-        QFile* file = new QFile(ui->filePathLineEdit->text());
-        if (file->open(QFile::ReadOnly))
-        {
-            delete file;
-            FileInfoDialog* fileInfoDialog = new FileInfoDialog(ui->filePathLineEdit->text());
 
-            fileInfoDialog->show();
-        }
+    QFile* file = new QFile(ui->filePathLineEdit->text());
+    if (file->open(QFile::ReadOnly))
+    {
+        delete file;
+        FileInfoDialog* fileInfoDialog = new FileInfoDialog(ui->filePathLineEdit->text());
+
+        fileInfoDialog->show();
     }
+    else
+    {
+        QMessageBox::warning(0, "Error opening file", "Couldn't open file: " + file->fileName());
+    }
+
 }
 
 void FileVideoSourceOptionsWidget::openFile()
 {
-    ui->filePathLineEdit->setText(QFileDialog::getOpenFileName(0, "Select your video", QDir::homePath()));
+    ui->filePathLineEdit->setText(QFileDialog::getOpenFileName(0, "Select your video",
+                                                               QDir::homePath(), "Video files [ *.avi , *.mp4 , *.MP4 , *.MKV *.mkv]"));
 }

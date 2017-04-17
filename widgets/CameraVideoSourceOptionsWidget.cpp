@@ -53,6 +53,11 @@ CameraVideoSourceOptionsWidget::CameraVideoSourceOptionsWidget(QWidget *parent) 
     }
 }
 
+QString CameraVideoSourceOptionsWidget::cameraName() const
+{
+    return ui->availableCamerasListWidget->currentItem()->text();
+}
+
 CameraVideoSourceOptionsWidget::~CameraVideoSourceOptionsWidget()
 {
     delete ui;
