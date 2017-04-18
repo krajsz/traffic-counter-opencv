@@ -40,6 +40,7 @@ public:
     ~TrafficCounterController();
 
     void setSource(AbstractVideoSource* source);
+    QImage currentFrame() const;
 private:
 
     DatabaseManager* m_databaseManager;

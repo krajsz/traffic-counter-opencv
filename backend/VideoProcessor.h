@@ -45,6 +45,8 @@ public:
     void setSource(AbstractVideoSource* source);
     void process();
 
+    AbstractVideoSource* source() const;
+
     void initialize();
 
     bool isPaused() const;
@@ -69,9 +71,9 @@ private:
     bool m_paused;
     bool m_readyForProcessing;
 
-    QTimer* m_updateImageTimer;
 protected:
     void run() override;
+    static void msleep(unsigned long msecs);
 
 public Q_SLOTS:
     void pauseResume(bool pause);

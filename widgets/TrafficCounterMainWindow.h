@@ -55,6 +55,8 @@ private:
     VideoSourceDock* m_videoSourceDock;
     TrafficCounterController* m_controller;
 
+    QTimer* m_updateImageTimer;
+
 protected:
     void keyPressEvent(QKeyEvent*);
     void closeEvent(QCloseEvent*);
@@ -75,6 +77,8 @@ private Q_SLOTS:
     void record();
     void saveScreenshot();
     void pauseProcessing();
+
+    void updateImageLabel();
 };
 
 #endif // TRAFFICCOUNTERMAIN_H

@@ -32,6 +32,17 @@ PlaybackActionsDock::PlaybackActionsDock(QWidget *parent) :
     ui(new Ui::PlaybackActionsDock)
 {
     ui->setupUi(this);
+    ui->pauseButton->setEnabled(false);
+    ui->recordButton->setEnabled(false);
+    ui->saveScreenshotButton->setEnabled(false);
+    ui->startButton->setEnabled(false);
+
+    connect(ui->startButton, &QPushButton::clicked, this,
+            [=] {
+        ui->pauseButton->setEnabled(true);
+        ui->recordButton->setEnabled(true);
+        ui->saveScreenshotButton->setEnabled(true);
+    });
 }
 
 PlaybackActionsDock::~PlaybackActionsDock()

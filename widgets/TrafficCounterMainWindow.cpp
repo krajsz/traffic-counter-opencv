@@ -34,6 +34,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QFile>
+#include <QTimer>
 
 #include <QDebug>
 
@@ -42,11 +43,14 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
     ui(new Ui::TrafficCounterMainWindow),
     m_playbackActionsDock(new PlaybackActionsDock),
     m_databaseSettingsDialog(new DatabaseSettingsDialog),
-    m_videoSourceDock(new VideoSourceDock)
+    m_videoSourceDock(new VideoSourceDock),
+    m_updateImageTimer(new QTimer)
 {
     ui->setupUi(this);
 
     setAttribute(Qt::WA_DeleteOnClose);
+
+    m_updateImageTimer->setInterval(30);
 
     ui->videoFrameDisplayLabel->setPixmap(QPixmap(":/images/noSource.png"));
     addDockWidget(Qt::BottomDockWidgetArea, m_playbackActionsDock);
@@ -65,6 +69,7 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
     connect(m_playbackActionsDock->saveScreenshotButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::saveScreenshot);
 
     connect(m_videoSourceDock, &VideoSourceDock::currentFileSourceTypeChanged, this, &TrafficCounterMainWindow::enableButtonStart);
+
 }
 
 void TrafficCounterMainWindow::setController(TrafficCounterController *controller)
@@ -174,6 +179,8 @@ void TrafficCounterMainWindow::startProcessing()
     {
         //file
         FileVideoSource* fsource = new FileVideoSource(m_videoSourceDock->fileVideoSourceOptions()->filePath());
+
+        fsource->setInfos(VideoProcessor::videoInfos(fsource->path()));
         qDebug() << "fileSourceStartProcessing";
         source = fsource;
     }
@@ -201,6 +208,10 @@ void TrafficCounterMainWindow::startProcessing()
 
         source = csource;
     }
+
+    connect(m_updateImageTimer, &QTimer::timeout, this, &TrafficCounterMainWindow::updateImageLabel);
+    m_updateImageTimer->start(30);
+
     m_controller->setSource(source);
     m_controller->startProcessing();
 }
@@ -217,6 +228,8 @@ void TrafficCounterMainWindow::saveScreenshot()
 
 void TrafficCounterMainWindow::stopProcessing()
 {
+    disconnect(m_updateImageTimer, &QTimer::timeout, this, &TrafficCounterMainWindow::updateImageLabel);
+
     m_controller->stopProcessing();
 }
 
@@ -243,4 +256,10 @@ void TrafficCounterMainWindow::enableButtonStart(int newSourceType)
         m_playbackActionsDock->startButton()->setEnabled(cvsow->ok());
 
     }
+}
+
+void TrafficCounterMainWindow::updateImageLabel()
+{
+    qDebug() << "updating image..";
+    ui->videoFrameDisplayLabel->setPixmap(QPixmap::fromImage(m_controller->currentFrame()));
 }

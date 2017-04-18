@@ -39,13 +39,19 @@ VideoProcessor::VideoProcessor(QObject *parent) : QThread(parent),
     m_paused(false),
     m_readyForProcessing(false)
 {
-
 }
 
 void VideoProcessor::run()
 {
-    process();
+    while (m_processing)
+    {
+        process();
+    }
+}
 
+void VideoProcessor::msleep(unsigned long msleep)
+{
+    QThread::msleep(msleep);
 }
 
 void VideoProcessor::initialize()
@@ -199,8 +205,21 @@ void VideoProcessor::process()
     {
         // read
 
+        qDebug() << "reading new frame..";
+        m_videoReader.read(m_currentFrame);
 
-        cv::waitKey(30);
+        if (!m_currentFrame.empty())
+        {
+            //processing stuff here
+
+        }
+        if (dynamic_cast<FileVideoSource*>(m_source))
+        {
+            FileVideoSource* source = dynamic_cast<FileVideoSource*>(m_source);
+            int ms = static_cast<int>(1000 / source->infos().fps);
+            msleep(ms);
+
+        }
     }
 }
 
@@ -223,4 +242,9 @@ void VideoProcessor::stopProcessing()
 void VideoProcessor::setSource(AbstractVideoSource *source)
 {
     m_source = source;
+}
+
+AbstractVideoSource* VideoProcessor::source() const
+{
+    return m_source;
 }

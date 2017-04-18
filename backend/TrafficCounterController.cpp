@@ -26,6 +26,10 @@
  ***************************************************************************/
 #include "TrafficCounterController.h"
 
+#include <QDateTime>
+
+#include <QImage>
+
 TrafficCounterController::TrafficCounterController(QObject *parent) : QObject(parent),
     m_videoProcessor(new VideoProcessor),
     m_videoRecorder(new VideoRecorder)
@@ -42,6 +46,11 @@ void TrafficCounterController::setSource(AbstractVideoSource *source)
 {
     m_videoProcessor->setSource(source);
     m_videoProcessor->initialize();
+}
+
+QImage TrafficCounterController::currentFrame() const
+{
+    return m_videoProcessor->currentFrameQImage();
 }
 
 void TrafficCounterController::startProcessing()
@@ -76,5 +85,8 @@ void TrafficCounterController::stopRecording()
 
 void TrafficCounterController::saveScreenshot()
 {
+    QString fileName = m_videoProcessor->source()->path()+ QLatin1String("_") +
+            QDateTime::currentDateTime().toString()+ QLatin1String(".jpg");
 
+    m_videoProcessor->currentFrameQImage().save(fileName);
 }
