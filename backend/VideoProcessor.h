@@ -80,6 +80,8 @@ public Q_SLOTS:
 
 signals:
     void progress(int value);
+    void frameReadyForProcessing(const cv::Mat& frame);
+    void currentProgressInTime(const QString& time);
 public slots:
 
 };

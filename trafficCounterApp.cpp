@@ -34,6 +34,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    qRegisterMetaType<cv::Mat>("cv::Mat");
+
     QCoreApplication::setApplicationName("TrafficCounter");
     QCoreApplication::setOrganizationName("University of Debrecen");
     QCoreApplication::setApplicationVersion("1.0");

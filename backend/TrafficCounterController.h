@@ -41,6 +41,7 @@ public:
 
     void setSource(AbstractVideoSource* source);
     QImage currentFrame() const;
+    VideoProcessor* videoProcessor() const;
 private:
 
     DatabaseManager* m_databaseManager;

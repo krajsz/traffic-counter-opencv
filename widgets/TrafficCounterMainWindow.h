@@ -31,6 +31,7 @@
 #include "widgets/PlaybackActionsDock.h"
 #include "widgets/DatabaseSettingsDialog.h"
 #include "widgets/VideoSourceDock.h"
+#include "widgets/FileVideoSourceProgressBar.h"
 
 #include "backend/TrafficCounterController.h"
 
@@ -54,6 +55,8 @@ private:
     DatabaseSettingsDialog* m_databaseSettingsDialog;
     VideoSourceDock* m_videoSourceDock;
     TrafficCounterController* m_controller;
+
+    FileVideoSourceProgressBar* m_fileVideoSourceProgressBar;
 
     QTimer* m_updateImageTimer;
 

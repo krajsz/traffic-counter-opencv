@@ -37,8 +37,10 @@
 VideoProcessor::VideoProcessor(QObject *parent) : QThread(parent),
     m_processing(false),
     m_paused(false),
-    m_readyForProcessing(false)
+    m_readyForProcessing(false),
+    m_frameProcessor(new FrameProcessor)
 {
+    connect(this, &VideoProcessor::frameReadyForProcessing, m_frameProcessor, &FrameProcessor::process);
 }
 
 void VideoProcessor::run()
@@ -119,12 +121,6 @@ void VideoProcessor::startProcessing()
 
     //start the thread
     start();
-
-    //new thread needed for this
-    /*while (m_processing)
-    {
-       // process();
-    }*/
 }
 
 cv::VideoCapture VideoProcessor::reader() const
@@ -156,21 +152,7 @@ FileVideoSource::VideoInfo VideoProcessor::videoInfos(const QString& filename)
 
         int milliseconds = cap.get(CV_CAP_PROP_POS_MSEC);
 
-        QString lengthFormatted;
-
-        int seconds  = milliseconds/ 1000;
-        milliseconds %= 1000;
-        int minutes  = seconds / 60;
-        seconds  %= 60;
-        int hours  = minutes/ 60;
-        minutes  %= 60;
-
-        lengthFormatted.append(QString("%1").arg(hours, 2, 10, QLatin1Char('0')) + ":" +
-                               QString( "%1" ).arg(minutes, 2, 10, QLatin1Char('0')) + ":" +
-                               QString( "%1" ).arg(seconds, 2, 10, QLatin1Char('0')) + ":" +
-                               QString( "%1" ).arg(milliseconds, 3, 10, QLatin1Char('0')));
-
-        infos.lenghtFormatted = lengthFormatted;
+        infos.lenghtFormatted = Utils::videoLengthFormatted(milliseconds);
 
         infos.fps = cap.get(CV_CAP_PROP_FPS);
         infos.frameCount = cap.get(CV_CAP_PROP_FRAME_COUNT);
@@ -205,20 +187,25 @@ void VideoProcessor::process()
     {
         // read
 
-        qDebug() << "reading new frame..";
         m_videoReader.read(m_currentFrame);
 
         if (!m_currentFrame.empty())
         {
             //processing stuff here
+            emit frameReadyForProcessing(m_currentFrame);
 
         }
         if (dynamic_cast<FileVideoSource*>(m_source))
         {
             FileVideoSource* source = dynamic_cast<FileVideoSource*>(m_source);
             int ms = static_cast<int>(1000 / source->infos().fps);
-            msleep(ms);
+            int progressValue = (1000 * m_videoReader.get(CV_CAP_PROP_POS_FRAMES)) / source->infos().frameCount;
 
+            emit progress(progressValue);
+            QString currentTime = Utils::videoLengthFormatted(m_videoReader.get(CV_CAP_PROP_POS_MSEC));
+
+            emit currentProgressInTime(currentTime);
+            msleep(ms);
         }
     }
 }

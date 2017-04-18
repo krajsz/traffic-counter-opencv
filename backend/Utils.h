@@ -37,6 +37,7 @@ public:
 
     static QImage Mat2QImage(const cv::Mat& src);
     static cv::Mat QImage2Mat(const QImage& src);
+    static QString videoLengthFormatted(int milliseconds);
 };
 
 #endif // UTILS_H

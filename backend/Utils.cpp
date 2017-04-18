@@ -39,3 +39,23 @@ cv::Mat Utils::QImage2Mat(const QImage & src) {
   cv::cvtColor(tmp, result, CV_RGB2BGR);
   return result;
 }
+
+QString Utils::videoLengthFormatted(int milliseconds)
+{
+    QString lengthFormatted;
+
+    int seconds  = milliseconds/ 1000;
+    milliseconds %= 1000;
+    int minutes  = seconds / 60;
+    seconds  %= 60;
+    int hours  = minutes/ 60;
+    minutes  %= 60;
+
+    lengthFormatted.append(QString("%1").arg(hours, 2, 10, QLatin1Char('0')) + ":" +
+                           QString( "%1" ).arg(minutes, 2, 10, QLatin1Char('0')) + ":" +
+                           QString( "%1" ).arg(seconds, 2, 10, QLatin1Char('0')) + ":" +
+                           QString( "%1" ).arg(milliseconds, 3, 10, QLatin1Char('0')));
+    return lengthFormatted;
+}
+
+

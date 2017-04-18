@@ -1,5 +1,5 @@
 /***************************************************************************
-    File                 : TrafficCounterController.cpp
+    File                 : FileVideoSourceProgressBar.cpp
     Project              : TrafficCounter
     Description          :
     --------------------------------------------------------------------
@@ -24,74 +24,24 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
-#include "TrafficCounterController.h"
+#include "FileVideoSourceProgressBar.h"
+#include <QDebug>
 
-#include <QDateTime>
-
-#include <QImage>
-
-TrafficCounterController::TrafficCounterController(QObject *parent) : QObject(parent),
-    m_videoProcessor(new VideoProcessor),
-    m_videoRecorder(new VideoRecorder)
+FileVideoSourceProgressBar::FileVideoSourceProgressBar(QWidget *parent) : QProgressBar(parent),
+    m_updateProgressTimer(new QTimer)
 {
+    setRange(0, 1000);
+    connect(m_updateProgressTimer, SIGNAL(timeout()), this, SLOT(update()));
+
+    m_updateProgressTimer->start(50);
 }
 
-TrafficCounterController::~TrafficCounterController()
+void FileVideoSourceProgressBar::setText(const QString &text)
 {
-    delete m_videoProcessor;
-    delete m_videoRecorder;
+    m_text = text;
 }
 
-void TrafficCounterController::setSource(AbstractVideoSource *source)
+QString FileVideoSourceProgressBar::text() const
 {
-    m_videoProcessor->setSource(source);
-    m_videoProcessor->initialize();
-}
-
-QImage TrafficCounterController::currentFrame() const
-{
-    return m_videoProcessor->currentFrameQImage();
-}
-
-VideoProcessor* TrafficCounterController::videoProcessor() const
-{
-    return m_videoProcessor;
-}
-
-void TrafficCounterController::startProcessing()
-{
-    m_videoProcessor->startProcessing();
-}
-
-void TrafficCounterController::pauseProcessing()
-{
-    m_videoProcessor->pauseResume(true);
-}
-
-void TrafficCounterController::resumeProcessing()
-{
-    m_videoProcessor->pauseResume(false);
-}
-
-void TrafficCounterController::stopProcessing()
-{
-    m_videoProcessor->stopProcessing();
-}
-
-void TrafficCounterController::startRecording()
-{
-    m_videoRecorder->startRecording();
-}
-
-void TrafficCounterController::stopRecording()
-{
-    m_videoRecorder->stopRecording();
-}
-
-void TrafficCounterController::saveScreenshot()
-{
-    QString fileName = m_videoProcessor->source()->path()+ QLatin1String("_") +
-            QDateTime::currentDateTime().toString()+ QLatin1String(".jpg");
-
-    m_videoProcessor->currentFrameQImage().save(fileName);
+    return m_text;
 }

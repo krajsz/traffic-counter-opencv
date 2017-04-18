@@ -48,6 +48,8 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    m_fileVideoSourceProgressBar = ui->playbackProgressProgressBar;
+
     setAttribute(Qt::WA_DeleteOnClose);
 
     m_updateImageTimer->setInterval(30);
@@ -75,6 +77,11 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
 void TrafficCounterMainWindow::setController(TrafficCounterController *controller)
 {
     m_controller = controller;
+
+    connect(m_controller->videoProcessor(), &VideoProcessor::progress,
+            m_fileVideoSourceProgressBar, &FileVideoSourceProgressBar::setValue, Qt::DirectConnection);
+    connect(m_controller->videoProcessor(), &VideoProcessor::currentProgressInTime,
+            m_fileVideoSourceProgressBar, &FileVideoSourceProgressBar::setText, Qt::DirectConnection);
 }
 
 TrafficCounterMainWindow::~TrafficCounterMainWindow()
@@ -260,6 +267,5 @@ void TrafficCounterMainWindow::enableButtonStart(int newSourceType)
 
 void TrafficCounterMainWindow::updateImageLabel()
 {
-    qDebug() << "updating image..";
     ui->videoFrameDisplayLabel->setPixmap(QPixmap::fromImage(m_controller->currentFrame()));
 }

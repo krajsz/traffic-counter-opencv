@@ -1,9 +1,3 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2017-03-07T23:18:56
-#
-#-------------------------------------------------
-
 QT       += core gui sql multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -23,6 +17,7 @@ SOURCES += trafficCounterApp.cpp\
     backend/TrafficCounterController.cpp \
     backend/database/DatabaseManager.cpp \
     videosources/AbstractVideoSource.cpp \
+    videosources/CameraVideoSource.cpp \
     videosources/FileVideoSource.cpp \
     videosources/LiveIPCameraVideoSource.cpp \
     widgets/DatabaseSettingsDialog.cpp \
@@ -33,7 +28,7 @@ SOURCES += trafficCounterApp.cpp\
     widgets/IPCameraVideoSourceOptionsWidget.cpp \
     widgets/FileInfoDialog.cpp \
     widgets/CameraVideoSourceOptionsWidget.cpp \
-    videosources/CameraVideoSource.cpp
+    widgets/FileVideoSourceProgressBar.cpp
 
 HEADERS  += backend/CommandLineParser.h \
     backend/FrameProcessor.h \
@@ -44,6 +39,7 @@ HEADERS  += backend/CommandLineParser.h \
     backend/TrafficCounterController.h \
     backend/database/DatabaseManager.h \
     videosources/AbstractVideoSource.h \
+    videosources/CameraVideoSource.h \
     videosources/FileVideoSource.h \
     videosources/LiveIPCameraVideoSource.h \
     widgets/DatabaseSettingsDialog.h \
@@ -54,7 +50,7 @@ HEADERS  += backend/CommandLineParser.h \
     widgets/IPCameraVideoSourceOptionsWidget.h \
     widgets/FileInfoDialog.h \
     widgets/CameraVideoSourceOptionsWidget.h \
-    videosources/CameraVideoSource.h
+    widgets/FileVideoSourceProgressBar.h
 
 FORMS    += ui/databasesettingsdialog.ui \
     ui/trafficcountermainwindow.ui \
