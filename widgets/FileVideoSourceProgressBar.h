@@ -35,6 +35,7 @@ class FileVideoSourceProgressBar : public QProgressBar
     Q_OBJECT
 public:
     explicit FileVideoSourceProgressBar(QWidget *parent = 0);
+    ~FileVideoSourceProgressBar();
 signals:
 
 public Q_SLOTS:

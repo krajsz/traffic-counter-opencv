@@ -55,6 +55,10 @@ private Q_SLOTS:
     void removeConnection();
     void testConnection();
 
+    void testDatabaseNotOpened();
+    void testDatabaseNotValid();
+    void testDatabaseOk();
+
     void connectionSelectionChanged(int index);
     void driverChanged(const int index);
     void hostChanged(const QString& newHost);

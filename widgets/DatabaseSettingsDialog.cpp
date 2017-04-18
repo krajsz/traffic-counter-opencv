@@ -78,6 +78,25 @@ void DatabaseSettingsDialog::initSlots()
     connect(ui->passwordLineEdit, &QLineEdit::textEdited, this, &DatabaseSettingsDialog::passwordChanged);
 
     connect(ui->sqlConnectionsListWidget, &QListWidget::currentRowChanged, this, &DatabaseSettingsDialog::connectionSelectionChanged);
+
+    connect(m_dbManager, &DatabaseManager::testDatabaseNotOpened, this, &DatabaseSettingsDialog::testDatabaseNotOpened);
+    connect(m_dbManager, &DatabaseManager::testDatabaseNotValid, this, &DatabaseSettingsDialog::testDatabaseNotValid);
+    connect(m_dbManager, &DatabaseManager::testDatabaseOk, this, &DatabaseSettingsDialog::testDatabaseOk);
+}
+
+void DatabaseSettingsDialog::testDatabaseNotOpened()
+{
+    QMessageBox::warning(0, "Database testing error!", "Database not opened!");
+}
+
+void DatabaseSettingsDialog::testDatabaseNotValid()
+{
+    QMessageBox::warning(0, "Database testing error!", "Database not valid!");
+}
+
+void DatabaseSettingsDialog::testDatabaseOk()
+{
+    QMessageBox::information(0, "Database testing ok!", "Database opened!");
 }
 
 void DatabaseSettingsDialog::addConnection()

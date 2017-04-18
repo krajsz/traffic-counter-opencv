@@ -52,19 +52,43 @@ QList<DatabaseManager::SQLConnection *> DatabaseManager::connections() const
     return m_connections;
 }
 
-QSqlError DatabaseManager::connect(const int connectionIndex)
+void DatabaseManager::connect(const int connectionIndex)
 {
-    return QSqlError();
 }
 
-QSqlError DatabaseManager::testConnection(const int connectionIndex)
+void DatabaseManager::testConnection(const int connectionIndex)
 {
-    return QSqlError();
+    SQLConnection* conn = m_connections.at(connectionIndex);
+
+    testConnection(conn);
 }
 
-QSqlError DatabaseManager::testConnection(SQLConnection* conn)
+void DatabaseManager::testConnection(SQLConnection* conn)
 {
-    return QSqlError();
+    QStringList drivers = DatabaseManager::drivers();
+
+    QSqlDatabase database = QSqlDatabase::addDatabase(drivers.at(conn->vendorIndex));
+    database.setDatabaseName(conn->dbName);
+
+    if (database.isValid())
+    {
+        if (database.open())
+        {
+            if (database.isOpen())
+            {
+                database.close();
+                emit testDatabaseOk();
+            }
+        }
+        else
+        {
+            emit testDatabaseNotOpened();
+        }
+    }
+    else
+    {
+        emit testDatabaseNotValid();
+    }
 }
 
 void DatabaseManager::deleteConnection(const int connectionIndex)

@@ -34,6 +34,12 @@ FileVideoSourceProgressBar::FileVideoSourceProgressBar(QWidget *parent) : QProgr
     connect(m_updateProgressTimer, SIGNAL(timeout()), this, SLOT(update()));
 
     m_updateProgressTimer->start(50);
+    setAttribute(Qt::WA_DeleteOnClose);
+}
+
+FileVideoSourceProgressBar::~FileVideoSourceProgressBar()
+{
+    delete m_updateProgressTimer;
 }
 
 void FileVideoSourceProgressBar::setText(const QString &text)

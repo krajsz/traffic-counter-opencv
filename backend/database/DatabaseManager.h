@@ -48,9 +48,9 @@ public:
 
     static QStringList drivers();
 
-    QSqlError connect(const int connectionIndex);
-    QSqlError testConnection(const int connectionIndex);
-    QSqlError testConnection(SQLConnection* conn);
+    void connect(const int connectionIndex);
+    void testConnection(const int connectionIndex);
+    void testConnection(SQLConnection* conn);
 
     void deleteConnection(const int connectionIndex);
     void addConnection(SQLConnection *&conn);
@@ -81,6 +81,9 @@ private:
     int m_currentConnectionIndex;
 
 Q_SIGNALS:
+    void testDatabaseOk();
+    void testDatabaseNotOpened();
+    void testDatabaseNotValid();
 
 public Q_SLOTS:
     void saveConnections() const;
