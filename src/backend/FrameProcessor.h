@@ -52,6 +52,8 @@ private:
     IBGS* m_backgroundSubstractor;
     cv::Mat m_background;
     cv::Mat m_foreground;
+
+    void postProcess();
 };
 
 #endif // FRAMEPROCESSOR_H

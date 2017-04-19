@@ -58,6 +58,8 @@ private:
 
     FileVideoSourceProgressBar* m_fileVideoSourceProgressBar;
 
+    cv::Size m_imageLabelSize;
+
 protected:
     void keyPressEvent(QKeyEvent*);
     void closeEvent(QCloseEvent*);

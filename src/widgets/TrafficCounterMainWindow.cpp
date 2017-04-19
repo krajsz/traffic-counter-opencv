@@ -52,7 +52,7 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
 
     setAttribute(Qt::WA_DeleteOnClose);
 
-    ui->videoFrameDisplayLabel->setPixmap(QPixmap(":/images/noSource.png"));
+    ui->videoFrameDisplayLabel->setPixmap(QPixmap(QLatin1String(":/images/noSource.png")));
     addDockWidget(Qt::BottomDockWidgetArea, m_playbackActionsDock);
     addDockWidget(Qt::RightDockWidgetArea, m_videoSourceDock);
     connect(ui->aboutAction, &QAction::triggered, this, &TrafficCounterMainWindow::showAbout);
@@ -70,6 +70,7 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
 
     connect(m_videoSourceDock, &VideoSourceDock::currentFileSourceTypeChanged, this, &TrafficCounterMainWindow::enableButtonStart);
 
+    connect(m_videoSourceDock->fileVideoSourceOptions(), &FileVideoSourceOptionsWidget::fileOpened, m_playbackActionsDock->startButton(), &QPushButton::setEnabled);
 }
 
 void TrafficCounterMainWindow::setController(TrafficCounterController *controller)
@@ -293,12 +294,17 @@ void TrafficCounterMainWindow::enableButtonStart(int newSourceType)
     {
         CameraVideoSourceOptionsWidget* cvsow = m_videoSourceDock->cameraSourceOptions();
         m_playbackActionsDock->startButton()->setEnabled(cvsow->ok());
-
     }
 }
 
 void TrafficCounterMainWindow::updateImageLabel(const cv::Mat& img)
 {
-    QImage image = Utils::GrayMat2QImage(img);
+    m_imageLabelSize = cv::Size(ui->videoFrameDisplayLabel->size().width(),
+                                   ui->videoFrameDisplayLabel->size().height());
+    cv::Mat imcpy;
+
+    cv::resize(img, imcpy, m_imageLabelSize);
+    QImage image = Utils::GrayMat2QImage(imcpy);
+
     ui->videoFrameDisplayLabel->setPixmap(QPixmap::fromImage(image));
 }

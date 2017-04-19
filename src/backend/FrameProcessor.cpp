@@ -39,7 +39,19 @@ FrameProcessor::FrameProcessor(QObject *parent) : QObject(parent),
 
 void FrameProcessor::process(const cv::Mat &frame)
 {
-    emit frameProcessed(m_backgroundSubstractor->apply(frame));
+    cv::Mat fr;
+    m_backgroundSubstractor->process(frame, fr, m_background);
+    fr.copyTo(m_foreground);
+    fr.release();
+
+    emit frameProcessed(m_foreground);
+
+    postProcess();
+}
+
+void FrameProcessor::postProcess()
+{
+
 }
 
 cv::Mat FrameProcessor::backgroundMat() const

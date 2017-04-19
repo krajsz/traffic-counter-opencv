@@ -85,4 +85,6 @@ void FileVideoSourceOptionsWidget::openFile()
 {
     ui->filePathLineEdit->setText(QFileDialog::getOpenFileName(0, "Select your video",
                                                                QDir::homePath(), "Video files [ *.avi , *.mp4 , *.MP4 , *.MKV *.mkv]"));
+
+    emit fileOpened(ok());
 }
