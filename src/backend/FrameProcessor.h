@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : FrameProcessor.h
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,34 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#ifndef FRAMEPROCESSOR_H
+#define FRAMEPROCESSOR_H
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
+#include <QObject>
+#include <opencv2/opencv.hpp>
 
-#include <QDebug>
-int main(int argc, char *argv[])
+#include "3rdparty/package_bgs/bgslibrary.h"
+
+class FrameProcessor : public QObject
 {
-    QApplication a(argc, argv);
+    Q_OBJECT
+public:
+    explicit FrameProcessor(QObject *parent = 0);
+    cv::Mat backgroundMat() const;
+    cv::Mat foregroundMat() const;
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
+    QImage foregroundQImage() const;
 
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
+Q_SIGNALS:
+    void frameProcessed(const cv::Mat& frame);
 
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
+public Q_SLOTS:
+    void process(const cv::Mat& frame);
 
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
+private:
+    IBGS* m_backgroundSubstractor;
+    cv::Mat m_background;
+    cv::Mat m_foreground;
+};
 
-    if (commandLineParser.fileNameSet())
-    {
-
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
-}
+#endif // FRAMEPROCESSOR_H

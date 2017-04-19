@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : FileVideoSourceOptionsWidget.h
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,30 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#ifndef FILEVIDEOSOURCEOPTIONSWIDGET_H
+#define FILEVIDEOSOURCEOPTIONSWIDGET_H
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
+#include <QWidget>
+#include "ui_filevideosourceoptionswidget.h"
+#include "src/widgets/FileInfoDialog.h"
 
-#include <QDebug>
-int main(int argc, char *argv[])
+class FileVideoSourceOptionsWidget : public QWidget
 {
-    QApplication a(argc, argv);
+    Q_OBJECT
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
+public:
+    explicit FileVideoSourceOptionsWidget(QWidget *parent = 0);
+    ~FileVideoSourceOptionsWidget();
 
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
+    bool ok() const;
 
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
+    QString filePath() const;
 
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
+private:
+    Ui::FileVideoSourceOptionsWidget *ui;
+private Q_SLOTS:
+    void showFileInfoDialog();
+    void openFile();
+};
 
-    if (commandLineParser.fileNameSet())
-    {
-
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
-}
+#endif // FILEVIDEOSOURCEOPTIONSWIDGET_H

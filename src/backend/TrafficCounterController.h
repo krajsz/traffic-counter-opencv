@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : TrafficCounterController.h
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,45 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#ifndef TRAFFICCOUNTERCONTROLLER_H
+#define TRAFFICCOUNTERCONTROLLER_H
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
+#include "src/backend/VideoProcessor.h"
+#include "src/backend/VideoRecorder.h"
+#include "src/backend/database/DatabaseManager.h"
+#include <QObject>
 
-#include <QDebug>
-int main(int argc, char *argv[])
+class TrafficCounterController : public QObject
 {
-    QApplication a(argc, argv);
+    Q_OBJECT
+public:
+    explicit TrafficCounterController(QObject *parent = 0);
+    ~TrafficCounterController();
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
+    void setSource(AbstractVideoSource* source);
+    QImage currentFrame() const;
+    QImage foregroundFrame() const;
 
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
+    VideoProcessor* videoProcessor() const;
 
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
+private:
 
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
+    DatabaseManager* m_databaseManager;
+    VideoProcessor* m_videoProcessor;
+    VideoRecorder* m_videoRecorder;
 
-    if (commandLineParser.fileNameSet())
-    {
+signals:
 
-    }
+public slots:
+    void startProcessing();
+    void pauseProcessing();
+    void resumeProcessing();
+    void stopProcessing();
 
-    if (commandLineParser.record())
-    {
+    void startRecording();
+    void stopRecording();
 
-    }
+    void saveScreenshot();
+};
 
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
-}
+#endif // TRAFFICCOUNTERCONTROLLER_H

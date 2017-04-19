@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : FileVideoSourceProgressBar.cpp
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,30 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
-
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
-
+#include "src/widgets/FileVideoSourceProgressBar.h"
 #include <QDebug>
-int main(int argc, char *argv[])
+
+FileVideoSourceProgressBar::FileVideoSourceProgressBar(QWidget *parent) : QProgressBar(parent),
+    m_updateProgressTimer(new QTimer)
 {
-    QApplication a(argc, argv);
+    setRange(0, 1000);
+    connect(m_updateProgressTimer, SIGNAL(timeout()), this, SLOT(update()));
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
+    m_updateProgressTimer->start(50);
+    setAttribute(Qt::WA_DeleteOnClose);
+}
 
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
+FileVideoSourceProgressBar::~FileVideoSourceProgressBar()
+{
+    delete m_updateProgressTimer;
+}
 
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
+void FileVideoSourceProgressBar::setText(const QString &text)
+{
+    m_text = text;
+}
 
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
-
-    if (commandLineParser.fileNameSet())
-    {
-
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
+QString FileVideoSourceProgressBar::text() const
+{
+    return m_text;
 }

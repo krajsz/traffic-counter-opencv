@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : Utils.h
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,21 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#ifndef UTILS_H
+#define UTILS_H
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
+#include <QImage>
+#include <opencv2/opencv.hpp>
 
-#include <QDebug>
-int main(int argc, char *argv[])
+class Utils
 {
-    QApplication a(argc, argv);
+public:
+    Utils() = default;
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
+    static QImage Mat2QImage(const cv::Mat& src);
+    static cv::Mat QImage2Mat(const QImage& src);
+    static QString videoLengthFormatted(int milliseconds);
+    static QImage GrayMat2QImage(const cv::Mat & src);
+};
 
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
-
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
-
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
-
-    if (commandLineParser.fileNameSet())
-    {
-
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
-}
+#endif // UTILS_H

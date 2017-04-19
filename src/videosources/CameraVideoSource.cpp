@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : CameraVideoSource.cpp
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,19 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#include "src/videosources/CameraVideoSource.h"
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
-
-#include <QDebug>
-int main(int argc, char *argv[])
+CameraVideoSource::CameraVideoSource(const QString &path, QObject *parent) : AbstractVideoSource(path, parent)
 {
-    QApplication a(argc, argv);
+}
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
 
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
+QCameraInfo CameraVideoSource::infos() const
+{
+    return m_infos;
+}
 
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
-
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
-
-    if (commandLineParser.fileNameSet())
-    {
-
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
+void CameraVideoSource::setInfos(const QCameraInfo &info)
+{
+    m_infos = info;
 }

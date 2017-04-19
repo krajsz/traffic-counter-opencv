@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : FileVideoSourceProgressBar.cpp
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,57 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#ifndef FILEVIDEOSOURCEPROGRESSBAR_H
+#define FILEVIDEOSOURCEPROGRESSBAR_H
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
+#include <QTimer>
+#include <QProgressBar>
 
-#include <QDebug>
-int main(int argc, char *argv[])
+class FileVideoSourceProgressBar : public QProgressBar
 {
-    QApplication a(argc, argv);
+    Q_OBJECT
+public:
+    /*!
+     * \brief FileVideoSourceProgressBar's construcor.
+     * Constructs a FileVideoSourceProgressBar.
+     * \param parent
+     */
+    explicit FileVideoSourceProgressBar(QWidget *parent = 0);
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
+    /*!
+     * \brief FileVideoSourceProgressBar's destructor.
+     * Destructs this object.
+     */
+    ~FileVideoSourceProgressBar();
+signals:
 
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
+public Q_SLOTS:
+    /*!
+     * \brief setText
+     * Sets the QProgressBar's display text to text.
+     * \param text the text to be set as the QProgressBar's text.
+     * \sa text()
+     */
+    void setText(const QString& text);
 
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
+protected:
 
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
+    /*!
+     * \brief FileVideoSourceProgressBar::text
+     *  Returns m_text as the QProgressBar's text, this is used by the QProgressBar itself.
+     * \return
+     */
+    QString text() const;
+private:
+    /*!
+     * \brief The text to be shown on the QProgressBar.
+     */
+    QString m_text;
 
-    if (commandLineParser.fileNameSet())
-    {
+    /*!
+     * \brief QTimer which updates the QProgressBar.
+     */
+    QTimer* m_updateProgressTimer;
+};
 
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
-}
+#endif // FILEVIDEOSOURCEPROGRESSBAR_H

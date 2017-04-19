@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : FileVideoSource.h
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,31 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#ifndef FILEVIDEOSOURCE_H
+#define FILEVIDEOSOURCE_H
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
+#include "src/videosources/AbstractVideoSource.h"
 
-#include <QDebug>
-int main(int argc, char *argv[])
+class FileVideoSource : public AbstractVideoSource
 {
-    QApplication a(argc, argv);
+    Q_OBJECT
+public:
+    FileVideoSource(const QString& path, QObject* parent = nullptr);
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
-
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
-
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
-
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
+    struct VideoInfo
     {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
+        double fps;
+        int frameCount;
+        QString lenghtFormatted;
+        QSize frameSize;
+    };
 
-    if (commandLineParser.fileNameSet())
-    {
+    VideoInfo infos() const;
+    void setInfos(const VideoInfo& info);
+private:
 
-    }
+    VideoInfo m_infos;
 
-    if (commandLineParser.record())
-    {
+};
 
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
-}
+#endif // FILEVIDEOSOURCE_H

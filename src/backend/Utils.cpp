@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : Utils.cpp
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,48 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#include "src/backend/Utils.h"
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
-
-#include <QDebug>
-int main(int argc, char *argv[])
+QImage Utils::Mat2QImage(const cv::Mat & src)
 {
-    QApplication a(argc, argv);
-
-    qRegisterMetaType<cv::Mat>("cv::Mat");
-
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
-
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
-
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
-
-    if (commandLineParser.fileNameSet())
-    {
-
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
+  cv::Mat temp;
+  cv::cvtColor(src, temp, CV_BGR2RGB);
+  QImage dest((const uchar *)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+  dest.bits();
+  return dest;
 }
+
+QImage Utils::GrayMat2QImage(const cv::Mat & src)
+{
+  QImage dest((const uchar *)src.data, src.cols, src.rows, src.step, QImage::Format_Indexed8);
+  dest.bits();
+  return dest;
+}
+
+cv::Mat Utils::QImage2Mat(const QImage & src)
+{
+  cv::Mat tmp(src.height(), src.width(), CV_8UC3, (uchar*)src.bits(), src.bytesPerLine());
+  cv::Mat result;
+  cv::cvtColor(tmp, result, CV_RGB2BGR);
+  return result;
+}
+
+QString Utils::videoLengthFormatted(int milliseconds)
+{
+    QString lengthFormatted;
+
+    int seconds  = milliseconds/ 1000;
+    milliseconds %= 1000;
+    int minutes  = seconds / 60;
+    seconds  %= 60;
+    int hours  = minutes/ 60;
+    minutes  %= 60;
+
+    lengthFormatted.append(QString("%1").arg(hours, 2, 10, QLatin1Char('0')) + ":" +
+                           QString( "%1" ).arg(minutes, 2, 10, QLatin1Char('0')) + ":" +
+                           QString( "%1" ).arg(seconds, 2, 10, QLatin1Char('0')) + ":" +
+                           QString( "%1" ).arg(milliseconds, 3, 10, QLatin1Char('0')));
+    return lengthFormatted;
+}
+
+

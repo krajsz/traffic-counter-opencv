@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : VideoProcessor.h
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,67 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#ifndef VIDEOPROCESSOR_H
+#define VIDEOPROCESSOR_H
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
+#include <QThread>
 
-#include <QDebug>
-int main(int argc, char *argv[])
+#include "src/backend/FrameProcessor.h"
+#include "src/videosources/FileVideoSource.h"
+
+class QTimer;
+
+class VideoProcessor : public QThread
 {
-    QApplication a(argc, argv);
+    Q_OBJECT
+public:
+    explicit VideoProcessor(QObject *parent = 0);
+    void startProcessing();
+    void stopProcessing();
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
+    void setSource(AbstractVideoSource* source);
+    void process();
 
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
+    AbstractVideoSource* source() const;
+    FrameProcessor* frameProcessor() const;
 
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
+    void initialize();
 
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
+    bool isPaused() const;
+    bool isProcessing() const;
+    bool isReadyForProcessing() const;
 
-    if (commandLineParser.fileNameSet())
-    {
+    cv::VideoCapture reader() const;
 
-    }
+    QImage currentFrameQImage() const;
+    cv::Mat currentFrameMat() const;
 
-    if (commandLineParser.record())
-    {
+    static FileVideoSource::VideoInfo videoInfos(const QString& filename);
 
-    }
+private:
+    AbstractVideoSource* m_source;
+    FrameProcessor* m_frameProcessor;
 
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
+    cv::VideoCapture m_videoReader;
+    cv::Mat m_currentFrame;
 
-    return a.exec();
-}
+    bool m_processing;
+    bool m_paused;
+    bool m_readyForProcessing;
+
+protected:
+    void run() override;
+    static void msleep(unsigned long msecs);
+
+public Q_SLOTS:
+    void pauseResume(bool pause);
+
+signals:
+    void progress(int value);
+    void frameReadyForProcessing(const cv::Mat& frame);
+    void currentProgressInTime(const QString& time);
+public slots:
+
+};
+
+#endif // VIDEOPROCESSOR_H

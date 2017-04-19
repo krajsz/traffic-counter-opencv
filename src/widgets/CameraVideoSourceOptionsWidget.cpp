@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : CameraVideoSourceOptionsWidget.cpp
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,45 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
-
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
+#include "src/widgets/CameraVideoSourceOptionsWidget.h"
+#include "ui_cameravideosourceoptionswidget.h"
+#include <QCamera>
+#include <QCameraInfo>
 
 #include <QDebug>
-int main(int argc, char *argv[])
+CameraVideoSourceOptionsWidget::CameraVideoSourceOptionsWidget(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::CameraVideoSourceOptionsWidget)
 {
-    QApplication a(argc, argv);
+    ui->setupUi(this);
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
+    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+    foreach (const QCameraInfo &cameraInfo, cameras) {
+        QListWidgetItem* cameraDescription = new QListWidgetItem(cameraInfo.deviceName() +
+                                                                 QLatin1String(" ") + cameraInfo.description());
 
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
 
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
-
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
+        ui->availableCamerasListWidget->addItem(cameraDescription);
     }
-    else
+    if (!ui->availableCamerasListWidget->count())
     {
-        //nogui, controller
+        QListWidgetItem* noCamerasItem = new QListWidgetItem(QLatin1String("No cameras found."));
+        noCamerasItem->setFlags(noCamerasItem->flags()& ~Qt::ItemIsSelectable);
+        ui->availableCamerasListWidget->addItem(noCamerasItem);
+        ui->selectCameraButton->setEnabled(false);
     }
+}
 
-    if (commandLineParser.fileNameSet())
-    {
+bool CameraVideoSourceOptionsWidget::ok() const
+{
+    return ui->selectCameraButton->isEnabled();
+}
+QString CameraVideoSourceOptionsWidget::cameraName() const
+{
+    return ui->availableCamerasListWidget->currentItem()->text();
+}
 
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
+CameraVideoSourceOptionsWidget::~CameraVideoSourceOptionsWidget()
+{
+    delete ui;
 }

@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : CommandLineParser.h
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,43 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#ifndef COMMANDLINEPARSER_H
+#define COMMANDLINEPARSER_H
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
+#include <QObject>
+#include <QCommandLineOption>
+#include <QCommandLineParser>
+#include <QVector>
+#include <QSocketNotifier>
 
-#include <QDebug>
-int main(int argc, char *argv[])
+namespace Cli
 {
-    QApplication a(argc, argv);
+class CommandLineParser : public QObject
+{
+    Q_OBJECT
+public:
+    explicit CommandLineParser(QObject *parent = 0);
+    bool showGui() const;
+    bool fileNameSet() const;
+    bool record() const;
+    QString fileName() const;
+    void parse(const QCoreApplication &app);
+private:
+    QCommandLineParser m_optionsParser;
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
+    bool m_fileNameSet;
+    bool m_showGui;
 
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
+    bool m_record;
 
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
+    QSocketNotifier m_stdinNotifier;
 
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
+signals:
 
-    if (commandLineParser.fileNameSet())
-    {
+public Q_SLOTS:
 
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
+private Q_SLOTS:
+    void stdinInputReceived();
+};
 }
+#endif // COMMANDLINEPARSER_H

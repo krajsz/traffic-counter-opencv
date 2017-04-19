@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : VideoSourceDock.h
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,53 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#ifndef VIDEOSOURCEDOCK_H
+#define VIDEOSOURCEDOCK_H
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
+#include <QDockWidget>
+#include "src/widgets/FileVideoSourceOptionsWidget.h"
+#include "src/widgets/IPCameraVideoSourceOptionsWidget.h"
+#include "src/widgets/CameraVideoSourceOptionsWidget.h"
 
-#include <QDebug>
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
+#include "ui_videosourcedock.h"
+#include <QStackedWidget>
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
-
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
-
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
-
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
-
-    if (commandLineParser.fileNameSet())
-    {
-
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
+namespace Ui {
+class VideoSourceDock;
 }
+
+class VideoSourceDock : public QDockWidget
+{
+    Q_OBJECT
+
+public:
+    /*!
+     * \brief VideoSourceDock
+     * \param parent
+     */
+    explicit VideoSourceDock(QWidget *parent = 0);
+
+    /*!
+
+      */
+    ~VideoSourceDock();
+
+    FileVideoSourceOptionsWidget* fileVideoSourceOptions() const;
+    IPCameraVideoSourceOptionsWidget* ipCameraSourceOptions() const;
+    CameraVideoSourceOptionsWidget* cameraSourceOptions() const;
+
+    int type() const;
+
+private:
+    Ui::VideoSourceDock *ui;
+
+    FileVideoSourceOptionsWidget* m_fileVideoSourceOptionsWidget;
+    IPCameraVideoSourceOptionsWidget* m_ipCameraVideoSourceOptionsWidget;
+    CameraVideoSourceOptionsWidget* m_cameraVideoSourceOptionsWidget;
+Q_SIGNALS:
+    void currentFileSourceTypeChanged(int type);
+private Q_SLOTS:
+    void sourceTypeChanged(bool checked);
+};
+
+#endif // VIDEOSOURCEDOCK_H

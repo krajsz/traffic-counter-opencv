@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : FrameProcessor.cpp
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,35 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#include "src/backend/FrameProcessor.h"
+#include "src/backend/Utils.h"
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
+#include "3rdparty/package_bgs/FrameDifference.h"
 
 #include <QDebug>
-int main(int argc, char *argv[])
+
+FrameProcessor::FrameProcessor(QObject *parent) : QObject(parent),
+    m_backgroundSubstractor(new FrameDifference)
 {
-    QApplication a(argc, argv);
+    m_backgroundSubstractor->setShowOutput(false);
+}
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
+void FrameProcessor::process(const cv::Mat &frame)
+{
+    emit frameProcessed(m_backgroundSubstractor->apply(frame));
+}
 
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
+cv::Mat FrameProcessor::backgroundMat() const
+{
+    return m_background;
+}
 
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
+QImage FrameProcessor::foregroundQImage() const
+{
+    return Utils::Mat2QImage(m_foreground);
+}
 
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
-
-    if (commandLineParser.fileNameSet())
-    {
-
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
+cv::Mat FrameProcessor::foregroundMat() const
+{
+    return m_foreground;
 }

@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : PlaybackActionsDock.cpp
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,48 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#include "src/widgets/PlaybackActionsDock.h"
+#include "ui_playbackactionsdock.h"
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
-
-#include <QDebug>
-int main(int argc, char *argv[])
+PlaybackActionsDock::PlaybackActionsDock(QWidget *parent) :
+    QDockWidget(parent),
+    ui(new Ui::PlaybackActionsDock)
 {
-    QApplication a(argc, argv);
+    ui->setupUi(this);
+    ui->pauseButton->setEnabled(false);
+    ui->recordButton->setEnabled(false);
+    ui->saveScreenshotButton->setEnabled(false);
+    ui->startButton->setEnabled(false);
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
+    connect(ui->startButton, &QPushButton::clicked, this,
+            [=] {
+        ui->pauseButton->setEnabled(true);
+        ui->recordButton->setEnabled(true);
+        ui->saveScreenshotButton->setEnabled(true);
+    });
+}
 
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
+PlaybackActionsDock::~PlaybackActionsDock()
+{
+    delete ui;
+}
 
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
+QPushButton* PlaybackActionsDock::pauseButton()
+{
+    return ui->pauseButton;
+}
 
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
+QPushButton* PlaybackActionsDock::startButton()
+{
+    return ui->startButton;
+}
 
-    if (commandLineParser.fileNameSet())
-    {
+QPushButton* PlaybackActionsDock::recordButton()
+{
+    return ui->recordButton;
+}
 
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
+QPushButton* PlaybackActionsDock::saveScreenshotButton()
+{
+    return ui->saveScreenshotButton;
 }

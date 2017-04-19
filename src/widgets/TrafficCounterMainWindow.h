@@ -1,7 +1,7 @@
 /***************************************************************************
-    File                 : trafficCounterApp.cpp
+    File                 : TrafficCounterMainWindow.h
     Project              : TrafficCounter
-    Description          : Main function
+    Description          :
     --------------------------------------------------------------------
     Copyright            : (C) 2017 Fábián Kristóf - Szabolcs (fkristofszabolcs@gmail.com)
  ***************************************************************************/
@@ -24,54 +24,65 @@
  *   Boston, MA  02110-1301  USA                                           *
  *                                                                         *
  ***************************************************************************/
+#ifndef TRAFFICCOUNTERMAIN_H
+#define TRAFFICCOUNTERMAIN_H
 
-#include <QApplication>
-#include "src/widgets/TrafficCounterMainWindow.h"
-#include "src/backend/CommandLineParser.h"
+#include <QMainWindow>
+#include "src/widgets/PlaybackActionsDock.h"
+#include "src/widgets/DatabaseSettingsDialog.h"
+#include "src/widgets/VideoSourceDock.h"
+#include "src/widgets/FileVideoSourceProgressBar.h"
 
-#include <QDebug>
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
+#include "src/backend/TrafficCounterController.h"
 
-    qRegisterMetaType<cv::Mat>("cv::Mat");
-
-    QCoreApplication::setApplicationName("TrafficCounter");
-    QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
-    QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
-
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
-
-    TrafficCounterMainWindow* win;
-    TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
-    {
-        //show gui
-        win =  new TrafficCounterMainWindow;
-        win->setController(trafficCounterController);
-        win->show();
-    }
-    else
-    {
-        //nogui, controller
-    }
-
-    if (commandLineParser.fileNameSet())
-    {
-
-    }
-
-    if (commandLineParser.record())
-    {
-
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
-    }
-
-    return a.exec();
+namespace Ui {
+class TrafficCounterMainWindow;
 }
+
+class TrafficCounterMainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit TrafficCounterMainWindow(QWidget *parent = 0);
+    ~TrafficCounterMainWindow();
+
+    void setController(TrafficCounterController* controller);
+private:
+    Ui::TrafficCounterMainWindow *ui;
+
+    PlaybackActionsDock* m_playbackActionsDock;
+    DatabaseSettingsDialog* m_databaseSettingsDialog;
+    VideoSourceDock* m_videoSourceDock;
+    TrafficCounterController* m_controller;
+
+    FileVideoSourceProgressBar* m_fileVideoSourceProgressBar;
+
+protected:
+    void keyPressEvent(QKeyEvent*);
+    void closeEvent(QCloseEvent*);
+
+private Q_SLOTS:
+    void showAbout();
+    void databaseSettingsActionClicked();
+    void sourceSettingsActionChecked(bool checked);
+    void playActionsChecked(bool checked);
+    void openFileActionClicked();
+    void playbackDockClosed();
+    void videoSourceDockClosed();
+
+    void enableButtonStart(int newSourceType);
+
+    void startProcessing();
+    void stopProcessing();
+    void record();
+    void saveScreenshot();
+    void pauseProcessing();
+    void resumeProcessing();
+
+    void pauseResumeButtonClicked();
+    void startStopButtonClicked();
+    void updateImageLabel(const Mat &img);
+};
+
+#endif // TRAFFICCOUNTERMAIN_H
