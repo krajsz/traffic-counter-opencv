@@ -28,6 +28,7 @@
 #include <QApplication>
 #include "src/widgets/TrafficCounterMainWindow.h"
 #include "src/backend/CommandLineParser.h"
+#include <QDir>
 
 #include <QDebug>
 int main(int argc, char *argv[])
@@ -35,6 +36,16 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     qRegisterMetaType<cv::Mat>("cv::Mat");
+
+
+    // config directory needed by BGSLib
+    QDir configDirForBGS (QDir::current().path() + QLatin1String("/config"));
+
+    if (!configDirForBGS.exists())
+    {
+        QDir createConfigDir (QDir::current().path());
+        createConfigDir.mkdir("./config");
+    }
 
     QCoreApplication::setApplicationName("TrafficCounter");
     QCoreApplication::setOrganizationName("University of Debrecen");
@@ -66,11 +77,6 @@ int main(int argc, char *argv[])
     if (commandLineParser.record())
     {
 
-    }
-
-    if (win == nullptr)
-    {
-        delete trafficCounterController;
     }
 
     return a.exec();
