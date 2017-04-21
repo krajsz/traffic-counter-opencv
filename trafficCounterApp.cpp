@@ -44,12 +44,12 @@ int main(int argc, char *argv[])
     if (!configDirForBGS.exists())
     {
         QDir createConfigDir (QDir::current().path());
-        createConfigDir.mkdir("./config");
+        createConfigDir.mkdir(QLatin1String("./config"));
     }
 
     QCoreApplication::setApplicationName("TrafficCounter");
     QCoreApplication::setOrganizationName("University of Debrecen");
-    QCoreApplication::setApplicationVersion("1.0");
+    QCoreApplication::setApplicationVersion("0.1");
     QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
 
     Cli::CommandLineParser commandLineParser;
