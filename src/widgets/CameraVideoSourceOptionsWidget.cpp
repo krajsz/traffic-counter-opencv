@@ -36,7 +36,7 @@ CameraVideoSourceOptionsWidget::CameraVideoSourceOptionsWidget(QWidget *parent) 
 {
     ui->setupUi(this);
 
-    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+    QList<QCameraInfo> cameras = QCameraInfo::availableCameras(QCamera::FrontFace);
     foreach (const QCameraInfo &cameraInfo, cameras) {
         QListWidgetItem* cameraDescription = new QListWidgetItem(cameraInfo.deviceName() +
                                                                  QLatin1String(" ") + cameraInfo.description());

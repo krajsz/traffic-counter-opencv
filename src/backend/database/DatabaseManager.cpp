@@ -82,6 +82,7 @@ void DatabaseManager::testConnection(SQLConnection* conn)
         }
         else
         {
+            qDebug() << database.lastError().text();
             emit testDatabaseNotOpened();
         }
     }
