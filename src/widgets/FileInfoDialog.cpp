@@ -28,7 +28,6 @@
 #include "ui_fileinfodialog.h"
 #include "src/backend/VideoProcessor.h"
 
-#include <QProcess>
 #include <QFileInfo>
 #include <QDateTime>
 

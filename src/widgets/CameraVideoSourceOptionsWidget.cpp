@@ -28,6 +28,7 @@
 #include "ui_cameravideosourceoptionswidget.h"
 #include <QCamera>
 #include <QCameraInfo>
+#include <QDir>
 
 #include <QDebug>
 CameraVideoSourceOptionsWidget::CameraVideoSourceOptionsWidget(QWidget *parent) :
@@ -46,10 +47,27 @@ CameraVideoSourceOptionsWidget::CameraVideoSourceOptionsWidget(QWidget *parent) 
     }
     if (!ui->availableCamerasListWidget->count())
     {
-        QListWidgetItem* noCamerasItem = new QListWidgetItem(QLatin1String("No cameras found."));
-        noCamerasItem->setFlags(noCamerasItem->flags()& ~Qt::ItemIsSelectable);
-        ui->availableCamerasListWidget->addItem(noCamerasItem);
-        ui->selectCameraButton->setEnabled(false);
+        //maybe Qt can't see them somehow, let's check it again
+#ifdef Q_OS_LINUX
+        qDebug() << "dir";
+
+        QDir lsDevDir("/dev/");
+        lsDevDir.setNameFilters(QStringList() << "video*");
+        QStringList devVids = lsDevDir.entryList(QDir::System);
+
+        foreach (const QString& devv, devVids)
+        {
+            QListWidgetItem* devItem = new QListWidgetItem("Device /dev/" + devv);
+            ui->availableCamerasListWidget->addItem(devItem);
+        }
+#endif
+        if (ui->availableCamerasListWidget->count() == 0)
+        {
+            QListWidgetItem* noCamerasItem = new QListWidgetItem(QLatin1String("No cameras found."));
+            noCamerasItem->setFlags(noCamerasItem->flags()& ~Qt::ItemIsSelectable);
+            ui->availableCamerasListWidget->addItem(noCamerasItem);
+            ui->selectCameraButton->setEnabled(false);
+        }
     }
 }
 
