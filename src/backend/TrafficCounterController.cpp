@@ -26,6 +26,7 @@
  ***************************************************************************/
 #include "src/backend/TrafficCounterController.h"
 #include "src/backend/Utils.h"
+#include "src/videosources/CameraVideoSource.h"
 
 #include <QDateTime>
 #include <QDebug>
@@ -98,8 +99,17 @@ void TrafficCounterController::stopRecording()
 
 void TrafficCounterController::saveScreenshot()
 {
-    QString fileName = m_videoProcessor->source()->path()+ QLatin1String("_") +
-            QDateTime::currentDateTime().toString()+ QLatin1String(".jpg");
+    QString fileName;
+    if (dynamic_cast<CameraVideoSource*> (m_videoProcessor->source()))
+    {
+        fileName = QLatin1String("webcam_") + m_videoProcessor->source()->path() + QLatin1String("_") +
+                QDateTime::currentDateTime().toString()+ QLatin1String(".jpg");
+    }
+    else
+    {
+        fileName = m_videoProcessor->source()->path()+ QLatin1String("_") +
+                QDateTime::currentDateTime().toString()+ QLatin1String(".jpg");
+    }
 
     m_videoProcessor->currentFrameQImage().save(fileName);
 }

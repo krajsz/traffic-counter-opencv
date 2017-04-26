@@ -27,6 +27,7 @@
 #ifndef VEHICLEBLOB_H
 #define VEHICLEBLOB_H
 
+#include <opencv2/features2d.hpp>
 
 class VehicleBlob
 {

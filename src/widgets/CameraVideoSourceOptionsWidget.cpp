@@ -43,8 +43,6 @@ CameraVideoSourceOptionsWidget::CameraVideoSourceOptionsWidget(QWidget *parent) 
     foreach (const QCameraInfo &cameraInfo, cameras) {
         QListWidgetItem* cameraDescription = new QListWidgetItem(cameraInfo.deviceName() +
                                                                  QLatin1String(" ") + cameraInfo.description());
-
-
         ui->availableCamerasListWidget->addItem(cameraDescription);
     }
     if (!ui->availableCamerasListWidget->count())
@@ -61,6 +59,11 @@ CameraVideoSourceOptionsWidget::CameraVideoSourceOptionsWidget(QWidget *parent) 
             noCamerasItem->setFlags(noCamerasItem->flags()& ~Qt::ItemIsSelectable);
             ui->availableCamerasListWidget->addItem(noCamerasItem);
             ui->selectCameraButton->setEnabled(false);
+        }
+        else
+        {
+            ui->availableCamerasListWidget->setCurrentRow(0);
+            ui->availableCamerasListWidget->item(0)->setSelected(true);
         }
     }
 }

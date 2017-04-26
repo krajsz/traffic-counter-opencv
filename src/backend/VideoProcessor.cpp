@@ -182,8 +182,6 @@ void VideoProcessor::process()
 {
     if (!m_paused)
     {
-        // read
-
         m_videoReader.read(m_currentFrame);
 
         if (!m_currentFrame.empty())

@@ -295,16 +295,20 @@ void TrafficCounterMainWindow::enableButtonStart(int newSourceType)
     {
         FileVideoSourceOptionsWidget* fsow = m_videoSourceDock->fileVideoSourceOptions();
         m_playbackActionsDock->startButton()->setEnabled(fsow->ok());
+        ui->playbackProgressProgressBar->show();
     }
     else if (newSourceType == 1)
     {
         IPCameraVideoSourceOptionsWidget* ipcvsow = m_videoSourceDock->ipCameraSourceOptions();
         m_playbackActionsDock->startButton()->setEnabled(ipcvsow->ok());
+        ui->playbackProgressProgressBar->hide();
+
     }
     else
     {
         CameraVideoSourceOptionsWidget* cvsow = m_videoSourceDock->cameraSourceOptions();
         m_playbackActionsDock->startButton()->setEnabled(cvsow->ok());
+        ui->playbackProgressProgressBar->hide();
     }
 }
 
@@ -315,6 +319,7 @@ void TrafficCounterMainWindow::updateImageLabel(const cv::Mat& img)
     cv::Mat imcpy;
 
     cv::resize(img, imcpy, m_imageLabelSize);
+    // here
     QImage image = Utils::Mat2QImage(imcpy);
 
     ui->videoFrameDisplayLabel->setPixmap(QPixmap::fromImage(image));

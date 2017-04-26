@@ -44,7 +44,6 @@ void VideoRecorder::write(const cv::Mat &frame)
     if (m_recorder.isOpened())
     {
         m_recorder.write(frame);
-        qDebug() << "writing";
     }
 }
 
@@ -63,6 +62,6 @@ void VideoRecorder::startRecording()
         m_filePath += "/TrafficCounter_recording.avi";
         qDebug() << m_filePath;
         int fcc = cv::VideoWriter::fourcc('H','2','6','4');
-        m_recorder.open(m_filePath.toStdString(), fcc, 30, cv::Size(640, 480));
+        m_recorder.open(m_filePath.toStdString(), fcc, 24, cv::Size(640, 480));
     }
 }
