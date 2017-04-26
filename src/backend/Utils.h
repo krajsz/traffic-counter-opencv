@@ -30,6 +30,7 @@
 #include <QImage>
 #include <opencv2/opencv.hpp>
 
+class QStringList;
 class Utils
 {
 public:
@@ -39,6 +40,7 @@ public:
     static cv::Mat QImage2Mat(const QImage& src);
     static QString videoLengthFormatted(int milliseconds);
     static QImage GrayMat2QImage(const cv::Mat & src);
+    static QStringList availableCamerasList();
 };
 
 #endif // UTILS_H

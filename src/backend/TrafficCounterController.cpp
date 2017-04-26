@@ -28,7 +28,7 @@
 #include "src/backend/Utils.h"
 
 #include <QDateTime>
-
+#include <QDebug>
 #include <QImage>
 
 TrafficCounterController::TrafficCounterController(QObject *parent) : QObject(parent),
@@ -87,11 +87,13 @@ void TrafficCounterController::stopProcessing()
 void TrafficCounterController::startRecording()
 {
     m_videoRecorder->startRecording();
+    connect(m_videoProcessor, &VideoProcessor::frameReadyForProcessing, m_videoRecorder, &VideoRecorder::write);
 }
 
 void TrafficCounterController::stopRecording()
 {
     m_videoRecorder->stopRecording();
+    disconnect(m_videoProcessor, &VideoProcessor::frameReadyForProcessing, m_videoRecorder, &VideoRecorder::write);
 }
 
 void TrafficCounterController::saveScreenshot()

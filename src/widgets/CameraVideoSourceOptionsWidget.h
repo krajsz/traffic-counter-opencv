@@ -43,7 +43,7 @@ public:
 
     bool ok() const;
 
-    QString cameraName() const;
+    int cameraName() const;
 
 private:
     Ui::CameraVideoSourceOptionsWidget *ui;

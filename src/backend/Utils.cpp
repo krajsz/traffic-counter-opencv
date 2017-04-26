@@ -25,6 +25,8 @@
  *                                                                         *
  ***************************************************************************/
 #include "src/backend/Utils.h"
+#include <QStringList>
+#include <QDir>
 
 QImage Utils::Mat2QImage(const cv::Mat & src)
 {
@@ -68,4 +70,14 @@ QString Utils::videoLengthFormatted(int milliseconds)
     return lengthFormatted;
 }
 
+QStringList Utils::availableCamerasList()
+{
+#ifdef Q_OS_LINUX
+    QDir lsDevDir(QLatin1String("/dev/"));
+    lsDevDir.setNameFilters(QStringList() << "video*");
+
+    return lsDevDir.entryList(QDir::System);
+#endif
+    return QStringList();
+}
 

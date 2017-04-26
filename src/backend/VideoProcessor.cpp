@@ -62,10 +62,6 @@ void VideoProcessor::initialize()
     {
         qDebug() << "file";
         m_videoReader.open(m_source->path().toStdString());
-        if (m_videoReader.isOpened())
-        {
-            m_readyForProcessing = true;
-        }
     }
 
     if (dynamic_cast<LiveIPCameraVideoSource*>(m_source))
@@ -83,23 +79,19 @@ void VideoProcessor::initialize()
             //path = ipCamSource->infos().
         }
         m_videoReader.open(path.toStdString());
-
-        if(m_videoReader.isOpened())
-        {
-            m_readyForProcessing = true;
-        }
     }
 
     if (dynamic_cast<CameraVideoSource*>(m_source))
     {
         qDebug() << "webcam";
         CameraVideoSource* source = dynamic_cast<CameraVideoSource*>(m_source);
-        int camIdx = source->infos().deviceName().toInt();
+        int camIdx = source->path().toInt();
         m_videoReader.open(camIdx);
-        if (m_videoReader.isOpened())
-        {
-            m_readyForProcessing = true;
-        }
+    }
+
+    if(m_videoReader.isOpened())
+    {
+        m_readyForProcessing = true;
     }
 }
 
@@ -193,7 +185,6 @@ void VideoProcessor::process()
         {
             //processing stuff here
             emit frameReadyForProcessing(m_currentFrame);
-
         }
         if (dynamic_cast<FileVideoSource*>(m_source))
         {
@@ -206,6 +197,10 @@ void VideoProcessor::process()
 
             emit currentProgressInTime(currentTime);
             msleep(ms);
+        }
+        if (dynamic_cast<CameraVideoSource*>(m_source))
+        {
+
         }
     }
 }

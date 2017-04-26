@@ -30,7 +30,7 @@
 #include <QThread>
 #include <opencv2/videoio.hpp>
 
-class VideoRecorder : public QThread
+class VideoRecorder : public QObject
 {
     Q_OBJECT
 public:
@@ -48,6 +48,7 @@ signals:
 
 public slots:
 
+    void write(const cv::Mat& frame);
     void startRecording();
     void stopRecording();
 };

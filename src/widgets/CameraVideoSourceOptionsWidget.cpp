@@ -25,7 +25,9 @@
  *                                                                         *
  ***************************************************************************/
 #include "src/widgets/CameraVideoSourceOptionsWidget.h"
+#include "src/backend/Utils.h"
 #include "ui_cameravideosourceoptionswidget.h"
+
 #include <QCamera>
 #include <QCameraInfo>
 #include <QDir>
@@ -47,20 +49,12 @@ CameraVideoSourceOptionsWidget::CameraVideoSourceOptionsWidget(QWidget *parent) 
     }
     if (!ui->availableCamerasListWidget->count())
     {
-        //maybe Qt can't see them somehow, let's check it again
-#ifdef Q_OS_LINUX
-        qDebug() << "dir";
-
-        QDir lsDevDir("/dev/");
-        lsDevDir.setNameFilters(QStringList() << "video*");
-        QStringList devVids = lsDevDir.entryList(QDir::System);
-
-        foreach (const QString& devv, devVids)
+        foreach (const QString& devv, Utils::availableCamerasList())
         {
             QListWidgetItem* devItem = new QListWidgetItem("Device /dev/" + devv);
             ui->availableCamerasListWidget->addItem(devItem);
         }
-#endif
+
         if (ui->availableCamerasListWidget->count() == 0)
         {
             QListWidgetItem* noCamerasItem = new QListWidgetItem(QLatin1String("No cameras found."));
@@ -75,9 +69,9 @@ bool CameraVideoSourceOptionsWidget::ok() const
 {
     return ui->selectCameraButton->isEnabled();
 }
-QString CameraVideoSourceOptionsWidget::cameraName() const
+int CameraVideoSourceOptionsWidget::cameraName() const
 {
-    return ui->availableCamerasListWidget->currentItem()->text();
+    return ui->availableCamerasListWidget->currentRow();
 }
 
 CameraVideoSourceOptionsWidget::~CameraVideoSourceOptionsWidget()

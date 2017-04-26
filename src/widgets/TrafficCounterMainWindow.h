@@ -77,14 +77,15 @@ private Q_SLOTS:
 
     void startProcessing();
     void stopProcessing();
-    void record();
+
     void saveScreenshot();
     void pauseProcessing();
     void resumeProcessing();
 
     void pauseResumeButtonClicked();
     void startStopButtonClicked();
-    void updateImageLabel(const Mat &img);
+    void startStopRecordingButtonClicked();
+    void updateImageLabel(const cv::Mat &img);
 };
 
 #endif // TRAFFICCOUNTERMAIN_H

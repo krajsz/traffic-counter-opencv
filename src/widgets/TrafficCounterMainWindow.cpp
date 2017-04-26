@@ -65,7 +65,7 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
 
     connect(m_playbackActionsDock->startButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::startProcessing);
     connect(m_playbackActionsDock->pauseButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::pauseResumeButtonClicked);
-    connect(m_playbackActionsDock->recordButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::record);
+    connect(m_playbackActionsDock->recordButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::startStopRecordingButtonClicked);
     connect(m_playbackActionsDock->saveScreenshotButton(), &QPushButton::clicked, this, &TrafficCounterMainWindow::saveScreenshot);
 
     connect(m_videoSourceDock, &VideoSourceDock::currentFileSourceTypeChanged, this, &TrafficCounterMainWindow::enableButtonStart);
@@ -214,7 +214,7 @@ void TrafficCounterMainWindow::startProcessing()
     else
     {
         //camera
-        CameraVideoSource* csource = new CameraVideoSource(m_videoSourceDock->cameraSourceOptions()->cameraName());
+        CameraVideoSource* csource = new CameraVideoSource(QString::number(m_videoSourceDock->cameraSourceOptions()->cameraName()));
         qDebug() << "camSourceStartProcessing";
 
         source = csource;
@@ -253,12 +253,28 @@ void TrafficCounterMainWindow::startStopButtonClicked()
     if (m_playbackActionsDock->startButton()->text() == QLatin1String("&Start"))
     {
         startProcessing();
+        m_playbackActionsDock->recordButton()->setEnabled(true);
         m_playbackActionsDock->startButton()->setText("&Stop");
     }
     else
     {
         stopProcessing();
+        m_playbackActionsDock->recordButton()->setEnabled(false);
         m_playbackActionsDock->startButton()->setText("&Start");
+    }
+}
+
+void TrafficCounterMainWindow::startStopRecordingButtonClicked()
+{
+    if (m_playbackActionsDock->recordButton()->text() == QLatin1String("&Record"))
+    {
+        m_controller->startRecording();
+        m_playbackActionsDock->recordButton()->setText("&Stop recording");
+    }
+    else
+    {
+        m_controller->stopRecording();
+        m_playbackActionsDock->recordButton()->setText("&Record");
     }
 }
 
@@ -271,11 +287,6 @@ void TrafficCounterMainWindow::saveScreenshot()
 void TrafficCounterMainWindow::stopProcessing()
 {
     m_controller->stopProcessing();
-}
-
-void TrafficCounterMainWindow::record()
-{
-    m_controller->startRecording();
 }
 
 void TrafficCounterMainWindow::enableButtonStart(int newSourceType)
@@ -300,7 +311,7 @@ void TrafficCounterMainWindow::enableButtonStart(int newSourceType)
 void TrafficCounterMainWindow::updateImageLabel(const cv::Mat& img)
 {
     m_imageLabelSize = cv::Size(ui->videoFrameDisplayLabel->size().width(),
-                                   ui->videoFrameDisplayLabel->size().height());
+                                ui->videoFrameDisplayLabel->size().height());
     cv::Mat imcpy;
 
     cv::resize(img, imcpy, m_imageLabelSize);
