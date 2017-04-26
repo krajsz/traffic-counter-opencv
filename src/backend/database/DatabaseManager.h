@@ -48,24 +48,20 @@ public:
 
     static QStringList drivers();
 
-    void connect(const int connectionIndex);
-    void testConnection(const int connectionIndex);
+    QSqlError connect();
     void testConnection(SQLConnection* conn);
-
-    void deleteConnection(const int connectionIndex);
-    void addConnection(SQLConnection *&conn);
 
     QSqlError initDb();
 
-    QList<SQLConnection*> connections() const;
+    SQLConnection *connection() const;
 
-    void currentConnectionChanged(const int index);
     void driverChanged(const int index);
     void hostChanged(const QString& newHost);
     void portChanged(const int &newPort);
     void connectionNameChanged(const QString &newName);
     void userNameChanged(const QString &newUserName);
     void passwordChanged(const QString &newPassword);
+    void dbNameChanged(const QString& newName);
 
     static DatabaseManager* instance();
 
@@ -74,11 +70,10 @@ private:
 
     static DatabaseManager* ptr;
 
-    QList<SQLConnection*> m_connections;
+    SQLConnection* m_connection;
     QString m_databaseConnectionsFile;
-    void loadConnections();
+    void loadConnection();
     QSqlDatabase m_database;
-    int m_currentConnectionIndex;
 
 Q_SIGNALS:
     void testDatabaseOk();
@@ -86,7 +81,7 @@ Q_SIGNALS:
     void testDatabaseNotValid();
 
 public Q_SLOTS:
-    void saveConnections() const;
+    void saveConnection() const;
 
 };
 

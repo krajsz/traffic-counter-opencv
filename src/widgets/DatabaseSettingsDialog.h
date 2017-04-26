@@ -42,32 +42,30 @@ public:
     explicit DatabaseSettingsDialog(QWidget *parent = 0);
     ~DatabaseSettingsDialog();
 
+    void setConnectedAlready(bool connected);
+
 private:
     Ui::DatabaseSettingsDialog *ui;
 
     void initSlots();
-
-    bool canAddNewConnection() const;
+    bool m_connecedAlready;
 
     DatabaseManager* m_dbManager;
 private Q_SLOTS:
-    void addConnection();
-    void removeConnection();
     void testConnection();
+    void connectToDatabase();
 
     void testDatabaseNotOpened();
     void testDatabaseNotValid();
     void testDatabaseOk();
 
-    void connectionSelectionChanged(int index);
     void driverChanged(const int index);
+    void dbNameChanged(const QString& newName);
     void hostChanged(const QString& newHost);
     void portChanged(const QString& newPort);
     void connectionNameChanged(const QString &newName);
     void userNameChanged(const QString &newUserName);
     void passwordChanged(const QString &newPassword);
-
-
 };
 
 #endif // DATABASESETTINGSDIALOG_H

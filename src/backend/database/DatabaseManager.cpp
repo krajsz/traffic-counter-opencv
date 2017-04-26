@@ -31,15 +31,14 @@
 #include <QVector>
 
 DatabaseManager::DatabaseManager(QObject *parent) : QObject(parent),
-    m_databaseConnectionsFile(QApplication::applicationDirPath() + "/dbConnections.ini"),
-    m_currentConnectionIndex(-1)
+    m_databaseConnectionsFile(QApplication::applicationDirPath() + "/dbConnections.ini")
 {
-    loadConnections();
+    loadConnection();
 }
 
 DatabaseManager::~DatabaseManager()
 {
-    saveConnections();
+    saveConnection();
 }
 
 QStringList DatabaseManager::drivers()
@@ -47,20 +46,14 @@ QStringList DatabaseManager::drivers()
     return QSqlDatabase::drivers();
 }
 
-QList<DatabaseManager::SQLConnection *> DatabaseManager::connections() const
+DatabaseManager::SQLConnection * DatabaseManager::connection() const
 {
-    return m_connections;
+    return m_connection;
 }
 
-void DatabaseManager::connect(const int connectionIndex)
+QSqlError DatabaseManager::connect()
 {
-}
-
-void DatabaseManager::testConnection(const int connectionIndex)
-{
-    SQLConnection* conn = m_connections.at(connectionIndex);
-
-    testConnection(conn);
+    return QSqlError();
 }
 
 void DatabaseManager::testConnection(SQLConnection* conn)
@@ -92,51 +85,33 @@ void DatabaseManager::testConnection(SQLConnection* conn)
     }
 }
 
-void DatabaseManager::deleteConnection(const int connectionIndex)
-{
-    if (connectionIndex != -1)
-    {
-        const int connectionc = m_connections.size();
-        qDebug() << "connectionsCountBeforeDelete: " << QString::number(connectionc);
-        if (connectionc != 0)
-        {
-            qDebug() << "connectionIndexToRemove: " << QString::number(connectionIndex);
-            m_connections.removeAt(connectionIndex);
-            if (connectionIndex == 0)
-            {
-                if (connectionc == 1)
-                {
-                    currentConnectionChanged(0);
-                }
-                else
-                {
-                    currentConnectionChanged(connectionIndex+1);
-                }
-            }
-            else
-            {
-                currentConnectionChanged(connectionIndex-1);
-            }
-            qDebug() << "currentConnectionChangedAfter: " << QString::number(m_currentConnectionIndex);
-        }
-    }
-}
-
-void DatabaseManager::addConnection(SQLConnection *&conn)
-{
-    m_connections.append(conn);
-}
-
 QSqlError DatabaseManager::initDb()
 {
+
+    QStringList drivers = DatabaseManager::drivers();
+
+    QSqlDatabase db = QSqlDatabase::addDatabase(drivers.at(m_connection->vendorIndex));
+    db.setDatabaseName(m_connection->name);
+
+    if (!db.open())
+        return db.lastError();
+
+    QStringList tables = db.tables();
+    if (tables.contains("books", Qt::CaseInsensitive))
+    {
+
+
+        return QSqlError();
+    }
+
     return QSqlError();
 }
 
-void DatabaseManager::saveConnections() const
+void DatabaseManager::saveConnection() const
 {
-    QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
+    /*QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
 
-    connectionSetting.beginWriteArray(QLatin1String("Connections"));
+    connectionSetting.begin(QLatin1String("Connections"));
     for(int i = 0; i < m_connections.size(); ++i)
     {
         connectionSetting.setArrayIndex(i);
@@ -150,12 +125,12 @@ void DatabaseManager::saveConnections() const
         connectionSetting.setValue(QLatin1String("password"), conn->password);
     }
 
-    connectionSetting.endArray();
+    connectionSetting.endArray();*/
 }
 
-void DatabaseManager::loadConnections()
+void DatabaseManager::loadConnection()
 {
-    QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
+    /*QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
 
     const int savedConnectionsSize = connectionSetting.beginReadArray(QLatin1String("Connections"));
 
@@ -174,60 +149,42 @@ void DatabaseManager::loadConnections()
 
         m_connections.append(conn);
     }
-    connectionSetting.endArray();;
-}
-
-void DatabaseManager::currentConnectionChanged(const int index)
-{
-    m_currentConnectionIndex = index;
+    connectionSetting.endArray();*/
 }
 
 void DatabaseManager::driverChanged(const int index)
 {
-    if (m_currentConnectionIndex != -1)
-    {
-        m_connections[m_currentConnectionIndex]->vendorIndex = index;
-    }
+    m_connection->vendorIndex = index;
 }
 
 void DatabaseManager::hostChanged(const QString& newHost)
 {
-    if (m_currentConnectionIndex != -1)
-    {
-        m_connections[m_currentConnectionIndex]->hostName = newHost;
-    }
+    m_connection->hostName = newHost;
 }
 
 void DatabaseManager::portChanged(const int& newPort)
 {
-    if (m_currentConnectionIndex != -1)
-    {
-        m_connections[m_currentConnectionIndex]->port = newPort;
-    }
+    m_connection->port = newPort;
 }
 
 void DatabaseManager::connectionNameChanged(const QString &newName)
 {
-    if (m_currentConnectionIndex != -1)
-    {
-        m_connections[m_currentConnectionIndex]->name = newName;
-    }
+    m_connection->name = newName;
 }
 
 void DatabaseManager::userNameChanged(const QString &newUserName)
 {
-    if (m_currentConnectionIndex != -1)
-    {
-        m_connections[m_currentConnectionIndex]->userName = newUserName;
-    }
+    m_connection->userName = newUserName;
 }
 
 void DatabaseManager::passwordChanged(const QString &newPassword)
 {
-    if (m_currentConnectionIndex != -1)
-    {
-        m_connections[m_currentConnectionIndex]->password = newPassword;
-    }
+    m_connection->password = newPassword;
+}
+
+void DatabaseManager::dbNameChanged(const QString &newName)
+{
+    m_connection->dbName = newName;
 }
 
 DatabaseManager* DatabaseManager::ptr = 0;
