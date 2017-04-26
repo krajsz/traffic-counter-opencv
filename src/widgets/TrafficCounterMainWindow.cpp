@@ -315,7 +315,7 @@ void TrafficCounterMainWindow::updateImageLabel(const cv::Mat& img)
     cv::Mat imcpy;
 
     cv::resize(img, imcpy, m_imageLabelSize);
-    QImage image = Utils::GrayMat2QImage(imcpy);
+    QImage image = Utils::Mat2QImage(imcpy);
 
     ui->videoFrameDisplayLabel->setPixmap(QPixmap::fromImage(image));
 }

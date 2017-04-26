@@ -44,13 +44,14 @@ void FrameProcessor::process(const cv::Mat &frame)
     fr.copyTo(m_foreground);
     fr.release();
 
-    emit frameProcessed(m_foreground);
+    emit frameProcessed(frame);
 
     postProcess();
 }
 
 void FrameProcessor::postProcess()
 {
+    //processing stuff here
 
 }
 

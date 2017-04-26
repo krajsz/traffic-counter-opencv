@@ -78,6 +78,8 @@ void VideoProcessor::initialize()
         {
             //path = ipCamSource->infos().
         }
+        qDebug() << path;
+
         m_videoReader.open(path.toStdString());
     }
 
@@ -92,6 +94,10 @@ void VideoProcessor::initialize()
     if(m_videoReader.isOpened())
     {
         m_readyForProcessing = true;
+    }
+    else
+    {
+        qDebug() << "Not opened";
     }
 }
 
@@ -109,7 +115,6 @@ void VideoProcessor::startProcessing()
     }
 
     m_processing = true;
-
 
     //start the thread
     start();
@@ -183,7 +188,6 @@ void VideoProcessor::process()
 
         if (!m_currentFrame.empty())
         {
-            //processing stuff here
             emit frameReadyForProcessing(m_currentFrame);
         }
         if (dynamic_cast<FileVideoSource*>(m_source))
