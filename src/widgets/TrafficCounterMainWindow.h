@@ -35,6 +35,8 @@
 
 #include "src/backend/TrafficCounterController.h"
 
+class QAction;
+
 namespace Ui {
 class TrafficCounterMainWindow;
 }
@@ -72,6 +74,8 @@ private Q_SLOTS:
     void openFileActionClicked();
     void playbackDockClosed();
     void videoSourceDockClosed();
+
+    void playbackModeChanged(QAction* action);
 
     void enableButtonStart(int newSourceType);
 

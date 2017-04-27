@@ -42,6 +42,9 @@ public:
 
     QImage foregroundQImage() const;
 
+    bool emitOriginal() const;
+    void setEmitOriginal(bool original);
+
 Q_SIGNALS:
     void frameProcessed(const cv::Mat& frame);
 
@@ -53,6 +56,7 @@ private:
     cv::Mat m_background;
     cv::Mat m_foreground;
 
+    bool m_emitOriginal;
     void postProcess();
 };
 

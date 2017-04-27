@@ -38,6 +38,7 @@ VideoProcessor::VideoProcessor(QObject *parent) : QThread(parent),
     m_processing(false),
     m_paused(false),
     m_readyForProcessing(false),
+    m_emitOriginal(false),
     m_frameProcessor(new FrameProcessor)
 {
     connect(this, &VideoProcessor::frameReadyForProcessing, m_frameProcessor, &FrameProcessor::process);

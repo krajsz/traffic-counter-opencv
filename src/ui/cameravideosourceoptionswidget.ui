@@ -28,13 +28,6 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QPushButton" name="selectCameraButton">
-     <property name="text">
-      <string>&amp;Select</string>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <resources/>

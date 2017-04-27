@@ -65,6 +65,8 @@ private:
     AbstractVideoSource* m_source;
     FrameProcessor* m_frameProcessor;
 
+    bool m_emitOriginal;
+
     cv::VideoCapture m_videoReader;
     cv::Mat m_currentFrame;
 

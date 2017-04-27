@@ -51,7 +51,9 @@ public:
     QSqlError connect();
     void testConnection(SQLConnection* conn);
 
-    QSqlError initDb();
+    bool initDb();
+
+    bool newObservation(const int cpm, const QDateTime& time, const int node_id);
 
     SQLConnection *connection() const;
 

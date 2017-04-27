@@ -36,6 +36,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QTimer>
+#include <QActionGroup>
 
 #include <QDebug>
 
@@ -49,6 +50,14 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     m_fileVideoSourceProgressBar = ui->playbackProgressProgressBar;
+
+    QActionGroup* playbackModeAg = new QActionGroup(ui->menuPlayback_mode);
+    playbackModeAg->setExclusive(true);
+
+    playbackModeAg->addAction(ui->originalFrameAction);
+    playbackModeAg->addAction(ui->processedFrameAction);
+
+    ui->menuPlayback_mode->setEnabled(false);
 
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -71,6 +80,8 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
     connect(m_videoSourceDock, &VideoSourceDock::currentFileSourceTypeChanged, this, &TrafficCounterMainWindow::enableButtonStart);
 
     connect(m_videoSourceDock->fileVideoSourceOptions(), &FileVideoSourceOptionsWidget::fileOpened, m_playbackActionsDock->startButton(), &QPushButton::setEnabled);
+
+    connect(playbackModeAg, &QActionGroup::triggered, this, &TrafficCounterMainWindow::playbackModeChanged);
 }
 
 void TrafficCounterMainWindow::setController(TrafficCounterController *controller)
@@ -183,6 +194,18 @@ void TrafficCounterMainWindow::videoSourceDockClosed()
     }
 }
 
+void TrafficCounterMainWindow::playbackModeChanged(QAction *action)
+{
+    if (action == ui->originalFrameAction)
+    {
+        m_controller->videoProcessor()->frameProcessor()->setEmitOriginal(true);
+    }
+    else
+    {
+        m_controller->videoProcessor()->frameProcessor()->setEmitOriginal(false);
+    }
+}
+
 void TrafficCounterMainWindow::startProcessing()
 {
     AbstractVideoSource* source;
@@ -219,6 +242,8 @@ void TrafficCounterMainWindow::startProcessing()
 
         source = csource;
     }
+
+    ui->menuPlayback_mode->setEnabled(true);
 
     m_controller->setSource(source);
     m_controller->startProcessing();
@@ -320,7 +345,15 @@ void TrafficCounterMainWindow::updateImageLabel(const cv::Mat& img)
 
     cv::resize(img, imcpy, m_imageLabelSize);
     // here
-    QImage image = Utils::Mat2QImage(imcpy);
+    QImage image;
+    if (m_controller->videoProcessor()->frameProcessor()->emitOriginal())
+    {
+        image = Utils::Mat2QImage(imcpy);
+    }
+    else
+    {
+        image = Utils::GrayMat2QImage(imcpy);
+    }
 
     ui->videoFrameDisplayLabel->setPixmap(QPixmap::fromImage(image));
 }

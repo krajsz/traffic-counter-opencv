@@ -27,11 +27,13 @@
 #include "src/backend/database/DatabaseManager.h"
 #include <QApplication>
 #include <QtSql>
-#include <QDebug>
 #include <QVector>
 
+#include <QDebug>
+
 DatabaseManager::DatabaseManager(QObject *parent) : QObject(parent),
-    m_databaseConnectionsFile(QApplication::applicationDirPath() + "/dbConnections.ini")
+    m_databaseConnectionsFile(QApplication::applicationDirPath() + "/dbConnection.ini"),
+    m_connection(new DatabaseManager::SQLConnection)
 {
     loadConnection();
 }
@@ -51,9 +53,34 @@ DatabaseManager::SQLConnection * DatabaseManager::connection() const
     return m_connection;
 }
 
+bool DatabaseManager::newObservation(const int cpm, const QDateTime &time, const int node_id)
+{
+    QSqlQuery q;
+
+    q.prepare("insert into observations (cpm, date_of_observation, node_id) values (?, ?, ?)");
+    q.addBindValue(cpm);
+    q.addBindValue(time);
+    q.addBindValue(node_id);
+
+    return q.exec();
+}
+
 QSqlError DatabaseManager::connect()
 {
-    return QSqlError();
+    QStringList dbs = DatabaseManager::drivers();
+
+    m_database = QSqlDatabase::addDatabase(dbs.at(m_connection->vendorIndex));
+    m_database.setDatabaseName(m_connection->dbName);
+
+    if (m_database.open())
+    {
+        initDb();
+        return QSqlError();
+    }
+    else
+    {
+        return m_database.lastError();
+    }
 }
 
 void DatabaseManager::testConnection(SQLConnection* conn)
@@ -85,71 +112,48 @@ void DatabaseManager::testConnection(SQLConnection* conn)
     }
 }
 
-QSqlError DatabaseManager::initDb()
+bool DatabaseManager::initDb()
 {
+    QStringList tables = m_database.tables();
+    QSqlQuery q;
 
-    QStringList drivers = DatabaseManager::drivers();
-
-    QSqlDatabase db = QSqlDatabase::addDatabase(drivers.at(m_connection->vendorIndex));
-    db.setDatabaseName(m_connection->name);
-
-    if (!db.open())
-        return db.lastError();
-
-    QStringList tables = db.tables();
-    if (tables.contains("books", Qt::CaseInsensitive))
+    if (!tables.contains("observations", Qt::CaseInsensitive))
     {
-
-
-        return QSqlError();
+        bool ct = q.exec("create table observations (id integer primary key, cpm integer, date_of_observation date, node_id integer)");
+        if (!ct)
+            return false;
     }
 
-    return QSqlError();
+    return true;
 }
 
 void DatabaseManager::saveConnection() const
 {
-    /*QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
-
-    connectionSetting.begin(QLatin1String("Connections"));
-    for(int i = 0; i < m_connections.size(); ++i)
-    {
-        connectionSetting.setArrayIndex(i);
-        SQLConnection* conn = m_connections.at(i);
-        connectionSetting.setValue(QLatin1String("connectionName"), conn->name);
-        connectionSetting.setValue(QLatin1String("databaseName"), conn->dbName);
-        connectionSetting.setValue(QLatin1String("driver"), conn->vendorIndex);
-        connectionSetting.setValue(QLatin1String("port"), conn->port);
-        connectionSetting.setValue(QLatin1String("hostName"), conn->hostName);
-        connectionSetting.setValue(QLatin1String("userName"), conn->userName);
-        connectionSetting.setValue(QLatin1String("password"), conn->password);
-    }
-
-    connectionSetting.endArray();*/
+    QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
+    connectionSetting.setValue(QLatin1String("connectionName"), m_connection->name);
+    connectionSetting.setValue(QLatin1String("dbName"), m_connection->dbName);
+    connectionSetting.setValue(QLatin1String("driver"), m_connection->vendorIndex);
+    connectionSetting.setValue(QLatin1String("port"), m_connection->port);
+    connectionSetting.setValue(QLatin1String("hostName"), m_connection->hostName);
+    connectionSetting.setValue(QLatin1String("userName"), m_connection->userName);
+    connectionSetting.setValue(QLatin1String("password"), m_connection->password);
 }
 
 void DatabaseManager::loadConnection()
 {
-    /*QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
+    QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
 
-    const int savedConnectionsSize = connectionSetting.beginReadArray(QLatin1String("Connections"));
+    SQLConnection* conn = new SQLConnection;
+    conn->name = connectionSetting.value(QLatin1String("connectionName")).toString();
+    conn->dbName = connectionSetting.value(QLatin1String("dbName")).toString();
+    conn->hostName = connectionSetting.value(QLatin1String("hostName")).toString();
+    conn->port = connectionSetting.value(QLatin1String("port")).toInt();
+    conn->vendorIndex = connectionSetting.value(QLatin1String("driver")).toInt();
+    conn->userName = connectionSetting.value(QLatin1String("userName")).toString();
+    conn->password = connectionSetting.value(QLatin1String("password")).toString();
 
-    m_connections.reserve(savedConnectionsSize);
-    for(int i = 0; i < savedConnectionsSize; ++i)
-    {
-        connectionSetting.setArrayIndex(i);
-        SQLConnection* conn = new SQLConnection;
-        conn->name = connectionSetting.value(QLatin1String("connectionName"), QLatin1String("NoConnectionName")).toString();
-        conn->dbName = connectionSetting.value(QLatin1String("databaseName"), QLatin1String("NoDatabaseName")).toString();
-        conn->hostName = connectionSetting.value(QLatin1String("hostName"), QLatin1String("")).toString();
-        conn->port = connectionSetting.value(QLatin1String("port")).toInt();
-        conn->vendorIndex = connectionSetting.value(QLatin1String("driver")).toInt();
-        conn->userName = connectionSetting.value(QLatin1String("userName")).toString();
-        conn->password = connectionSetting.value(QLatin1String("password")).toString();
-
-        m_connections.append(conn);
-    }
-    connectionSetting.endArray();*/
+    qDebug() << conn->name << " " << conn->dbName;
+    m_connection = conn;
 }
 
 void DatabaseManager::driverChanged(const int index)

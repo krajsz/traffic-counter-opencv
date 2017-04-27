@@ -59,8 +59,18 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
+    <widget class="QMenu" name="menuPlayback_mode">
+     <property name="title">
+      <string>Playback mode</string>
+     </property>
+     <addaction name="separator"/>
+     <addaction name="separator"/>
+     <addaction name="originalFrameAction"/>
+     <addaction name="processedFrameAction"/>
+    </widget>
     <addaction name="sourceSettingsAction"/>
     <addaction name="playbackActionsAction"/>
+    <addaction name="menuPlayback_mode"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -120,6 +130,28 @@
   <action name="exitAction">
    <property name="text">
     <string>&amp;Exit</string>
+   </property>
+  </action>
+  <action name="originalFrameAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Original frame</string>
+   </property>
+  </action>
+  <action name="processedFrameAction">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Processed frame</string>
    </property>
   </action>
  </widget>

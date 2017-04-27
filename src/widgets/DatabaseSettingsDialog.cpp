@@ -39,6 +39,16 @@ DatabaseSettingsDialog::DatabaseSettingsDialog(QWidget *parent) :
     ui->passwordLineEdit->setEchoMode(QLineEdit::Password);
 
     ui->sqlDriversComboBox->addItems(DatabaseManager::drivers());
+
+    const DatabaseManager::SQLConnection* conn = m_dbManager->connection();
+    ui->dbNameLineEdit->setText(conn->dbName);
+    ui->connectionNameLineEdit->setText(conn->name);
+    ui->portLineEdit->setText(QString::number(conn->port));
+    ui->hostLineEdit->setText(conn->hostName);
+    ui->passwordLineEdit->setText(conn->password);
+    ui->userNameLineEdit->setText(conn->userName);
+    ui->sqlDriversComboBox->setCurrentIndex(conn->vendorIndex);
+
     initSlots();
 }
 
@@ -64,6 +74,7 @@ void DatabaseSettingsDialog::initSlots()
     connect(ui->sqlDriversComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &DatabaseSettingsDialog::driverChanged);
     connect(ui->userNameLineEdit, &QLineEdit::textEdited, this, &DatabaseSettingsDialog::userNameChanged);
     connect(ui->passwordLineEdit, &QLineEdit::textEdited, this, &DatabaseSettingsDialog::passwordChanged);
+    connect(ui->dbNameLineEdit, &QLineEdit::textEdited, this, &DatabaseSettingsDialog::dbNameChanged);
 
     connect(m_dbManager, &DatabaseManager::testDatabaseNotOpened, this, &DatabaseSettingsDialog::testDatabaseNotOpened);
     connect(m_dbManager, &DatabaseManager::testDatabaseNotValid, this, &DatabaseSettingsDialog::testDatabaseNotValid);
@@ -95,7 +106,7 @@ void DatabaseSettingsDialog::driverChanged(const int index)
 
 void DatabaseSettingsDialog::dbNameChanged(const QString &newName)
 {
-
+    m_dbManager->dbNameChanged(newName);
 }
 
 void DatabaseSettingsDialog::connectToDatabase()

@@ -32,7 +32,8 @@
 #include <QDebug>
 
 FrameProcessor::FrameProcessor(QObject *parent) : QObject(parent),
-    m_backgroundSubstractor(new FrameDifference)
+    m_backgroundSubstractor(new FrameDifference),
+    m_emitOriginal(false)
 {
     m_backgroundSubstractor->setShowOutput(false);
 }
@@ -44,15 +45,31 @@ void FrameProcessor::process(const cv::Mat &frame)
     fr.copyTo(m_foreground);
     fr.release();
 
-    emit frameProcessed(frame);
-
     postProcess();
+
+    if (m_emitOriginal)
+    {
+        emit frameProcessed(frame);
+    }
+    else
+    {
+        emit frameProcessed(m_foreground);
+    }
+}
+
+void FrameProcessor::setEmitOriginal(bool original)
+{
+    m_emitOriginal = original;
+}
+
+bool FrameProcessor::emitOriginal() const
+{
+    return m_emitOriginal;
 }
 
 void FrameProcessor::postProcess()
 {
     //processing stuff here
-
 }
 
 cv::Mat FrameProcessor::backgroundMat() const
