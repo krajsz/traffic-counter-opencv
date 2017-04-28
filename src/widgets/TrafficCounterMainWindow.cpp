@@ -104,12 +104,14 @@ void TrafficCounterMainWindow::setController(TrafficCounterController *controlle
 
 TrafficCounterMainWindow::~TrafficCounterMainWindow()
 {
-    delete m_playbackActionsDock;
     delete m_databaseSettingsDialog;
+    delete ui;
+
     delete m_videoSourceDock;
 
     delete m_controller;
-    delete ui;
+    delete m_playbackActionsDock;
+
 }
 
 void TrafficCounterMainWindow::keyPressEvent(QKeyEvent * event)
@@ -331,7 +333,6 @@ void TrafficCounterMainWindow::enableButtonStart(int newSourceType)
         IPCameraVideoSourceOptionsWidget* ipcvsow = m_videoSourceDock->ipCameraSourceOptions();
         m_playbackActionsDock->startButton()->setEnabled(ipcvsow->ok());
         ui->playbackProgressProgressBar->hide();
-
     }
     else
     {

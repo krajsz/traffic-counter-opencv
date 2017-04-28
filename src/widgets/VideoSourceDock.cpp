@@ -72,6 +72,7 @@ CameraVideoSourceOptionsWidget* VideoSourceDock::cameraSourceOptions() const
 
 VideoSourceDock::~VideoSourceDock()
 {
+    disconnect(ui->sourceOptionsStackedWidget, &QStackedWidget::currentChanged, this, &VideoSourceDock::currentFileSourceTypeChanged);
     delete m_cameraVideoSourceOptionsWidget;
     delete m_fileVideoSourceOptionsWidget;
     delete m_ipCameraVideoSourceOptionsWidget;
