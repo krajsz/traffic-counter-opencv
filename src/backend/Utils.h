@@ -41,6 +41,8 @@ public:
     static QString videoLengthFormatted(int milliseconds);
     static QImage GrayMat2QImage(const cv::Mat & src);
     static QStringList availableCamerasList();
+    static double distance(const cv::Point& point1,const cv::Point& point2);
+
 };
 
 #endif // UTILS_H

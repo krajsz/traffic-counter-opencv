@@ -47,6 +47,9 @@ CommandLineParser::CommandLineParser(QObject *parent) : QObject(parent),
     QCommandLineOption recordOption(QStringList() << QLatin1String("r") << QLatin1String("record"),
                                     "Record the video.");
 
+    QCommandLineOption cameraOption(QStringList() << QLatin1String("w") << QLatin1String("webcam"),
+                                    "Set the input camera.");
+
 
     QCommandLineOption fileNameOption(QStringList() << QLatin1String("f") <<
                                       QLatin1String("filename"),"Input file name",
@@ -55,6 +58,8 @@ CommandLineParser::CommandLineParser(QObject *parent) : QObject(parent),
     m_optionsParser.addOption(noGuiOption);
     m_optionsParser.addOption(recordOption);
     m_optionsParser.addOption(fileNameOption);
+    m_optionsParser.addOption(cameraOption);
+
 }
 
 void CommandLineParser::parse(const QCoreApplication& app)
@@ -101,6 +106,16 @@ void CommandLineParser::stdinInputReceived()
     qDebug() << "command: " << strin.readLine();
 
     //pause, resume, new file, show gui
+}
+
+int CommandLineParser::webcamIdx() const
+{
+    return m_webcamIdx;
+}
+
+bool CommandLineParser::webcamSourceSet() const
+{
+
 }
 
 QString CommandLineParser::fileName() const

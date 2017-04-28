@@ -58,7 +58,6 @@ CameraVideoSourceOptionsWidget::CameraVideoSourceOptionsWidget(QWidget *parent) 
             QListWidgetItem* noCamerasItem = new QListWidgetItem(QLatin1String("No cameras found."));
             noCamerasItem->setFlags(noCamerasItem->flags()& ~Qt::ItemIsSelectable);
             ui->availableCamerasListWidget->addItem(noCamerasItem);
-            ui->selectCameraButton->setEnabled(false);
         }
         else
         {
@@ -70,7 +69,8 @@ CameraVideoSourceOptionsWidget::CameraVideoSourceOptionsWidget(QWidget *parent) 
 
 bool CameraVideoSourceOptionsWidget::ok() const
 {
-    return ui->selectCameraButton->isEnabled();
+    return (ui->availableCamerasListWidget->currentRow() != -1) &&
+            (ui->availableCamerasListWidget->currentItem()->text() != QLatin1String("No cameras found."));
 }
 int CameraVideoSourceOptionsWidget::cameraName() const
 {

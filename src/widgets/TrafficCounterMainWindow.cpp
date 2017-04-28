@@ -341,18 +341,15 @@ void TrafficCounterMainWindow::updateImageLabel(const cv::Mat& img)
 {
     m_imageLabelSize = cv::Size(ui->videoFrameDisplayLabel->size().width(),
                                 ui->videoFrameDisplayLabel->size().height());
-    cv::Mat imcpy;
-
-    cv::resize(img, imcpy, m_imageLabelSize);
     // here
     QImage image;
     if (m_controller->videoProcessor()->frameProcessor()->emitOriginal())
     {
-        image = Utils::Mat2QImage(imcpy);
+        image = Utils::Mat2QImage(img);
     }
     else
     {
-        image = Utils::GrayMat2QImage(imcpy);
+        image = Utils::GrayMat2QImage(img);
     }
 
     ui->videoFrameDisplayLabel->setPixmap(QPixmap::fromImage(image));

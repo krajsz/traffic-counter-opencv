@@ -43,13 +43,17 @@ public:
     bool showGui() const;
     bool fileNameSet() const;
     bool record() const;
+    bool webcamSourceSet() const;
+
     QString fileName() const;
+    int webcamIdx() const;
     void parse(const QCoreApplication &app);
 private:
     QCommandLineParser m_optionsParser;
 
     bool m_fileNameSet;
     bool m_showGui;
+    int m_webcamIdx;
 
     bool m_record;
 

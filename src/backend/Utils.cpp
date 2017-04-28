@@ -70,6 +70,15 @@ QString Utils::videoLengthFormatted(int milliseconds)
     return lengthFormatted;
 }
 
+double Utils::distance(const cv::Point& point1,const cv::Point& point2)
+{
+    int x = abs(point1.x - point2.x);
+    int y = abs(point1.y - point2.y);
+
+    return std::sqrt(pow(x, 2) + pow(y, 2));
+}
+
+
 QStringList Utils::availableCamerasList()
 {
 #ifdef Q_OS_LINUX

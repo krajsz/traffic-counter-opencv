@@ -32,7 +32,50 @@
 class VehicleBlob
 {
 public:
-    VehicleBlob();
+    VehicleBlob(const std::vector<cv::Point>& blobContour);
+
+    void update();
+
+    int framesWithoutMatching() const;
+
+    double diagonalSize() const;
+    double aspectRatio() const;
+
+    bool newOrExisting() const;
+    bool isTracked() const;
+    cv::Rect boundingRect() const;
+    std::vector<cv::Point> previousCenterPositions() const;
+    std::vector<cv::Point> contour() const;
+    cv::Point nextPosition() const;
+
+    void frameWithoutMatching();
+
+    void addPreviousPosition(const cv::Point& position);
+
+    void setNew(const bool neww);
+    void setTracked(const bool tracked);
+    void setContour(const std::vector<cv::Point>& newContour);
+    void setBoundingRect(const cv::Rect& newRect);
+    void setAspectRatio(const int aspratio);
+    void setDiagonalSize(const int diagonalSize);
+
+private:
+    void calculateNextPosition();
+
+    std::vector<cv::Point> m_contour;
+    std::vector<cv::Point> m_previousCenterPositions;
+
+    cv::Point m_nextPosition;
+
+    bool m_tracked;
+    bool m_newOrExisting;
+
+    int m_framesWithoutMatch;
+
+    double m_diagonalSize;
+    double m_aspectRatio;
+
+    cv::Rect m_boundingRect;
 };
 
 #endif // VEHICLEBLOB_H

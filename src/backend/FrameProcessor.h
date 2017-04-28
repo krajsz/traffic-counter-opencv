@@ -29,7 +29,7 @@
 
 #include <QObject>
 #include <opencv2/opencv.hpp>
-
+#include "src/backend/VehicleBlob.h"
 #include "3rdparty/package_bgs/bgslibrary.h"
 
 class FrameProcessor : public QObject
@@ -47,7 +47,7 @@ public:
 
 Q_SIGNALS:
     void frameProcessed(const cv::Mat& frame);
-
+    void newCar();
 public Q_SLOTS:
     void process(const cv::Mat& frame);
 
@@ -56,7 +56,12 @@ private:
     cv::Mat m_background;
     cv::Mat m_foreground;
 
+    cv::Mat m_currentFrame;
+    std::vector<VehicleBlob> m_blobs;
+
     bool m_emitOriginal;
+    bool m_firstFrame;
+
     void postProcess();
 };
 
