@@ -193,8 +193,8 @@ void FrameProcessor::postProcess()
             m_blobs.clear();
         }*/
 
-        qDebug() << "contoursToBeDrawn: " << contoursToBeDrawn.size();
-        qDebug() << "m_blobs size: " << m_blobs.size();
+        /*qDebug() << "contoursToBeDrawn: " << contoursToBeDrawn.size();
+        qDebug() << "m_blobs size: " << m_blobs.size();*/
 
         const cv::Scalar red = cv::Scalar(0.0, 0.0, 255.0);
         cv::drawContours(m_currentFrame, contoursToBeDrawn, -1 , red);

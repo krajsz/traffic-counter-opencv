@@ -46,6 +46,8 @@ Q_SIGNALS:
     void fileOpened(bool ok);
 private:
     Ui::FileVideoSourceOptionsWidget *ui;
+
+    QString m_guiSettingsFile;
 private Q_SLOTS:
     void showFileInfoDialog();
     void openFile();

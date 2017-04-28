@@ -60,6 +60,8 @@ private:
 
     FileVideoSourceProgressBar* m_fileVideoSourceProgressBar;
 
+    QString m_guiSettingsFile;
+
     cv::Size m_imageLabelSize;
 
 protected:

@@ -28,14 +28,20 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QSettings>
 
 #include <QDebug>
 
 FileVideoSourceOptionsWidget::FileVideoSourceOptionsWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FileVideoSourceOptionsWidget)
+    ui(new Ui::FileVideoSourceOptionsWidget),
+    m_guiSettingsFile(QApplication::applicationDirPath() + "/guiSettings.ini")
 {
     ui->setupUi(this);
+
+    QSettings guiSetting(m_guiSettingsFile, QSettings::NativeFormat);
+
+    ui->filePathLineEdit->setText(guiSetting.value(QLatin1String("fileName")).toString());
 
     ui->fileInfoButton->setEnabled(false);
     connect(ui->openFileButton, &QPushButton::clicked, this, &FileVideoSourceOptionsWidget::openFile);
@@ -54,6 +60,13 @@ QString FileVideoSourceOptionsWidget::filePath() const
 
 FileVideoSourceOptionsWidget::~FileVideoSourceOptionsWidget()
 {
+    QSettings guiSetting(m_guiSettingsFile, QSettings::NativeFormat);
+
+    if (!ui->filePathLineEdit->text().isEmpty())
+    {
+        guiSetting.setValue("fileName", ui->filePathLineEdit->text());
+    }
+
     delete ui;
 }
 

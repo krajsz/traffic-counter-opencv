@@ -45,11 +45,14 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
     ui(new Ui::TrafficCounterMainWindow),
     m_playbackActionsDock(new PlaybackActionsDock),
     m_databaseSettingsDialog(new DatabaseSettingsDialog),
-    m_videoSourceDock(new VideoSourceDock)
+    m_videoSourceDock(new VideoSourceDock),
+    m_guiSettingsFile(QApplication::applicationDirPath() + "/guiSettings.ini")
 {
     ui->setupUi(this);
 
     m_fileVideoSourceProgressBar = ui->playbackProgressProgressBar;
+
+    //QSettings guiSettingsFile(m_guiSettingsFile, QSettings::NativeFormat);
 
     QActionGroup* playbackModeAg = new QActionGroup(ui->menuPlayback_mode);
     playbackModeAg->setExclusive(true);
@@ -82,6 +85,8 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
     connect(m_videoSourceDock->fileVideoSourceOptions(), &FileVideoSourceOptionsWidget::fileOpened, m_playbackActionsDock->startButton(), &QPushButton::setEnabled);
 
     connect(playbackModeAg, &QActionGroup::triggered, this, &TrafficCounterMainWindow::playbackModeChanged);
+
+
 }
 
 void TrafficCounterMainWindow::setController(TrafficCounterController *controller)
@@ -99,13 +104,12 @@ void TrafficCounterMainWindow::setController(TrafficCounterController *controlle
 
 TrafficCounterMainWindow::~TrafficCounterMainWindow()
 {
-    delete ui;
     delete m_playbackActionsDock;
     delete m_databaseSettingsDialog;
     delete m_videoSourceDock;
 
-
     delete m_controller;
+    delete ui;
 }
 
 void TrafficCounterMainWindow::keyPressEvent(QKeyEvent * event)

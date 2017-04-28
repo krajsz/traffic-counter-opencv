@@ -26,6 +26,7 @@
  ***************************************************************************/
 #include "src/widgets/VideoSourceDock.h"
 #include <QGroupBox>
+#include <QDebug>
 
 VideoSourceDock::VideoSourceDock(QWidget *parent) :
     QDockWidget(parent),
@@ -71,6 +72,9 @@ CameraVideoSourceOptionsWidget* VideoSourceDock::cameraSourceOptions() const
 
 VideoSourceDock::~VideoSourceDock()
 {
+    delete m_cameraVideoSourceOptionsWidget;
+    delete m_fileVideoSourceOptionsWidget;
+    delete m_ipCameraVideoSourceOptionsWidget;
     delete ui;
 }
 
