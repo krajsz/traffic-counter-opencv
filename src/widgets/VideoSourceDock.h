@@ -55,6 +55,8 @@ public:
       */
     ~VideoSourceDock();
 
+    void setCurrentType(const int idx);
+
     FileVideoSourceOptionsWidget* fileVideoSourceOptions() const;
     IPCameraVideoSourceOptionsWidget* ipCameraSourceOptions() const;
     CameraVideoSourceOptionsWidget* cameraSourceOptions() const;

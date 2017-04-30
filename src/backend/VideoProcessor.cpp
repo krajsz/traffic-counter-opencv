@@ -109,10 +109,11 @@ void VideoProcessor::startProcessing()
         qDebug() << "file";
     }
 
-    if (dynamic_cast<LiveIPCameraVideoSource*>(m_source))
+    if (dynamic_cast<CameraVideoSource*>(m_source))
     {
-        qDebug() << "ipcam";
+        qDebug() << "cam";
     }
+
 
     m_processing = true;
 
@@ -200,6 +201,7 @@ void VideoProcessor::process()
             emit currentProgressInTime(currentTime);
             msleep(ms);
         }
+
         if (dynamic_cast<CameraVideoSource*>(m_source))
         {
 
@@ -216,11 +218,11 @@ void VideoProcessor::stopProcessing()
 {
     m_processing = false;
 
-    if (wait(2000))
+    /*if (wait(2000))
     {
         terminate();
         wait();
-    }
+    }*/
 }
 
 void VideoProcessor::setSource(AbstractVideoSource *source)

@@ -58,6 +58,11 @@ QString FileVideoSourceOptionsWidget::filePath() const
     return ui->filePathLineEdit->text();
 }
 
+void FileVideoSourceOptionsWidget::setFilePath(const QString &path)
+{
+    ui->filePathLineEdit->setText(path);
+}
+
 FileVideoSourceOptionsWidget::~FileVideoSourceOptionsWidget()
 {
     QSettings guiSetting(m_guiSettingsFile, QSettings::NativeFormat);

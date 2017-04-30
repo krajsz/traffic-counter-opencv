@@ -65,12 +65,14 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
     setAttribute(Qt::WA_DeleteOnClose);
 
     ui->videoFrameDisplayLabel->setPixmap(QPixmap(QLatin1String(":/images/noSource.png")));
-    addDockWidget(Qt::BottomDockWidgetArea, m_playbackActionsDock);
     addDockWidget(Qt::RightDockWidgetArea, m_videoSourceDock);
+    addDockWidget(Qt::RightDockWidgetArea, m_playbackActionsDock);
+
     connect(ui->aboutAction, &QAction::triggered, this, &TrafficCounterMainWindow::showAbout);
     connect(ui->databaseSettingsAction, &QAction::triggered, this, &TrafficCounterMainWindow::databaseSettingsActionClicked);
     connect(ui->playbackActionsAction, &QAction::triggered, this, &TrafficCounterMainWindow::playActionsChecked);
     connect(ui->sourceSettingsAction, &QAction::triggered, this, &TrafficCounterMainWindow::sourceSettingsActionChecked);
+    connect(ui->openVideoAction, &QAction::triggered, this, &TrafficCounterMainWindow::openFileActionClicked);
 
     connect(m_playbackActionsDock, &PlaybackActionsDock::visibilityChanged, this, &TrafficCounterMainWindow::playbackDockClosed);
     connect(m_videoSourceDock, &VideoSourceDock::visibilityChanged, this, &TrafficCounterMainWindow::videoSourceDockClosed);
@@ -86,7 +88,7 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
 
     connect(playbackModeAg, &QActionGroup::triggered, this, &TrafficCounterMainWindow::playbackModeChanged);
 
-
+    adjustSize();
 }
 
 void TrafficCounterMainWindow::setController(TrafficCounterController *controller)
@@ -140,15 +142,16 @@ void TrafficCounterMainWindow::showAbout()
 
 void TrafficCounterMainWindow::openFileActionClicked()
 {
-    const QString fileName = QFileDialog::getOpenFileName(0, QLatin1String("Select a video"), QDir::homePath());
+    const QString fileName = QFileDialog::getOpenFileName(0, "Select your video",
+                                                          QDir::homePath(), "Video files [ *.avi , *.mp4 , *.MP4 , *.MKV *.mkv]");
 
     QFile* pathOfFileSelectedFile = new QFile(fileName);
     if (pathOfFileSelectedFile->exists())
     {
+        m_videoSourceDock->setCurrentType(0);
         delete pathOfFileSelectedFile;
-        FileVideoSource* newSource = new FileVideoSource(fileName);
-
-        m_controller->setSource(newSource);
+        m_playbackActionsDock->startButton()->setEnabled(true);
+        m_videoSourceDock->fileVideoSourceOptions()->setFilePath(fileName);
     }
 }
 
@@ -251,6 +254,7 @@ void TrafficCounterMainWindow::startProcessing()
 
     ui->menuPlayback_mode->setEnabled(true);
 
+    m_controller->stopProcessing();
     m_controller->setSource(source);
     m_controller->startProcessing();
 }

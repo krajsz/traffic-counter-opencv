@@ -70,6 +70,23 @@ CameraVideoSourceOptionsWidget* VideoSourceDock::cameraSourceOptions() const
     return m_cameraVideoSourceOptionsWidget;
 }
 
+void VideoSourceDock::setCurrentType(const int idx)
+{
+    if (idx == 0)
+    {
+        ui->fileSourceRadioButton->setChecked(true);
+    }
+    else if (idx == 1)
+    {
+        ui->ipCameraSourceRadioButton->setChecked(true);
+    }
+    else
+    {
+        ui->webcamSourceRadioButton->setChecked(true);
+    }
+    ui->sourceOptionsStackedWidget->setCurrentIndex(idx);
+}
+
 VideoSourceDock::~VideoSourceDock()
 {
     disconnect(ui->sourceOptionsStackedWidget, &QStackedWidget::currentChanged, this, &VideoSourceDock::currentFileSourceTypeChanged);

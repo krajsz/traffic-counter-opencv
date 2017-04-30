@@ -46,6 +46,8 @@ TrafficCounterController::~TrafficCounterController()
 
 void TrafficCounterController::setSource(AbstractVideoSource *source)
 {
+    //reset processor ?
+
     m_videoProcessor->setSource(source);
     m_videoProcessor->initialize();
 }

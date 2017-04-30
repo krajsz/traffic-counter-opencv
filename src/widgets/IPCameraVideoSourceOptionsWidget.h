@@ -43,7 +43,7 @@ public:
     QString password() const;
     int port() const;
 
-    bool ok() const;
+    bool ok();
 
     bool urlContainsEverything() const;
 
@@ -51,7 +51,7 @@ private:
     Ui::IPCameraVideoSourceOptions *ui;
 private Q_SLOTS:
     void urlContainsEverythingChecked(bool checked);
-    void testButtonClicked();
+    bool testButtonClicked();
     void enableButtonTest(const QString& newUrl);
 };
 

@@ -41,6 +41,8 @@ public:
 
     bool ok() const;
 
+    void setFilePath(const QString& path);
+
     QString filePath() const;
 Q_SIGNALS:
     void fileOpened(bool ok);
@@ -48,9 +50,11 @@ private:
     Ui::FileVideoSourceOptionsWidget *ui;
 
     QString m_guiSettingsFile;
+public Q_SLOTS:
+    void openFile();
+
 private Q_SLOTS:
     void showFileInfoDialog();
-    void openFile();
 };
 
 #endif // FILEVIDEOSOURCEOPTIONSWIDGET_H

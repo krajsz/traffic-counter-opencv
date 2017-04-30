@@ -25,6 +25,9 @@
  *                                                                         *
  ***************************************************************************/
 #include "src/widgets/IPCameraVideoSourceOptionsWidget.h"
+#include <QMessageBox>
+#include <opencv2/opencv.hpp>
+
 #include <QDebug>
 
 IPCameraVideoSourceOptionsWidget::IPCameraVideoSourceOptionsWidget(QWidget *parent) :
@@ -60,12 +63,32 @@ void IPCameraVideoSourceOptionsWidget::urlContainsEverythingChecked(bool checked
     }
 }
 
-void IPCameraVideoSourceOptionsWidget::testButtonClicked()
+bool IPCameraVideoSourceOptionsWidget::testButtonClicked()
 {
+    if (ui->urlLineEdit->text().isEmpty())
+    {
+        QMessageBox::warning(0, QLatin1String("Error"), QLatin1String("Error, url not set!"));
+        return false;
 
+    }
+    else
+    {
+        cv::VideoCapture cap;
+        cap.open(ui->urlLineEdit->text().toStdString());
+        if (cap.isOpened())
+        {
+            cap.release();
+            QMessageBox::information(0, QLatin1String("Success"), QLatin1String("Test OK!"));
+
+            return true;
+        }
+        QMessageBox::warning(0, QLatin1String("Error"), QLatin1String("Error, unable to connect to camera!"));
+
+        return false;
+    }
 }
 
-bool IPCameraVideoSourceOptionsWidget::ok() const
+bool IPCameraVideoSourceOptionsWidget::ok()
 {
     //todo
     return true;
