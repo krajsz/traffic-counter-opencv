@@ -81,6 +81,8 @@ private Q_SLOTS:
 
     void enableButtonStart(int newSourceType);
 
+    void closeMain();
+
     void startProcessing();
     void stopProcessing();
 

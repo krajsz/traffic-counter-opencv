@@ -78,7 +78,7 @@ bool IPCameraVideoSourceOptionsWidget::testButtonClicked()
         if (cap.isOpened())
         {
             cap.release();
-            QMessageBox::information(0, QLatin1String("Success"), QLatin1String("Test OK!"));
+            QMessageBox::information(0, QLatin1String("Success"), QLatin1String("Successfully connected to the camera!"));
 
             return true;
         }

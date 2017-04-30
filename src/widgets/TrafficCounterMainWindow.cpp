@@ -73,6 +73,7 @@ TrafficCounterMainWindow::TrafficCounterMainWindow(QWidget *parent) :
     connect(ui->playbackActionsAction, &QAction::triggered, this, &TrafficCounterMainWindow::playActionsChecked);
     connect(ui->sourceSettingsAction, &QAction::triggered, this, &TrafficCounterMainWindow::sourceSettingsActionChecked);
     connect(ui->openVideoAction, &QAction::triggered, this, &TrafficCounterMainWindow::openFileActionClicked);
+    connect(ui->exitAction, &QAction::triggered, this, &TrafficCounterMainWindow::closeMain);
 
     connect(m_playbackActionsDock, &PlaybackActionsDock::visibilityChanged, this, &TrafficCounterMainWindow::playbackDockClosed);
     connect(m_videoSourceDock, &VideoSourceDock::visibilityChanged, this, &TrafficCounterMainWindow::videoSourceDockClosed);
@@ -322,6 +323,16 @@ void TrafficCounterMainWindow::saveScreenshot()
 void TrafficCounterMainWindow::stopProcessing()
 {
     m_controller->stopProcessing();
+}
+
+void TrafficCounterMainWindow::closeMain()
+{
+    int resp = QMessageBox::question(0, "Quit", "Are sure you want to quit?", QMessageBox::Yes, QMessageBox::No);
+
+    if (resp == QMessageBox::Yes)
+    {
+        close();
+    }
 }
 
 void TrafficCounterMainWindow::enableButtonStart(int newSourceType)
