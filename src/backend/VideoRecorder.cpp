@@ -50,7 +50,6 @@ void VideoRecorder::write(const cv::Mat &frame)
 void VideoRecorder::stopRecording()
 {
     m_recorder.release();
-    qDebug() << "stopping";
 }
 
 void VideoRecorder::startRecording()
