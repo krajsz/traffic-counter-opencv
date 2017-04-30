@@ -52,14 +52,31 @@ private:
     QCommandLineParser m_optionsParser;
 
     bool m_fileNameSet;
+    bool m_webcamIdxSet;
+    bool m_record;
     bool m_showGui;
+
     int m_webcamIdx;
 
-    bool m_record;
+    QString m_previousCommand;
+
+    const QLatin1String COMMAND_START = QLatin1String("start");
+    const QLatin1String COMMAND_PAUSE = QLatin1String("pause");
+    const QLatin1String COMMAND_STOP = QLatin1String("stop");
+    const QLatin1String COMMAND_NEW_SOURCE = QLatin1String("new");
+    const QLatin1String COMMAND_CAMERA = QLatin1String("camera");
+    const QLatin1String COMMAND_FILE = QLatin1String("file");
 
     QSocketNotifier m_stdinNotifier;
 
-signals:
+Q_SIGNALS:
+
+    void start();
+    void stop();
+    void pause();
+    void resume();
+    void newFileSource(const QString& path);
+    void newCameraSource(const int idx);
 
 public Q_SLOTS:
 

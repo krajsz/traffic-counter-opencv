@@ -40,17 +40,16 @@ CommandLineParser::CommandLineParser(QObject *parent) : QObject(parent),
 {
     m_optionsParser.addHelpOption();
     m_optionsParser.addVersionOption();
-
+    
     QCommandLineOption noGuiOption(QLatin1String("nogui"),
                                    "Don't show the GUI.");
-
-    QCommandLineOption recordOption(QStringList() << QLatin1String("r") << QLatin1String("record"),
-                                    "Record the video.");
-
+    
     QCommandLineOption cameraOption(QStringList() << QLatin1String("w") << QLatin1String("webcam"),
-                                    "Set the input camera.");
-
-
+                                    "Set the input camera.",
+                                    QLatin1String("cameraIdx"), QLatin1String("0"));
+    
+    QCommandLineOption recordOption(QStringList() << QLatin1String("r") << QLatin1String("record"),
+                                    "Record the input.");
     QCommandLineOption fileNameOption(QStringList() << QLatin1String("f") <<
                                       QLatin1String("filename"),"Input file name",
                                       QLatin1String("filename"));
@@ -59,13 +58,13 @@ CommandLineParser::CommandLineParser(QObject *parent) : QObject(parent),
     m_optionsParser.addOption(recordOption);
     m_optionsParser.addOption(fileNameOption);
     m_optionsParser.addOption(cameraOption);
-
+    
 }
 
 void CommandLineParser::parse(const QCoreApplication& app)
 {
     m_optionsParser.process(app);
-
+    
     //noGui
     if(m_optionsParser.isSet(QLatin1String("nogui")))
     {
@@ -73,19 +72,19 @@ void CommandLineParser::parse(const QCoreApplication& app)
         connect(&m_stdinNotifier, &QSocketNotifier::activated, this, &CommandLineParser::stdinInputReceived);
         m_stdinNotifier.setEnabled(true);
     }
-
+    
     //record
     if (m_optionsParser.isSet(QLatin1String("record")))
     {
         m_record = true;
     }
-
+    
     //filename
-
+    
     if (m_optionsParser.isSet(QLatin1String("filename")))
     {
         const QString filepath = m_optionsParser.value(QLatin1String("filename"));
-
+        
         if(QFileInfo(filepath).exists())
         {
             m_fileNameSet = true;
@@ -93,19 +92,76 @@ void CommandLineParser::parse(const QCoreApplication& app)
         else
         {
             qDebug() << "Incorrect file path!";
-
+            
             m_optionsParser.showHelp(1);
         }
     }
 
+    if (m_optionsParser.isSet(QLatin1String("camera")))
+    {
+        bool ok = m_optionsParser.value(QLatin1String("camera")).toInt(&ok);
+        if (ok)
+        {
+            m_webcamIdxSet = true;
+        }
+        else
+        {
+            m_optionsParser.showHelp(1);
+        }
+    }
 }
 
 void CommandLineParser::stdinInputReceived()
 {
     QTextStream strin(stdin);
-    qDebug() << "command: " << strin.readLine();
+    const QString command = strin.readLine();
 
-    //pause, resume, new file, show gui
+    qDebug() << "command: " << command;
+
+
+    if (command == COMMAND_START)
+    {
+        start();
+    }
+    else if (command == COMMAND_PAUSE)
+    {
+        emit pause();
+    }
+    else if (command == COMMAND_STOP)
+    {
+        emit stop();
+    }
+    else if (command == COMMAND_CAMERA)
+    {
+        qDebug() << "Enter camera index (0 the default): "; //available indexes here
+    }
+    else if (command == COMMAND_NEW_SOURCE)
+    {
+        qDebug() << "Enter 'file' for a new file source 'camera' for a webcamera souce: ";
+    }
+    else
+    {
+        if (m_previousCommand == COMMAND_NEW_SOURCE)
+        {
+            if ( (command  != COMMAND_FILE) ||
+                 (command != COMMAND_CAMERA))
+            {
+                qDebug() << "Incorrect command after command 'new'!";
+                qDebug() << "Enter 'file' for a new file source 'camera' for a webcamera souce: ";
+                m_previousCommand = COMMAND_NEW_SOURCE;
+            }
+        }
+        else if (m_previousCommand == COMMAND_FILE)
+        {
+            //check if can be opened as a video
+        }
+        else if (m_previousCommand == COMMAND_CAMERA)
+        {
+            //check if valid index
+        }
+    }
+    m_previousCommand = command;
+
 }
 
 int CommandLineParser::webcamIdx() const
@@ -115,7 +171,7 @@ int CommandLineParser::webcamIdx() const
 
 bool CommandLineParser::webcamSourceSet() const
 {
-
+    return m_webcamIdxSet;
 }
 
 QString CommandLineParser::fileName() const

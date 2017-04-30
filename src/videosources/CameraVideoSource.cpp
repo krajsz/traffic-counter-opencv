@@ -30,6 +30,14 @@ CameraVideoSource::CameraVideoSource(const QString &path, QObject *parent) : Abs
 {
 }
 
+CameraVideoSource::CameraVideoSource(const int idx) : AbstractVideoSource(""), m_idx(idx)
+{
+}
+
+int CameraVideoSource::idx() const
+{
+    return m_idx;
+}
 
 QCameraInfo CameraVideoSource::infos() const
 {

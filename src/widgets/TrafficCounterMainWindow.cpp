@@ -243,7 +243,7 @@ void TrafficCounterMainWindow::startProcessing()
     else
     {
         //camera
-        CameraVideoSource* csource = new CameraVideoSource(QString::number(m_videoSourceDock->cameraSourceOptions()->cameraName()));
+        CameraVideoSource* csource = new CameraVideoSource(m_videoSourceDock->cameraSourceOptions()->cameraName());
         qDebug() << "camSourceStartProcessing";
 
         source = csource;

@@ -35,11 +35,13 @@ class CameraVideoSource : public AbstractVideoSource
     Q_OBJECT
 public:
     CameraVideoSource(const QString& path, QObject* parent = nullptr);
-
+    CameraVideoSource(const int idx);
     QCameraInfo infos() const;
     void setInfos(const QCameraInfo& info);
+    int idx() const;
 private:
 
+    int m_idx;
     QCameraInfo m_infos;
 };
 

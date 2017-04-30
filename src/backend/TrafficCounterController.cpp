@@ -50,6 +50,34 @@ void TrafficCounterController::setSource(AbstractVideoSource *source)
     m_videoProcessor->initialize();
 }
 
+void TrafficCounterController::setCmdLineParser(Cli::CommandLineParser *parser)
+{
+    m_cmdLineParser = parser;
+
+    connect(m_cmdLineParser, &Cli::CommandLineParser::start, this, &TrafficCounterController::startProcessing);
+    connect(m_cmdLineParser, &Cli::CommandLineParser::stop, this, &TrafficCounterController::stopProcessing);
+    connect(m_cmdLineParser, &Cli::CommandLineParser::newCameraSource, this, &TrafficCounterController::newCliCameraSource);
+    connect(m_cmdLineParser, &Cli::CommandLineParser::newFileSource, this, &TrafficCounterController::newCliFileSource);
+
+    if (m_cmdLineParser->fileNameSet())
+    {
+        FileVideoSource* source = new FileVideoSource(m_cmdLineParser->fileName());
+
+        setSource(source);
+    }
+    else if (m_cmdLineParser->webcamSourceSet())
+    {
+        CameraVideoSource* source = new CameraVideoSource(m_cmdLineParser->webcamIdx());
+
+        setSource(source);
+    }
+
+    if (m_cmdLineParser->record())
+    {
+        startRecording();
+    }
+}
+
 QImage TrafficCounterController::currentFrame() const
 {
     return m_videoProcessor->currentFrameQImage();
@@ -112,4 +140,16 @@ void TrafficCounterController::saveScreenshot()
     }
 
     m_videoProcessor->currentFrameQImage().save(fileName);
+}
+
+void TrafficCounterController::newCliCameraSource(const int idx)
+{
+    CameraVideoSource* newSource = new CameraVideoSource(idx);
+    setSource(newSource);
+}
+
+void TrafficCounterController::newCliFileSource(const QString &path)
+{
+    FileVideoSource* newSource = new FileVideoSource(path);
+    setSource(newSource);
 }

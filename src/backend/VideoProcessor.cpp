@@ -88,8 +88,7 @@ void VideoProcessor::initialize()
     {
         qDebug() << "webcam";
         CameraVideoSource* source = dynamic_cast<CameraVideoSource*>(m_source);
-        int camIdx = source->path().toInt();
-        m_videoReader.open(camIdx);
+        m_videoReader.open(source->idx());
     }
 
     if(m_videoReader.isOpened())

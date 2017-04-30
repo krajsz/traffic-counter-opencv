@@ -30,6 +30,8 @@
 #include "src/backend/VideoProcessor.h"
 #include "src/backend/VideoRecorder.h"
 #include "src/backend/database/DatabaseManager.h"
+
+#include "src/backend/CommandLineParser.h"
 #include <QObject>
 
 class TrafficCounterController : public QObject
@@ -40,6 +42,8 @@ public:
     ~TrafficCounterController();
 
     void setSource(AbstractVideoSource* source);
+    void setCmdLineParser(Cli::CommandLineParser* parser);
+
     QImage currentFrame() const;
     QImage foregroundFrame() const;
 
@@ -50,9 +54,13 @@ private:
     DatabaseManager* m_databaseManager;
     VideoProcessor* m_videoProcessor;
     VideoRecorder* m_videoRecorder;
+    Cli::CommandLineParser* m_cmdLineParser;
 
 signals:
 
+private Q_SLOTS:
+    void newCliCameraSource(const int idx);
+    void newCliFileSource(const QString& path);
 public slots:
     void startProcessing();
     void pauseProcessing();

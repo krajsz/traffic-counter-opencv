@@ -52,12 +52,12 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion("0.1");
     QCoreApplication::setOrganizationDomain("http://inf.unideb.hu");
 
-    Cli::CommandLineParser commandLineParser;
-    commandLineParser.parse(a);
+    Cli::CommandLineParser* commandLineParser = new Cli::CommandLineParser;
+    commandLineParser->parse(a);
 
     TrafficCounterMainWindow* win;
     TrafficCounterController* trafficCounterController = new TrafficCounterController;
-    if (commandLineParser.showGui())
+    if (commandLineParser->showGui())
     {
         //show gui
         win =  new TrafficCounterMainWindow;
@@ -67,16 +67,7 @@ int main(int argc, char *argv[])
     else
     {
         //nogui, controller
-    }
-
-    if (commandLineParser.fileNameSet())
-    {
-
-    }
-
-    if (commandLineParser.record())
-    {
-
+        trafficCounterController->setCmdLineParser(commandLineParser);
     }
 
     return a.exec();
