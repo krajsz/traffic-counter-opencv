@@ -93,7 +93,7 @@ void DatabaseSettingsDialog::testDatabaseNotValid()
 
 void DatabaseSettingsDialog::testDatabaseOk()
 {
-    QMessageBox::information(0, "Database testing ok!", "Database opened!");
+    QMessageBox::information(0, "Testing ok!", "Database opened!");
 }
 
 void DatabaseSettingsDialog::driverChanged(const int index)

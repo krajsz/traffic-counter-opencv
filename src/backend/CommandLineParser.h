@@ -56,12 +56,17 @@ private:
     bool m_record;
     bool m_showGui;
 
+    bool m_started;
+    bool m_paused;
+    bool m_stopped;
+
     int m_webcamIdx;
 
     QString m_previousCommand;
 
     const QLatin1String COMMAND_START = QLatin1String("start");
     const QLatin1String COMMAND_PAUSE = QLatin1String("pause");
+    const QLatin1String COMMAND_RESUME = QLatin1String("pause");
     const QLatin1String COMMAND_STOP = QLatin1String("stop");
     const QLatin1String COMMAND_NEW_SOURCE = QLatin1String("new");
     const QLatin1String COMMAND_CAMERA = QLatin1String("camera");

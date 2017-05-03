@@ -144,7 +144,7 @@ void TrafficCounterMainWindow::showAbout()
 void TrafficCounterMainWindow::openFileActionClicked()
 {
     const QString fileName = QFileDialog::getOpenFileName(0, "Select your video",
-                                                          QDir::homePath(), "Video files [ *.avi , *.mp4 , *.MP4 , *.MKV *.mkv]");
+                                                          QDir::homePath(), "Video files [ *.avi , *.mp4 , *.MP4 , *.MKV , *.mkv , *.h264]");
 
     QFile* pathOfFileSelectedFile = new QFile(fileName);
     if (pathOfFileSelectedFile->exists())

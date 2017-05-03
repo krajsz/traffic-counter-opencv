@@ -36,6 +36,7 @@ namespace Cli
 
 CommandLineParser::CommandLineParser(QObject *parent) : QObject(parent),
     m_fileNameSet(false), m_showGui(true), m_record(false),
+    m_started(false), m_paused(false), m_stopped(false),
     m_stdinNotifier(STDIN_FILENO, QSocketNotifier::Read)
 {
     m_optionsParser.addHelpOption();
@@ -58,7 +59,6 @@ CommandLineParser::CommandLineParser(QObject *parent) : QObject(parent),
     m_optionsParser.addOption(recordOption);
     m_optionsParser.addOption(fileNameOption);
     m_optionsParser.addOption(cameraOption);
-    
 }
 
 void CommandLineParser::parse(const QCoreApplication& app)
@@ -116,20 +116,45 @@ void CommandLineParser::stdinInputReceived()
     QTextStream strin(stdin);
     const QString command = strin.readLine();
 
-    qDebug() << "command: " << command;
+    qDebug() << "Command: " << command;
 
 
     if (command == COMMAND_START)
     {
+        qDebug() << "Starting..";
         start();
+        m_started = true;
+        m_paused = false;
+        m_stopped = false;
     }
     else if (command == COMMAND_PAUSE)
     {
-        emit pause();
+        if (!m_stopped && m_started)
+        {
+            qDebug() << "Paused";
+
+            emit pause();
+            m_paused = true;
+        }
+    }
+    else if (command == COMMAND_PAUSE)
+    {
+        if (m_paused && !m_stopped)
+        {
+            qDebug() << "Resumed";
+
+            emit resume();
+            m_paused = false;
+        }
     }
     else if (command == COMMAND_STOP)
     {
-        emit stop();
+        if (m_started && !m_stopped)
+        {
+            qDebug() << "Stopping..";
+            m_stopped = true;
+            emit stop();
+        }
     }
     else if (command == COMMAND_CAMERA)
     {
@@ -154,10 +179,30 @@ void CommandLineParser::stdinInputReceived()
         else if (m_previousCommand == COMMAND_FILE)
         {
             //check if can be opened as a video
+
+            if (false)
+            {
+                qDebug() << "Loading..";
+                emit newFileSource(command);
+            }
+            else
+            {
+                qDebug() << "Incorrect fileName!";
+            }
         }
         else if (m_previousCommand == COMMAND_CAMERA)
         {
             //check if valid index
+            if (false)
+            {
+                qDebug() << "Loading..";
+                const int idx = 0;
+                emit newCameraSource(idx);
+            }
+            else
+            {
+                qDebug() << "Incorrect fileName!";
+            }
         }
     }
     m_previousCommand = command;

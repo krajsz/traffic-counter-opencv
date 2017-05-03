@@ -60,6 +60,7 @@ void TrafficCounterController::setCmdLineParser(Cli::CommandLineParser *parser)
     connect(m_cmdLineParser, &Cli::CommandLineParser::stop, this, &TrafficCounterController::stopProcessing);
     connect(m_cmdLineParser, &Cli::CommandLineParser::newCameraSource, this, &TrafficCounterController::newCliCameraSource);
     connect(m_cmdLineParser, &Cli::CommandLineParser::newFileSource, this, &TrafficCounterController::newCliFileSource);
+    connect(m_cmdLineParser, &Cli::CommandLineParser::resume, this, &TrafficCounterController::resumeProcessing);
 
     if (m_cmdLineParser->fileNameSet())
     {
