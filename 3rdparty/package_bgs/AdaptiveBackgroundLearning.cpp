@@ -19,7 +19,7 @@ along with BGSLibrary.  If not, see <http://www.gnu.org/licenses/>.
 using namespace bgslibrary::algorithms;
 
 AdaptiveBackgroundLearning::AdaptiveBackgroundLearning() :
-  alpha(0.05), limit(-1), counter(0), minVal(0.0), maxVal(1.0),
+  alpha(0.01), limit(150), counter(0), minVal(0.0), maxVal(1.0),
   enableThreshold(true), threshold(15)
 {
   std::cout << "AdaptiveBackgroundLearning()" << std::endl;

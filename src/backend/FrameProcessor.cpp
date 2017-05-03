@@ -29,12 +29,15 @@
 
 #include "3rdparty/package_bgs/FrameDifference.h"
 #include "3rdparty/package_bgs/AdaptiveBackgroundLearning.h"
+#include "3rdparty/package_bgs/StaticFrameDifference.h"
+#include "3rdparty/package_bgs/PBAS/PBAS.h"
+#include "3rdparty/package_bgs/AdaptiveSelectiveBackgroundLearning.h"
 #include <vector>
 
 #include <QDebug>
 
 FrameProcessor::FrameProcessor(QObject *parent) : QObject(parent),
-    m_backgroundSubstractor(new FrameDifference),
+    m_backgroundSubstractor(new AdaptiveSelectiveBackgroundLearning),
     m_emitOriginal(false)
 {
     m_backgroundSubstractor->setShowOutput(false);
@@ -48,9 +51,10 @@ void FrameProcessor::process(const cv::Mat &frame)
 
     cv::Mat fr;
 
-    m_backgroundSubstractor->process(frame, fr, m_background);
-    fr.copyTo(m_foreground);
-    fr.release();
+    m_backgroundSubstractor->apply(m_currentFrame).copyTo(m_foreground);
+
+    //m_backgroundSubstractor->process(frame, m_foreground, m_background);
+    //fr.copyTo(m_foreground);
     cv::resize(m_foreground, m_foreground, cv::Size(640, 480));
 
     postProcess();

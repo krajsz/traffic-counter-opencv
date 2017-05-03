@@ -19,7 +19,7 @@ along with BGSLibrary.  If not, see <http://www.gnu.org/licenses/>.
 using namespace bgslibrary::algorithms;
 
 FrameDifference::FrameDifference() :
-  enableThreshold(true), threshold(15)
+  enableThreshold(true), threshold(30)
 {
   std::cout << "FrameDifference()" << std::endl;
   setup("./config/FrameDifference.xml");
@@ -77,7 +77,7 @@ void FrameDifference::loadConfig()
   CvFileStorage* fs = cvOpenFileStorage(config_xml.c_str(), nullptr, CV_STORAGE_READ);
 
   enableThreshold = cvReadIntByName(fs, nullptr, "enableThreshold", true);
-  threshold = cvReadIntByName(fs, nullptr, "threshold", 15);
+  threshold = cvReadIntByName(fs, nullptr, "threshold", 30);
   showOutput = cvReadIntByName(fs, nullptr, "showOutput", true);
 
   cvReleaseFileStorage(&fs);
