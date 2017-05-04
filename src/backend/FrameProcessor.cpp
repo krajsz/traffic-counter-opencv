@@ -67,6 +67,8 @@ void FrameProcessor::process(const cv::Mat &frame)
         m_skipFrame = true;
     }
 
+#ifndef NOGUI
+
     if (m_emitOriginal)
     {
         emit frameProcessed(m_currentFrame);
@@ -75,6 +77,8 @@ void FrameProcessor::process(const cv::Mat &frame)
     {
         emit frameProcessed(m_foreground);
     }
+#endif
+
 }
 
 void FrameProcessor::setEmitOriginal(bool original)
