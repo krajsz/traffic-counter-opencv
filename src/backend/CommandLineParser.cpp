@@ -61,6 +61,19 @@ CommandLineParser::CommandLineParser(QObject *parent) : QObject(parent),
     m_optionsParser.addOption(cameraOption);
 }
 
+void CommandLineParser::commands() const
+{
+    qDebug() << "Available commands: ";
+    qDebug() << COMMAND_CAMERA << " - new source will be a camera data source.";
+    qDebug() << COMMAND_FILE << " - new source will be a file data source.";
+    qDebug() << COMMAND_NEW_SOURCE << " - set new source.";
+    qDebug() << COMMAND_START << " - start processing.";
+    qDebug() << COMMAND_STOP << " - stop processing.";
+    qDebug() << COMMAND_PAUSE << " - pause processing.";
+    qDebug() << COMMAND_RESUME << " - resume processing.";
+    qDebug() << COMMAND_HELP << " - show this help.";
+}
+
 void CommandLineParser::parse(const QCoreApplication& app)
 {
     m_optionsParser.process(app);
@@ -69,7 +82,10 @@ void CommandLineParser::parse(const QCoreApplication& app)
     if(m_optionsParser.isSet(QLatin1String("nogui")))
     {
         m_showGui = false;
-        connect(&m_stdinNotifier, &QSocketNotifier::activated, this, &CommandLineParser::stdinInputReceived);
+#ifndef NOGUI
+    #define NOGUI
+#endif
+        connect(&m_stdinNotifier, &QSocketNotifier::activated, this, &CommandLineParser::newCommandReceived);
         m_stdinNotifier.setEnabled(true);
     }
     
@@ -97,9 +113,9 @@ void CommandLineParser::parse(const QCoreApplication& app)
         }
     }
 
-    if (m_optionsParser.isSet(QLatin1String("camera")))
+    if (m_optionsParser.isSet(QLatin1String("webcam")))
     {
-        bool ok = m_optionsParser.value(QLatin1String("camera")).toInt(&ok);
+        bool ok = m_optionsParser.value(QLatin1String("webcam")).toInt(&ok);
         if (ok)
         {
             m_webcamIdxSet = true;
@@ -111,7 +127,7 @@ void CommandLineParser::parse(const QCoreApplication& app)
     }
 }
 
-void CommandLineParser::stdinInputReceived()
+void CommandLineParser::newCommandReceived()
 {
     QTextStream strin(stdin);
     const QString command = strin.readLine();
@@ -163,6 +179,10 @@ void CommandLineParser::stdinInputReceived()
     else if (command == COMMAND_NEW_SOURCE)
     {
         qDebug() << "Enter 'file' for a new file source 'camera' for a webcamera souce: ";
+    }
+    else if (command == COMMAND_HELP)
+    {
+        commands();
     }
     else
     {

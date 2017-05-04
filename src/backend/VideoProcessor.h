@@ -81,10 +81,11 @@ protected:
 public Q_SLOTS:
     void pauseResume(bool pause);
 
-signals:
+Q_SIGNALS:
     void progress(int value);
     void frameReadyForProcessing(const cv::Mat& frame);
     void currentProgressInTime(const QString& time);
+    void stopRecordRequested();
 public slots:
 
 };

@@ -19,7 +19,7 @@ along with BGSLibrary.  If not, see <http://www.gnu.org/licenses/>.
 using namespace bgslibrary::algorithms;
 
 FrameDifference::FrameDifference() :
-  enableThreshold(true), threshold(30)
+  enableThreshold(true), threshold(3)
 {
   std::cout << "FrameDifference()" << std::endl;
   setup("./config/FrameDifference.xml");
@@ -54,6 +54,8 @@ void FrameDifference::process(const cv::Mat &img_input, cv::Mat &img_output, cv:
 #endif
 
   img_foreground.copyTo(img_output);
+
+  cv::cvtColor(img_input, img_background, CV_BGR2GRAY);
 
   img_input.copyTo(img_background);
   img_background.copyTo(img_bgmodel);

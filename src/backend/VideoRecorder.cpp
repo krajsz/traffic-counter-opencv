@@ -30,7 +30,8 @@
 #include <QDebug>
 
 VideoRecorder::VideoRecorder(QObject *parent) : QObject(parent),
-    m_filePath(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation))
+    m_filePath(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)),
+    m_recording(false)
 {
 }
 
@@ -41,6 +42,11 @@ void VideoRecorder::setFilePath(const QString &path)
 
 void VideoRecorder::write(const cv::Mat &frame)
 {
+    if (!m_recording)
+    {
+        m_recording = true;
+    }
+
     if (m_recorder.isOpened())
     {
         m_recorder.write(frame);
@@ -49,7 +55,11 @@ void VideoRecorder::write(const cv::Mat &frame)
 
 void VideoRecorder::stopRecording()
 {
-    m_recorder.release();
+    if (m_recording)
+    {
+        m_recorder.release();
+        m_recording = false;
+    }
 }
 
 void VideoRecorder::startRecording()

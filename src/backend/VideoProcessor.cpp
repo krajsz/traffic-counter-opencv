@@ -183,7 +183,23 @@ void VideoProcessor::process()
 {
     if (!m_paused)
     {
-        m_videoReader.read(m_currentFrame);
+        if (dynamic_cast<FileVideoSource*>(m_source))
+        {
+            if (m_videoReader.get(CV_CAP_PROP_POS_FRAMES) < m_videoReader.get(CV_CAP_PROP_FRAME_COUNT))
+            {
+                m_videoReader.read(m_currentFrame);
+            }
+            else
+            {
+                emit stopRecordRequested();
+                m_videoReader.set(CV_CAP_PROP_POS_FRAMES, 0);
+                stopProcessing();
+            }
+        }
+        else
+        {
+            m_videoReader.read(m_currentFrame);
+        }
 
         if (!m_currentFrame.empty())
         {

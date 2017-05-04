@@ -30,12 +30,18 @@
 
 #include <QDateTime>
 #include <QDebug>
+#include <QSqlError>
+
 #include <QImage>
 
 TrafficCounterController::TrafficCounterController(QObject *parent) : QObject(parent),
     m_videoProcessor(new VideoProcessor),
-    m_videoRecorder(new VideoRecorder)
+    m_videoRecorder(new VideoRecorder),
+    m_databaseManager(DatabaseManager::instance())
 {
+    connect(m_videoProcessor, &VideoProcessor::stopRecordRequested, m_videoRecorder, &VideoRecorder::stopRecording);
+
+    m_databaseManager->connect();
 }
 
 TrafficCounterController::~TrafficCounterController()

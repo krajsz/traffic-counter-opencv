@@ -28,10 +28,13 @@
 #define VEHICLEBLOB_H
 
 #include <opencv2/features2d.hpp>
+#include <QVector>
 
 class VehicleBlob
 {
 public:
+    VehicleBlob() = default;
+
     VehicleBlob(const std::vector<cv::Point>& blobContour);
 
     void update();
@@ -43,8 +46,10 @@ public:
 
     bool newOrExisting() const;
     bool isTracked() const;
+    bool counted() const;
+
     cv::Rect boundingRect() const;
-    std::vector<cv::Point> previousCenterPositions() const;
+    QVector<cv::Point> previousCenterPositions() const;
     std::vector<cv::Point> contour() const;
     cv::Point nextPosition() const;
 
@@ -53,6 +58,7 @@ public:
     void addPreviousPosition(const cv::Point& position);
 
     void setNew(const bool neww);
+    void setCounted(const bool counted);
     void setTracked(const bool tracked);
     void setContour(const std::vector<cv::Point>& newContour);
     void setBoundingRect(const cv::Rect& newRect);
@@ -63,12 +69,13 @@ private:
     void calculateNextPosition();
 
     std::vector<cv::Point> m_contour;
-    std::vector<cv::Point> m_previousCenterPositions;
+    QVector<cv::Point> m_previousCenterPositions;
 
     cv::Point m_nextPosition;
 
     bool m_tracked;
     bool m_newOrExisting;
+    bool m_counted;
 
     int m_framesWithoutMatch;
 

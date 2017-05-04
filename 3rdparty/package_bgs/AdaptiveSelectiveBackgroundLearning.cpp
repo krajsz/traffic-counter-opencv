@@ -19,8 +19,8 @@ along with BGSLibrary.  If not, see <http://www.gnu.org/licenses/>.
 using namespace bgslibrary::algorithms;
 
 AdaptiveSelectiveBackgroundLearning::AdaptiveSelectiveBackgroundLearning() :
-  alphaLearn(0.05), alphaDetection(0.05), learningFrames(150), counter(0), minVal(0.0), maxVal(1.0),
-  threshold(15)
+  alphaLearn(0.01), alphaDetection(0.01), learningFrames(600), counter(0), minVal(0.0), maxVal(1.0),
+  threshold(30)
 {
   std::cout << "AdaptiveSelectiveBackgroundLearning()" << std::endl;
   setup("./config/AdaptiveSelectiveBackgroundLearning.xml");

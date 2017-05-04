@@ -42,6 +42,9 @@ public:
 
     QImage foregroundQImage() const;
 
+    void originalFrameRequested();
+    void foregroundFrameRequested();
+
     bool emitOriginal() const;
     void setEmitOriginal(bool original);
 
@@ -56,8 +59,12 @@ private:
     cv::Mat m_background;
     cv::Mat m_foreground;
 
+    bool m_skipFrame;
+    int m_vehicleCount;
+
+    int m_frames;
     cv::Mat m_currentFrame;
-    std::vector<VehicleBlob> m_blobs;
+    QVector<VehicleBlob> m_blobs;
 
     bool m_emitOriginal;
     bool m_firstFrame;

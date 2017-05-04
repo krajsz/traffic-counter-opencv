@@ -52,6 +52,7 @@ public:
     void testConnection(SQLConnection* conn);
 
     bool initDb();
+    bool connected() const;
 
     bool newObservation(const int cpm, const QDateTime& time, const int node_id);
 
@@ -76,6 +77,8 @@ private:
     QString m_databaseConnectionsFile;
     void loadConnection();
     QSqlDatabase m_database;
+
+    bool m_connected;
 
 Q_SIGNALS:
     void testDatabaseOk();

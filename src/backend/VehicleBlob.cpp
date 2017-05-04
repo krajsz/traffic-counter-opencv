@@ -27,9 +27,11 @@
 #include "src/backend/VehicleBlob.h"
 #include <vector>
 #include <opencv2/opencv.hpp>
+
+#include <QDebug>
 VehicleBlob::VehicleBlob(const std::vector<cv::Point> &blobContour) : m_contour (blobContour),
     m_tracked(true),
-    m_newOrExisting(false),
+    m_newOrExisting(true),
     m_framesWithoutMatch(0)
 {
     m_boundingRect = cv::boundingRect(m_contour);
@@ -96,7 +98,8 @@ void VehicleBlob::calculateNextPosition()
                                    m_previousCenterPositions.back().y + deltaY);
 
     }
-    else if (previousCenterPositionsCount >= 5) {
+    else if (previousCenterPositionsCount >= 5)
+    {
 
         int sumOfXChanges = ((m_previousCenterPositions[previousCenterPositionsCount - 1].x - m_previousCenterPositions[previousCenterPositionsCount - 2].x) * 4) +
                 ((m_previousCenterPositions[previousCenterPositionsCount - 2].x - m_previousCenterPositions[previousCenterPositionsCount - 3].x) * 3) +
@@ -114,10 +117,21 @@ void VehicleBlob::calculateNextPosition()
 
         m_nextPosition = cv::Point(m_previousCenterPositions.back().x + deltaX,
                                    m_previousCenterPositions.back().y + deltaY);
+
+
+        qDebug() << "Previous pos: " << m_previousCenterPositions.last().x << " "
+                 << m_previousCenterPositions.last().y << " "
+                 << " next: " << m_nextPosition.x << " " << m_nextPosition.y;
+       /* while (m_previousCenterPositions.size() >= 5)
+        {
+            m_previousCenterPositions.removeFirst();
+        }*/
     }
+
+   // qDebug() << "Previous positions: " << m_previousCenterPositions.size();
 }
 
-std::vector<cv::Point> VehicleBlob::previousCenterPositions() const
+QVector<cv::Point> VehicleBlob::previousCenterPositions() const
 {
     return m_previousCenterPositions;
 }
@@ -156,6 +170,16 @@ bool VehicleBlob::newOrExisting() const
 void VehicleBlob::setNew(const bool neww)
 {
     m_newOrExisting = neww;
+}
+
+bool VehicleBlob::counted() const
+{
+    return m_counted;
+}
+
+void VehicleBlob::setCounted(const bool counted)
+{
+    m_counted = counted;
 }
 
 void VehicleBlob::setContour(const std::vector<cv::Point> &newContour)

@@ -71,14 +71,21 @@ QSqlError DatabaseManager::connect()
 
     m_database = QSqlDatabase::addDatabase(dbs.at(m_connection->vendorIndex));
     m_database.setDatabaseName(m_connection->dbName);
+    qDebug() << "Connecting to database..";
 
     if (m_database.open())
     {
         initDb();
+        m_connected = true;
+        qDebug() << "Connected to database!";
+
         return QSqlError();
     }
     else
     {
+        m_connected = false;
+        qDebug() << "Failed to connect to database!";
+
         return m_database.lastError();
     }
 }
@@ -112,6 +119,11 @@ void DatabaseManager::testConnection(SQLConnection* conn)
     }
 }
 
+bool DatabaseManager::connected() const
+{
+    return m_connected;
+}
+
 bool DatabaseManager::initDb()
 {
     QStringList tables = m_database.tables();
@@ -142,6 +154,8 @@ void DatabaseManager::saveConnection() const
 void DatabaseManager::loadConnection()
 {
     QSettings connectionSetting(m_databaseConnectionsFile, QSettings::NativeFormat);
+
+    qDebug() << "Loading database connection..";
 
     SQLConnection* conn = new SQLConnection;
     conn->name = connectionSetting.value(QLatin1String("connectionName")).toString();

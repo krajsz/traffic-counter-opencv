@@ -28,6 +28,7 @@
 #include "ui_databasesettingsdialog.h"
 #include <QMessageBox>
 #include <QSqlError>
+#include <QPalette>
 
 #include <QDebug>
 
@@ -48,6 +49,20 @@ DatabaseSettingsDialog::DatabaseSettingsDialog(QWidget *parent) :
     ui->passwordLineEdit->setText(conn->password);
     ui->userNameLineEdit->setText(conn->userName);
     ui->sqlDriversComboBox->setCurrentIndex(conn->vendorIndex);
+
+    if (m_dbManager->connected())
+    {
+        QPalette palette;
+
+        QBrush brush(QColor(0, 255, 0, 255));
+        brush.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Disabled, QPalette::Button, brush);
+        ui->connectionStatusButton->setText(QLatin1String("Connected"));
+        QBrush brush1(QColor(0, 0, 0, 255));
+        brush1.setStyle(Qt::SolidPattern);
+        palette.setBrush(QPalette::Disabled, QPalette::ButtonText, brush1);
+        ui->connectionStatusButton->setPalette(palette);
+    }
 
     initSlots();
 }
@@ -113,7 +128,6 @@ void DatabaseSettingsDialog::connectToDatabase()
 {
     QPalette palette;
 
-
     if (m_dbManager->connect().type() == QSqlError::NoError)
     {
         QBrush brush(QColor(0, 255, 0, 255));
@@ -125,6 +139,7 @@ void DatabaseSettingsDialog::connectToDatabase()
         QBrush brush(QColor(255, 0, 0, 255));
         brush.setStyle(Qt::SolidPattern);
         palette.setBrush(QPalette::Disabled, QPalette::Button, brush);
+        ui->connectionStatusButton->setText(QLatin1String("Not connected"));
     }
 
     QBrush brush1(QColor(0, 0, 0, 255));

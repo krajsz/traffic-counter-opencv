@@ -71,8 +71,11 @@ private:
     const QLatin1String COMMAND_NEW_SOURCE = QLatin1String("new");
     const QLatin1String COMMAND_CAMERA = QLatin1String("camera");
     const QLatin1String COMMAND_FILE = QLatin1String("file");
+    const QLatin1String COMMAND_HELP = QLatin1String("help");
 
     QSocketNotifier m_stdinNotifier;
+
+    void commands() const;
 
 Q_SIGNALS:
 
@@ -86,7 +89,7 @@ Q_SIGNALS:
 public Q_SLOTS:
 
 private Q_SLOTS:
-    void stdinInputReceived();
+    void newCommandReceived();
 };
 }
 #endif // COMMANDLINEPARSER_H
