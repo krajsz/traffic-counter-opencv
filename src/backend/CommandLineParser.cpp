@@ -25,6 +25,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "src/backend/CommandLineParser.h"
+#include "src/backend/Utils.h"
 #include <unistd.h>
 
 #include <QDir>
@@ -63,6 +64,7 @@ CommandLineParser::CommandLineParser(QObject *parent) : QObject(parent),
 
 void CommandLineParser::commands() const
 {
+    qDebug() << "";
     qDebug() << "Available commands: ";
     qDebug() << COMMAND_CAMERA << " - new source will be a camera data source.";
     qDebug() << COMMAND_FILE << " - new source will be a file data source.";
@@ -72,6 +74,7 @@ void CommandLineParser::commands() const
     qDebug() << COMMAND_PAUSE << " - pause processing.";
     qDebug() << COMMAND_RESUME << " - resume processing.";
     qDebug() << COMMAND_HELP << " - show this help.";
+    qDebug() << "";
 }
 
 void CommandLineParser::parse(const QCoreApplication& app)
@@ -83,10 +86,11 @@ void CommandLineParser::parse(const QCoreApplication& app)
     {
         m_showGui = false;
 #ifndef NOGUI
-    #define NOGUI
+#define NOGUI
 #endif
         connect(&m_stdinNotifier, &QSocketNotifier::activated, this, &CommandLineParser::newCommandReceived);
         m_stdinNotifier.setEnabled(true);
+
     }
     
     //record
@@ -172,10 +176,6 @@ void CommandLineParser::newCommandReceived()
             emit stop();
         }
     }
-    else if (command == COMMAND_CAMERA)
-    {
-        qDebug() << "Enter camera index (0 the default): "; //available indexes here
-    }
     else if (command == COMMAND_NEW_SOURCE)
     {
         qDebug() << "Enter 'file' for a new file source 'camera' for a webcamera souce: ";
@@ -184,25 +184,41 @@ void CommandLineParser::newCommandReceived()
     {
         commands();
     }
+    else if (command == COMMAND_QUIT)
+    {
+        qDebug() << "Enter 'y' or 'n' to confirm:";
+        m_previousCommand = COMMAND_QUIT;
+    }
     else
     {
         if (m_previousCommand == COMMAND_NEW_SOURCE)
         {
-            if ( (command  != COMMAND_FILE) ||
+            if ( (command  != COMMAND_FILE) &&
                  (command != COMMAND_CAMERA))
             {
                 qDebug() << "Incorrect command after command 'new'!";
                 qDebug() << "Enter 'file' for a new file source 'camera' for a webcamera souce: ";
                 m_previousCommand = COMMAND_NEW_SOURCE;
             }
+            else if (command == COMMAND_CAMERA)
+            {
+                qDebug() << "Enter camera index (0 the default): ";
+            }
+            else if (command == COMMAND_FILE)
+            {
+                qDebug() << "Enter the file path: ";
+            }
         }
+
         else if (m_previousCommand == COMMAND_FILE)
         {
             //check if can be opened as a video
-
-            if (false)
+            cv::VideoCapture cap;
+            cap.open(command.toStdString());
+            if (cap.isOpened())
             {
-                qDebug() << "Loading..";
+                cap.release();
+                qDebug() << "Loading file " << command <<" ...";
                 emit newFileSource(command);
             }
             else
@@ -213,19 +229,36 @@ void CommandLineParser::newCommandReceived()
         else if (m_previousCommand == COMMAND_CAMERA)
         {
             //check if valid index
-            if (false)
+            bool ok;
+            const int idx = command.toInt(&ok);
+
+            ok &= (idx < Utils::availableCamerasList().size());
+
+            if (ok)
             {
-                qDebug() << "Loading..";
-                const int idx = 0;
+                qDebug() << "Loading camera " << idx << " ...";
                 emit newCameraSource(idx);
             }
             else
             {
-                qDebug() << "Incorrect fileName!";
+                qDebug() << "Incorrect camera index!";
             }
+        }
+        else if (m_previousCommand == COMMAND_QUIT)
+        {
+            if (command == "y")
+            {
+                quit();
+            }
+        }
+        else
+        {
+            qDebug() << "Incorrect command, enter 'help' for the available commands!";
         }
     }
     m_previousCommand = command;
+    if (command != COMMAND_FILE && command != COMMAND_CAMERA)
+        qDebug() << "Enter your command: ";
 
 }
 

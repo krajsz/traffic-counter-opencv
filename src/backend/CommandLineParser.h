@@ -72,6 +72,8 @@ private:
     const QLatin1String COMMAND_CAMERA = QLatin1String("camera");
     const QLatin1String COMMAND_FILE = QLatin1String("file");
     const QLatin1String COMMAND_HELP = QLatin1String("help");
+    const QLatin1String COMMAND_QUIT = QLatin1String("quit");
+
 
     QSocketNotifier m_stdinNotifier;
 
@@ -85,6 +87,7 @@ Q_SIGNALS:
     void resume();
     void newFileSource(const QString& path);
     void newCameraSource(const int idx);
+    void quit();
 
 public Q_SLOTS:
 

@@ -119,7 +119,7 @@ void VehicleBlob::calculateNextPosition()
                                    m_previousCenterPositions.back().y + deltaY);
 
 
-        qDebug() << "Previous pos: " << m_previousCenterPositions.last().x << " "
+        /*qDebug() << "Previous pos: " << m_previousCenterPositions.last().x << " "
                  << m_previousCenterPositions.last().y << " "
                  << " next: " << m_nextPosition.x << " " << m_nextPosition.y;
        /* while (m_previousCenterPositions.size() >= 5)

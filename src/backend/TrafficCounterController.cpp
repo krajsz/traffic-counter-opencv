@@ -67,24 +67,39 @@ void TrafficCounterController::setCmdLineParser(Cli::CommandLineParser *parser)
     connect(m_cmdLineParser, &Cli::CommandLineParser::newCameraSource, this, &TrafficCounterController::newCliCameraSource);
     connect(m_cmdLineParser, &Cli::CommandLineParser::newFileSource, this, &TrafficCounterController::newCliFileSource);
     connect(m_cmdLineParser, &Cli::CommandLineParser::resume, this, &TrafficCounterController::resumeProcessing);
+    connect(m_cmdLineParser, &Cli::CommandLineParser::quit, this, &TrafficCounterController::quit);
+
+    if (m_cmdLineParser->fileNameSet() && m_cmdLineParser->webcamSourceSet())
+    {
+        qDebug() << "You can set only one kind of source at a time!";
+        qDebug() << "Enter your command: ";
+
+        return;
+    }
 
     if (m_cmdLineParser->fileNameSet())
     {
         FileVideoSource* source = new FileVideoSource(m_cmdLineParser->fileName());
-
         setSource(source);
+
+        qDebug() << "File source set: " << source->path();
     }
     else if (m_cmdLineParser->webcamSourceSet())
     {
         CameraVideoSource* source = new CameraVideoSource(m_cmdLineParser->webcamIdx());
-
         setSource(source);
+        qDebug() << "Webcam source set: " << source->path();
     }
 
     if (m_cmdLineParser->record())
     {
         startRecording();
+        qDebug() << "Recording will start as soon as processing will be started!";
+
     }
+    qDebug() << "Enter 'help' for the available commands";
+    qDebug() << "Enter your command: ";
+
 }
 
 QImage TrafficCounterController::currentFrame() const
@@ -155,10 +170,19 @@ void TrafficCounterController::newCliCameraSource(const int idx)
 {
     CameraVideoSource* newSource = new CameraVideoSource(idx);
     setSource(newSource);
+    qDebug() << "Camera index set: " << newSource->path();
+}
+
+void TrafficCounterController::quit()
+{
+    exit(0);
 }
 
 void TrafficCounterController::newCliFileSource(const QString &path)
 {
     FileVideoSource* newSource = new FileVideoSource(path);
+    newSource->setInfos(VideoProcessor::videoInfos(newSource->path()));
+
     setSource(newSource);
+    qDebug() << "File source set: " << newSource->path();
 }

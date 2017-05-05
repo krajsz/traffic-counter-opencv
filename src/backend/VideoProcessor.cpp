@@ -192,6 +192,8 @@ void VideoProcessor::process()
             else
             {
                 emit stopRecordRequested();
+                qDebug() <<"stop";
+
                 m_videoReader.set(CV_CAP_PROP_POS_FRAMES, 0);
                 stopProcessing();
             }

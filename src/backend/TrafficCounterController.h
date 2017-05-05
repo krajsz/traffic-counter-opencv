@@ -61,6 +61,7 @@ signals:
 private Q_SLOTS:
     void newCliCameraSource(const int idx);
     void newCliFileSource(const QString& path);
+    void quit();
 public slots:
     void startProcessing();
     void pauseProcessing();

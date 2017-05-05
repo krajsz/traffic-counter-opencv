@@ -54,7 +54,7 @@ void FrameProcessor::process(const cv::Mat &frame)
     cv::resize(m_currentFrame, m_currentFrame, cv::Size(640, 480));
 
     m_frames++;
-    if (m_skipFrame)
+    if (false)
     {
         m_skipFrame = false;
         return;
@@ -102,17 +102,20 @@ bool FrameProcessor::emitOriginal() const
 
 void FrameProcessor::postProcess()
 {
-    cv::Mat strel5 = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
+    cv::Mat strel5 = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+    cv::Mat strel15 = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(25, 25));
 
-    /*   cv::blur(m_foreground, m_foreground, cv::Size(5, 5));
+    for (int i = 1; i < 5;++i)
+    {
+        cv::Mat strel5 = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(i+1, i+1));
 
-    cv::dilate(m_foreground, m_foreground, strel5);
-    cv::erode(m_foreground, m_foreground, strel7);
-*/
-    cv::morphologyEx(m_foreground, m_foreground, cv::MORPH_OPEN, strel5);
-    cv::morphologyEx(m_foreground, m_foreground, cv::MORPH_CLOSE, strel5);
+        cv::morphologyEx(m_foreground, m_foreground, cv::MORPH_OPEN, strel5);
+        cv::morphologyEx(m_foreground, m_foreground, cv::MORPH_CLOSE, strel5);
 
-    cv::threshold(m_foreground, m_foreground, 30, 255.0, CV_THRESH_BINARY);
+    }
+    cv::blur(m_foreground, m_foreground, cv::Size(5, 5));
+
+    //cv::threshold(m_foreground, m_foreground, 0, 255.0, CV_THRESH_BINARY  | CV_THRESH_OTSU);
 
     std::vector<std::vector<cv::Point> > contours;
 
@@ -140,7 +143,7 @@ void FrameProcessor::postProcess()
 
         if (okAsNewBlob)
         {
-            qDebug() << "new blob ";
+           // qDebug() << "new blob ";
 
             currentBlobs.push_back(vblob);
         }
@@ -175,14 +178,14 @@ void FrameProcessor::postProcess()
                     {
                         leastDistance = distance;
                         idxOfClosestBlob = i;
-                        qDebug() << "closest dist: " << leastDistance;
+                 //       qDebug() << "closest dist: " << leastDistance;
                     }
                 }
             }
 
             if (leastDistance < cblob.diagonalSize() * 1.5)
             {
-                qDebug() << "updating existing blob: " << idxOfClosestBlob;
+             //   qDebug() << "updating existing blob: " << idxOfClosestBlob;
                 m_blobs[idxOfClosestBlob].setContour(cblob.contour());
                 m_blobs[idxOfClosestBlob].setBoundingRect(cblob.boundingRect());
                 m_blobs[idxOfClosestBlob].setAspectRatio(cblob.aspectRatio());
@@ -194,7 +197,7 @@ void FrameProcessor::postProcess()
             }
             else
             {
-                qDebug() << "too far, new blob";
+            //    qDebug() << "too far, new blob";
 
                 cblob.setNew(true);
                 m_blobs.push_back(cblob);
@@ -229,7 +232,7 @@ void FrameProcessor::postProcess()
             }
         }*/
 
-        const int hLineHeight = m_currentFrame.rows * 0.4;
+        const int hLineHeight = m_currentFrame.rows * 0.3;
 
         bool atLeastOneBlobCrossed = false;
 
@@ -244,7 +247,11 @@ void FrameProcessor::postProcess()
                 if (blob.previousCenterPositions()[prevFrameIndex].y > hLineHeight &&
                         blob.previousCenterPositions()[currFrameIndex].y <= hLineHeight)
                 {
+                    //db
+
                     m_vehicleCount++;
+                    qDebug () << "Vehicle count: " << m_vehicleCount;
+
                     blob.setCounted(true);
                     atLeastOneBlobCrossed = true;
                 }
@@ -263,7 +270,7 @@ void FrameProcessor::postProcess()
             cv::line(m_currentFrame, lp1, lp2, cv::Scalar(255,0,0), 2);
         }
 
-        qDebug () << "m_blobs size: " << m_blobs.size();
+      //  qDebug () << "m_blobs size: " << m_blobs.size();
 
 
         /*qDebug() << "contoursToBeDrawn: " << contoursToBeDrawn.size();
