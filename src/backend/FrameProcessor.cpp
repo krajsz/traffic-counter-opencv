@@ -33,7 +33,9 @@
 #include "3rdparty/package_bgs/PBAS/PBAS.h"
 #include "3rdparty/package_bgs/AdaptiveSelectiveBackgroundLearning.h"
 #include "3rdparty/package_bgs/bgslibrary.h"
+#include "src/backend/database/DatabaseManager.h"
 #include <vector>
+#include <QDateTime>
 
 #include <QDebug>
 
@@ -244,13 +246,18 @@ void FrameProcessor::postProcess()
                 int prevFrameIndex = (int)blob.previousCenterPositions().size() - 2;
                 int currFrameIndex = (int)blob.previousCenterPositions().size() - 1;
 
-                if (blob.previousCenterPositions()[prevFrameIndex].y > hLineHeight &&
-                        blob.previousCenterPositions()[currFrameIndex].y <= hLineHeight)
+                if ((blob.previousCenterPositions()[prevFrameIndex].y > hLineHeight &&
+                        blob.previousCenterPositions()[currFrameIndex].y <= hLineHeight) ||
+                        (blob.previousCenterPositions()[prevFrameIndex].y < hLineHeight &&
+                         blob.previousCenterPositions()[currFrameIndex].y >= hLineHeight))
                 {
                     //db
 
                     m_vehicleCount++;
                     qDebug () << "Vehicle count: " << m_vehicleCount;
+
+                    DatabaseManager* dbmgr = DatabaseManager::instance();
+                    dbmgr->newObservation(m_vehicleCount, QDateTime::currentDateTime());
 
                     blob.setCounted(true);
                     atLeastOneBlobCrossed = true;

@@ -59,6 +59,7 @@ private:
     cv::Mat m_background;
     cv::Mat m_foreground;
 
+
     bool m_skipFrame;
     int m_vehicleCount;
 

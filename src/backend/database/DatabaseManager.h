@@ -31,6 +31,8 @@
 #include <QSettings>
 #include <QVector>
 #include <QtSql/QSqlDatabase>
+#include <QSqlQuery>
+
 class DatabaseManager : public QObject
 {
     Q_OBJECT
@@ -46,6 +48,8 @@ public:
         QString password;
     };
 
+    void setNodeId(const int id);
+
     static QStringList drivers();
 
     QSqlError connect();
@@ -54,7 +58,9 @@ public:
     bool initDb();
     bool connected() const;
 
-    bool newObservation(const int cpm, const QDateTime& time, const int node_id);
+    QString nodeId() const;
+
+    void newObservation(const int cpm, const QDateTime& time);
 
     SQLConnection *connection() const;
 
@@ -65,6 +71,7 @@ public:
     void userNameChanged(const QString &newUserName);
     void passwordChanged(const QString &newPassword);
     void dbNameChanged(const QString& newName);
+    void nodeIdChanged(const QString& newId);
 
     static DatabaseManager* instance();
 
@@ -73,12 +80,16 @@ private:
 
     static DatabaseManager* ptr;
 
-    SQLConnection* m_connection;
-    QString m_databaseConnectionsFile;
-    void loadConnection();
     QSqlDatabase m_database;
 
+    SQLConnection* m_connection;
+
     bool m_connected;
+
+    QString m_databaseConnectionsFile;
+    QString m_nodeId;
+
+    void loadConnection();
 
 Q_SIGNALS:
     void testDatabaseOk();

@@ -109,9 +109,7 @@ TrafficCounterMainWindow::~TrafficCounterMainWindow()
 {
     delete m_databaseSettingsDialog;
     delete ui;
-
     delete m_videoSourceDock;
-
     delete m_controller;
     delete m_playbackActionsDock;
 

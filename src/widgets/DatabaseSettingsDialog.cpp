@@ -50,6 +50,8 @@ DatabaseSettingsDialog::DatabaseSettingsDialog(QWidget *parent) :
     ui->userNameLineEdit->setText(conn->userName);
     ui->sqlDriversComboBox->setCurrentIndex(conn->vendorIndex);
 
+    ui->nodeIdLineEdit->setText(m_dbManager->nodeId());
+
     if (m_dbManager->connected())
     {
         QPalette palette;
@@ -90,6 +92,7 @@ void DatabaseSettingsDialog::initSlots()
     connect(ui->userNameLineEdit, &QLineEdit::textEdited, this, &DatabaseSettingsDialog::userNameChanged);
     connect(ui->passwordLineEdit, &QLineEdit::textEdited, this, &DatabaseSettingsDialog::passwordChanged);
     connect(ui->dbNameLineEdit, &QLineEdit::textEdited, this, &DatabaseSettingsDialog::dbNameChanged);
+    connect(ui->nodeIdLineEdit, &QLineEdit::textEdited, this, &DatabaseSettingsDialog::nodeIdChanged);
 
     connect(m_dbManager, &DatabaseManager::testDatabaseNotOpened, this, &DatabaseSettingsDialog::testDatabaseNotOpened);
     connect(m_dbManager, &DatabaseManager::testDatabaseNotValid, this, &DatabaseSettingsDialog::testDatabaseNotValid);
@@ -182,4 +185,9 @@ void DatabaseSettingsDialog::userNameChanged(const QString &newUserName)
 void DatabaseSettingsDialog::passwordChanged(const QString &newPassword)
 {
     m_dbManager->passwordChanged(newPassword);
+}
+
+void DatabaseSettingsDialog::nodeIdChanged(const QString &newId)
+{
+   m_dbManager->nodeIdChanged(newId);
 }

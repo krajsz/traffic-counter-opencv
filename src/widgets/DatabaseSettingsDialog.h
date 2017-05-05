@@ -66,6 +66,8 @@ private Q_SLOTS:
     void connectionNameChanged(const QString &newName);
     void userNameChanged(const QString &newUserName);
     void passwordChanged(const QString &newPassword);
+    void nodeIdChanged(const QString &newId);
+
 };
 
 #endif // DATABASESETTINGSDIALOG_H
