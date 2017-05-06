@@ -42,6 +42,7 @@ VideoProcessor::VideoProcessor(QObject *parent) : QThread(parent),
     m_frameProcessor(new FrameProcessor)
 {
     connect(this, &VideoProcessor::frameReadyForProcessing, m_frameProcessor, &FrameProcessor::process);
+    connect(this, &VideoProcessor::stopRecordRequested, m_frameProcessor, &FrameProcessor::resetVehicleCount);
 }
 
 void VideoProcessor::run()
@@ -235,6 +236,7 @@ void VideoProcessor::pauseResume(bool pause)
 void VideoProcessor::stopProcessing()
 {
     m_processing = false;
+    emit stopRecordRequested();
 
     /*if (wait(2000))
     {

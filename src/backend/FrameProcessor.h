@@ -53,6 +53,7 @@ Q_SIGNALS:
     void newCar();
 public Q_SLOTS:
     void process(const cv::Mat& frame);
+    void resetVehicleCount();
 
 private:
     IBGS* m_backgroundSubstractor;

@@ -37,7 +37,6 @@ int main(int argc, char *argv[])
 
     qRegisterMetaType<cv::Mat>("cv::Mat");
 
-
     // config directory needed by BGSLib
     QDir configDirForBGS (QDir::current().path() + QLatin1String("/config"));
 

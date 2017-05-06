@@ -104,7 +104,7 @@ bool FrameProcessor::emitOriginal() const
 
 void FrameProcessor::postProcess()
 {
-    cv::Mat strel5 = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+    cv::Mat strel5 = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(7, 7));
     cv::Mat strel15 = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(25, 25));
 
     for (int i = 1; i < 5;++i)
@@ -117,7 +117,7 @@ void FrameProcessor::postProcess()
     }
     cv::blur(m_foreground, m_foreground, cv::Size(5, 5));
 
-    //cv::threshold(m_foreground, m_foreground, 0, 255.0, CV_THRESH_BINARY  | CV_THRESH_OTSU);
+    cv::erode(m_foreground, m_foreground,strel5);
 
     std::vector<std::vector<cv::Point> > contours;
 
@@ -256,9 +256,9 @@ void FrameProcessor::postProcess()
                     m_vehicleCount++;
                     qDebug () << "Vehicle count: " << m_vehicleCount;
 
-                    DatabaseManager* dbmgr = DatabaseManager::instance();
+                  /*  DatabaseManager* dbmgr = DatabaseManager::instance();
                     dbmgr->newObservation(m_vehicleCount, QDateTime::currentDateTime());
-
+*/
                     blob.setCounted(true);
                     atLeastOneBlobCrossed = true;
                 }
@@ -283,18 +283,21 @@ void FrameProcessor::postProcess()
         /*qDebug() << "contoursToBeDrawn: " << contoursToBeDrawn.size();
         qDebug() << "m_blobs size: " << m_blobs.size();*/
 
-#ifdef NOGUI
 
-#endif
-
+#ifndef NOGUI
         const cv::Scalar red = cv::Scalar(0.0, 0.0, 255.0);
         cv::drawContours(m_currentFrame, contoursToBeDrawn, -1 , red);
 
         cv::putText(m_currentFrame, QString::number(m_vehicleCount).toStdString(), cv::Point(40, 30),
                     cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0,255,0), 2);
-
+#endif
         m_firstFrame = false;
     }
+}
+
+void FrameProcessor::resetVehicleCount()
+{
+    m_vehicleCount = 0;
 }
 
 void FrameProcessor::originalFrameRequested()
